@@ -1,0 +1,19 @@
+{
+  "name": "karelisys",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aredu89/Thesis-KareliSys.git"
+  },
+  "author": "Ariel Eduardo Rosales",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Aredu89/Thesis-KareliSys/issues"
+  },
+  "homepage": "https://github.com/Aredu89/Thesis-KareliSys#readme"
+}
