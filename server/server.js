@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const MongoClient = require('mongodb').MongoClient
+const Issue = require('./issue.js')
 let db
 
 app.use(express.static('static'))
@@ -35,49 +36,27 @@ app.get('/api/issues', (req, res) => {
 //POST Create
 app.post('/api/issues', (req, res) => {
   const newIssue = req.body
-  newIssue.id = issues.length + 1
   newIssue.created = new Date()
   if (!newIssue.status)
     newIssue.status = 'New'
   //validaciones
-  const err = validateIssue(newIssue)
+  const err = Issue.validateIssue(newIssue)
   if (err) {
     res.status(422).json({ message: `Invalid requrest: ${err}` })
     return
   }
-  issues.push(newIssue)
-  res.json(newIssue)
+  //Inserto en la base de datos
+  db.collection('issues').insertOne(newIssue)
+  .then(result =>
+    db.collection('issues').find({ _id: result.insertedId }).limit(1).next()
+    )
+    .then(newIssue => {
+      res.json(newIssue)
+    })
+    .catch(error => {
+      console.log(error)
+      res.status(500).json({ message: `Internal Server Error: ${error}` })
+    })
 })
 
-//Validaciones
-const validIssueStatus = {
-  New: true,
-  Open: true,
-  Assigned: true,
-  Fixed: true,
-  Verified: true,
-  Closed: true,
-};
-const issueFieldType = {
-  id: 'required',
-  status: 'required',
-  owner: 'required',
-  effort: 'optional',
-  created: 'required',
-  completionDate: 'optional',
-  title: 'required',
-};
-function validateIssue(issue) {
-  for (const field in issueFieldType) {
-    const type = issueFieldType[field]
-    if (!type) {
-      delete issue[field]
-    } else if (type === 'required' && !issue[field]) {
-      return `${field} is required.`
-    }
-  }
-  if (!validIssueStatus[issue.status])
-    return `${issue.status} is not a valid status.`
-  return null
-}
 //FIN de API REST

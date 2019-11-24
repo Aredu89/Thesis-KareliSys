@@ -1,5 +1,8 @@
+import React from'react'
+import 'whatwg-fetch'
+
 const newIssue = {
-  id: 3, status: 'Assigned', owner: 'Ariel',
+  status: 'Assigned', owner: 'Ariel',
   created: new Date('2016-08-16'), effort: 14,
   completionDate: new Date('2016-08-30'),
   title: 'Third issue',
@@ -37,7 +40,7 @@ export default class IssueList extends React.Component {
       })
   }
 
-  crearRegistro(newIssue) {
+  crearRegistro() {
     fetch('/api/issues', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
