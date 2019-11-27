@@ -1,8 +1,10 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const path = require('path')
 const app = express()
 const MongoClient = require('mongodb').MongoClient
 const Issue = require('./issue.js')
+
 let db
 
 app.use(express.static('static'))
@@ -14,15 +16,17 @@ MongoClient.connect('mongodb://localhost/issuetracker')
     app.listen(3000, function () {
       console.log('App started on port 3000')
     })
- })
- .catch(err => {
-    console.log('ERROR:', error)
- })
+  })
+  .catch(err => {
+      console.log('ERROR:', err)
+  })
 
 // API REST
 //Get List
 app.get('/api/issues', (req, res) => {
-  db.collection('issues').find().toArray()
+  const filter = {};
+  if (req.query.status) filter.status = req.query.status;
+  db.collection('issues').find(filter).toArray()
     .then(issues => {
       const metadata = { total_count: issues.length }
       res.json({ _metadata: metadata, data: issues })
@@ -60,3 +64,7 @@ app.post('/api/issues', (req, res) => {
 })
 
 //FIN de API REST
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve('static/index.html'))
+})

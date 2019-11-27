@@ -1,4 +1,5 @@
 import React from'react'
+import { Link } from 'react-router'
 import 'whatwg-fetch'
 
 const newIssue = {
@@ -79,6 +80,7 @@ export default class IssueList extends React.Component {
           onClick={() => this.crearRegistro()}>
             Crear
         </button>
+        <Link to="/link/123?status=Open">Link</Link> 
       </div>
     )
   }
