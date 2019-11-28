@@ -27691,7 +27691,7 @@
 	      fetch('/api/issues').then(function (res) {
 	        if (res.ok) {
 	          res.json().then(function (data) {
-	            console.log("Get List: ", data.data);
+	            console.log("Get List: ", data);
 	          });
 	        } else {
 	          res.json().then(function (error) {

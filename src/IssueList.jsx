@@ -27,7 +27,7 @@ export default class IssueList extends React.Component {
         if(res.ok) {
           res.json()
           .then(data => {
-            console.log("Get List: ", data.data)
+            console.log("Get List: ", data)
           })
         } else {
           res.json()
