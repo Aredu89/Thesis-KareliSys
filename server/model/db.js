@@ -8,9 +8,8 @@ const gracefulShutdown = (msg, callback) => {
 }
 
 let dbURI = 'mongodb://localhost/issuetracker'
-//URL para la base en el servidor
-// dbURI = 'mongodb://u0haubzbiwyypyf1u8mj:4oEskTsSYoIIVJ2kyvKb@bvoayqrxz5wsvwp-mongodb.services.clever-cloud.com:27017/bvoayqrxz5wsvwp'
-//
+// URL para la base en el servidor
+dbURI = 'mongodb://u0haubzbiwyypyf1u8mj:4oEskTsSYoIIVJ2kyvKb@bvoayqrxz5wsvwp-mongodb.services.clever-cloud.com:27017/bvoayqrxz5wsvwp'
 
 mongoose.connect(dbURI,{ useNewUrlParser: true })
 
