@@ -21,7 +21,7 @@
   "homepage": "https://github.com/Aredu89/Thesis-KareliSys#readme",
   "engines": {
     "node": "~12.13.0",
-    "npm": "~2.2.0"
+    "npm": "~6.12.0"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
