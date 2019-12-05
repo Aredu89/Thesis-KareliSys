@@ -67,7 +67,7 @@ export default class IssueList extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="issue-list">
         <button 
           type="button" 
           className="btn btn-primary"

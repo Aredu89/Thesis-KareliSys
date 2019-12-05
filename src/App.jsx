@@ -1,23 +1,24 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Router, Route, browserHistory } from 'react-router'
+import { Router, Route, browserHistory, Redirect, withRouter } from 'react-router'
 
-import IssueList from './IssueList.jsx'
 import Link from './Link.jsx'
+
+import Header from './Header.jsx'
+import Home from './Home.jsx'
 
 const contentNode = document.getElementById('contents')
 const noMatch = () => <p>Page Not Found</p>
 
 const RoutedApp = () => (
   <Router history={browserHistory} >
-    {/* <Route path="/" component={App} > Componente con Menus y header */}
-      {/* <IndexRoute component={Dashboard} /> Home */}
-      <Route path="/" component={IssueList} />
-      <Route path="/link/:id" component={Link} />
+    <Redirect from="/" to="/home" />
+    <Route path="/" component={Header} >
+      <Route path="home" component={withRouter(Home)} />
+      <Route path="link/:id" component={Link} />
       <Route path="*" component={noMatch} />
-    {/* </Route> */}
+    </Route>
   </Router>
 )
 
-ReactDOM.render(<RoutedApp />, contentNode) // Render the component inside the content Node
-//Para solucionar error, volver React y react-dom a version anterior
+ReactDOM.render(<RoutedApp />, contentNode)
