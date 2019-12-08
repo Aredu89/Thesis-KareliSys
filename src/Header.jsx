@@ -14,7 +14,7 @@ export default class Header extends React.Component {
     return (
       <div className="header">
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-          <Link className="navbar-brand" to="/">Navbar</Link>
+          <Link className="navbar-brand" to="/">KareliSys</Link>
           <button 
             className="navbar-toggler collapsed" 
             type="button" 
@@ -32,19 +32,49 @@ export default class Header extends React.Component {
                 <Link className="nav-link" to="/">Home <span className="sr-only">(current)</span></Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/link/123">Link</Link>
+                <Link className="nav-link" to="/">Usuarios</Link>
+              </li>
+              <li className="nav-item dropdown">
+                <a className="nav-link dropdown-toggle" 
+                  data-toggle="dropdown" 
+                  href="#" role="button" 
+                  aria-haspopup="true" 
+                  aria-expanded="false">Fábricas</a>
+                <div className="dropdown-menu">
+                  <Link className="dropdown-item" to="#">Gestión de Fábricas</Link>
+                  <Link className="dropdown-item" to="#">Gestión de Pagos</Link>
+                </div>
+              </li>
+              <li className="nav-item dropdown">
+                <a className="nav-link dropdown-toggle" 
+                  data-toggle="dropdown" 
+                  href="#" role="button" 
+                  aria-haspopup="true" 
+                  aria-expanded="false">Clientes</a>
+                <div className="dropdown-menu">
+                  <a className="dropdown-item" href="#">Gestión de Clientes</a>
+                  <a className="dropdown-item" href="#">Gestión de Cobros</a>
+                </div>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">Pricing</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">About</a>
+                <Link className="nav-link" to="/">Stock</Link>
               </li>
             </ul>
-            <form className="form-inline my-2 my-lg-0">
-              <input className="form-control mr-sm-2" type="text" placeholder="Search"></input>
-              <button className="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-            </form>
+            <div className="form-inline my-2 my-lg-0">
+              <div className="nav-item dropdown mr-sm-2">
+                <a className="user-name nav-link dropdown-toggle" 
+                  data-toggle="dropdown" 
+                  href="#" role="button" 
+                  aria-haspopup="true" 
+                  aria-expanded="false">Ariel Rosales</a>
+                <div className="dropdown-menu">
+                  <a className="dropdown-item" href="#">Opciones de Usuario</a>
+                  <div className="dropdown-divider"></div>
+                  <a className="logout dropdown-item" href="#">Cerrar Sesión</a>
+                </div>
+              </div>
+              <div className="profile-image"><span>A</span></div>
+            </div>
           </div>
         </nav>
         <div className="content">

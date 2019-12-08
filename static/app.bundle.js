@@ -56,19 +56,15 @@
 	
 	var _reactRouter = __webpack_require__(172);
 	
-	var _IssueList = __webpack_require__(248);
-	
-	var _IssueList2 = _interopRequireDefault(_IssueList);
-	
-	var _Link = __webpack_require__(250);
+	var _Link = __webpack_require__(248);
 	
 	var _Link2 = _interopRequireDefault(_Link);
 	
-	var _Header = __webpack_require__(251);
+	var _Header = __webpack_require__(249);
 	
 	var _Header2 = _interopRequireDefault(_Header);
 	
-	var _Home = __webpack_require__(252);
+	var _Home = __webpack_require__(251);
 	
 	var _Home2 = _interopRequireDefault(_Home);
 	
@@ -27649,6 +27645,56 @@
 /* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Link = function (_React$Component) {
+	  _inherits(Link, _React$Component);
+	
+	  function Link() {
+	    _classCallCheck(this, Link);
+	
+	    return _possibleConstructorReturn(this, (Link.__proto__ || Object.getPrototypeOf(Link)).apply(this, arguments));
+	  }
+	
+	  _createClass(Link, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "link" },
+	        "Link...",
+	        this.props.params.id
+	      );
+	    }
+	  }]);
+	
+	  return Link;
+	}(_react2.default.Component);
+	
+	exports.default = Link;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
@@ -27663,7 +27709,7 @@
 	
 	var _reactRouter = __webpack_require__(172);
 	
-	__webpack_require__(249);
+	__webpack_require__(250);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -27673,112 +27719,196 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var newIssue = {
-	  status: 'Assigned', owner: 'Ariel',
-	  created: new Date('2016-08-16'), effort: 14,
-	  completionDate: new Date('2016-08-30'),
-	  title: 'Third issue'
-	};
+	var Header = function (_React$Component) {
+	  _inherits(Header, _React$Component);
 	
-	var IssueList = function (_React$Component) {
-	  _inherits(IssueList, _React$Component);
+	  function Header() {
+	    _classCallCheck(this, Header);
 	
-	  function IssueList() {
-	    _classCallCheck(this, IssueList);
-	
-	    var _this = _possibleConstructorReturn(this, (IssueList.__proto__ || Object.getPrototypeOf(IssueList)).call(this));
+	    var _this = _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this));
 	
 	    _this.state = {};
 	    return _this;
 	  }
 	
-	  _createClass(IssueList, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      null;
-	    }
-	  }, {
-	    key: 'cargarLista',
-	    value: function cargarLista() {
-	      fetch('/api/issues').then(function (res) {
-	        if (res.ok) {
-	          res.json().then(function (data) {
-	            console.log("Get List: ", data);
-	          });
-	        } else {
-	          res.json().then(function (error) {
-	            console.log("Error en get list");
-	          });
-	        }
-	      }).catch(function (error) {
-	        console.log("Error: ", error);
-	      });
-	    }
-	  }, {
-	    key: 'crearRegistro',
-	    value: function crearRegistro() {
-	      fetch('/api/issues', {
-	        method: 'POST',
-	        headers: { 'Content-Type': 'application/json' },
-	        body: JSON.stringify(newIssue)
-	      }).then(function (res) {
-	        if (res.ok) {
-	          res.json().then(function (data) {
-	            console.log("Create issue: ", data);
-	          });
-	        } else {
-	          res.json().then(function (err) {
-	            console.log("Error al cargar issue: ", err.message);
-	          });
-	        }
-	      }).catch(function (err) {
-	        console.log("Error al crear: ", err.message);
-	      });
-	    }
-	  }, {
+	  _createClass(Header, [{
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this;
-	
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'issue-list' },
+	        { className: 'header' },
 	        _react2.default.createElement(
-	          'button',
-	          {
-	            type: 'button',
-	            className: 'btn btn-primary',
-	            onClick: function onClick() {
-	              return _this2.cargarLista();
-	            } },
-	          'Listar'
+	          'nav',
+	          { className: 'navbar navbar-expand-lg navbar-dark bg-primary' },
+	          _react2.default.createElement(
+	            _reactRouter.Link,
+	            { className: 'navbar-brand', to: '/' },
+	            'KareliSys'
+	          ),
+	          _react2.default.createElement(
+	            'button',
+	            {
+	              className: 'navbar-toggler collapsed',
+	              type: 'button',
+	              'data-toggle': 'collapse',
+	              'data-target': '#navbarColor01',
+	              'aria-controls': 'navbarColor01',
+	              'aria-expanded': 'false',
+	              'aria-label': 'Toggle navigation' },
+	            _react2.default.createElement('span', { className: 'navbar-toggler-icon' })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'navbar-collapse collapse', id: 'navbarColor01' },
+	            _react2.default.createElement(
+	              'ul',
+	              { className: 'navbar-nav mr-auto' },
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'nav-item active' },
+	                _react2.default.createElement(
+	                  _reactRouter.Link,
+	                  { className: 'nav-link', to: '/' },
+	                  'Home ',
+	                  _react2.default.createElement(
+	                    'span',
+	                    { className: 'sr-only' },
+	                    '(current)'
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'nav-item' },
+	                _react2.default.createElement(
+	                  _reactRouter.Link,
+	                  { className: 'nav-link', to: '/' },
+	                  'Usuarios'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'nav-item dropdown' },
+	                _react2.default.createElement(
+	                  'a',
+	                  { className: 'nav-link dropdown-toggle',
+	                    'data-toggle': 'dropdown',
+	                    href: '#', role: 'button',
+	                    'aria-haspopup': 'true',
+	                    'aria-expanded': 'false' },
+	                  'F\xE1bricas'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'dropdown-menu' },
+	                  _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { className: 'dropdown-item', to: '#' },
+	                    'Gesti\xF3n de F\xE1bricas'
+	                  ),
+	                  _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { className: 'dropdown-item', to: '#' },
+	                    'Gesti\xF3n de Pagos'
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'nav-item dropdown' },
+	                _react2.default.createElement(
+	                  'a',
+	                  { className: 'nav-link dropdown-toggle',
+	                    'data-toggle': 'dropdown',
+	                    href: '#', role: 'button',
+	                    'aria-haspopup': 'true',
+	                    'aria-expanded': 'false' },
+	                  'Clientes'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'dropdown-menu' },
+	                  _react2.default.createElement(
+	                    'a',
+	                    { className: 'dropdown-item', href: '#' },
+	                    'Gesti\xF3n de Clientes'
+	                  ),
+	                  _react2.default.createElement(
+	                    'a',
+	                    { className: 'dropdown-item', href: '#' },
+	                    'Gesti\xF3n de Cobros'
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'nav-item' },
+	                _react2.default.createElement(
+	                  _reactRouter.Link,
+	                  { className: 'nav-link', to: '/' },
+	                  'Stock'
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-inline my-2 my-lg-0' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nav-item dropdown mr-sm-2' },
+	                _react2.default.createElement(
+	                  'a',
+	                  { className: 'user-name nav-link dropdown-toggle',
+	                    'data-toggle': 'dropdown',
+	                    href: '#', role: 'button',
+	                    'aria-haspopup': 'true',
+	                    'aria-expanded': 'false' },
+	                  'Ariel Rosales'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'dropdown-menu' },
+	                  _react2.default.createElement(
+	                    'a',
+	                    { className: 'dropdown-item', href: '#' },
+	                    'Opciones de Usuario'
+	                  ),
+	                  _react2.default.createElement('div', { className: 'dropdown-divider' }),
+	                  _react2.default.createElement(
+	                    'a',
+	                    { className: 'logout dropdown-item', href: '#' },
+	                    'Cerrar Sesi\xF3n'
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'profile-image' },
+	                _react2.default.createElement(
+	                  'span',
+	                  null,
+	                  'A'
+	                )
+	              )
+	            )
+	          )
 	        ),
 	        _react2.default.createElement(
-	          'button',
-	          {
-	            type: 'button',
-	            className: 'btn btn-primary',
-	            onClick: function onClick() {
-	              return _this2.crearRegistro();
-	            } },
-	          'Crear'
-	        ),
-	        _react2.default.createElement(
-	          _reactRouter.Link,
-	          { to: '/link/123?status=Open' },
-	          'Link'
+	          'div',
+	          { className: 'content' },
+	          this.props.children
 	        )
 	      );
 	    }
 	  }]);
 	
-	  return IssueList;
+	  return Header;
 	}(_react2.default.Component);
 	
-	exports.default = IssueList;
+	exports.default = Header;
 
 /***/ },
-/* 249 */
+/* 250 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -28217,200 +28347,10 @@
 
 
 /***/ },
-/* 250 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Link = function (_React$Component) {
-	  _inherits(Link, _React$Component);
-	
-	  function Link() {
-	    _classCallCheck(this, Link);
-	
-	    return _possibleConstructorReturn(this, (Link.__proto__ || Object.getPrototypeOf(Link)).apply(this, arguments));
-	  }
-	
-	  _createClass(Link, [{
-	    key: "render",
-	    value: function render() {
-	      return _react2.default.createElement(
-	        "div",
-	        { className: "link" },
-	        "Link...",
-	        this.props.params.id
-	      );
-	    }
-	  }]);
-	
-	  return Link;
-	}(_react2.default.Component);
-	
-	exports.default = Link;
-
-/***/ },
 /* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRouter = __webpack_require__(172);
-	
-	__webpack_require__(249);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Header = function (_React$Component) {
-	  _inherits(Header, _React$Component);
-	
-	  function Header() {
-	    _classCallCheck(this, Header);
-	
-	    var _this = _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this));
-	
-	    _this.state = {};
-	    return _this;
-	  }
-	
-	  _createClass(Header, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'header' },
-	        _react2.default.createElement(
-	          'nav',
-	          { className: 'navbar navbar-expand-lg navbar-dark bg-primary' },
-	          _react2.default.createElement(
-	            _reactRouter.Link,
-	            { className: 'navbar-brand', to: '/' },
-	            'Navbar'
-	          ),
-	          _react2.default.createElement(
-	            'button',
-	            {
-	              className: 'navbar-toggler collapsed',
-	              type: 'button',
-	              'data-toggle': 'collapse',
-	              'data-target': '#navbarColor01',
-	              'aria-controls': 'navbarColor01',
-	              'aria-expanded': 'false',
-	              'aria-label': 'Toggle navigation' },
-	            _react2.default.createElement('span', { className: 'navbar-toggler-icon' })
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'navbar-collapse collapse', id: 'navbarColor01' },
-	            _react2.default.createElement(
-	              'ul',
-	              { className: 'navbar-nav mr-auto' },
-	              _react2.default.createElement(
-	                'li',
-	                { className: 'nav-item active' },
-	                _react2.default.createElement(
-	                  _reactRouter.Link,
-	                  { className: 'nav-link', to: '/' },
-	                  'Home ',
-	                  _react2.default.createElement(
-	                    'span',
-	                    { className: 'sr-only' },
-	                    '(current)'
-	                  )
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'li',
-	                { className: 'nav-item' },
-	                _react2.default.createElement(
-	                  _reactRouter.Link,
-	                  { className: 'nav-link', to: '/link/123' },
-	                  'Link'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'li',
-	                { className: 'nav-item' },
-	                _react2.default.createElement(
-	                  'a',
-	                  { className: 'nav-link', href: '#' },
-	                  'Pricing'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'li',
-	                { className: 'nav-item' },
-	                _react2.default.createElement(
-	                  'a',
-	                  { className: 'nav-link', href: '#' },
-	                  'About'
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'form',
-	              { className: 'form-inline my-2 my-lg-0' },
-	              _react2.default.createElement('input', { className: 'form-control mr-sm-2', type: 'text', placeholder: 'Search' }),
-	              _react2.default.createElement(
-	                'button',
-	                { className: 'btn btn-secondary my-2 my-sm-0', type: 'submit' },
-	                'Search'
-	              )
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'content' },
-	          this.props.children
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return Header;
-	}(_react2.default.Component);
-	
-	exports.default = Header;
-
-/***/ },
-/* 252 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
+	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -28443,12 +28383,123 @@
 	  }
 	
 	  _createClass(Home, [{
-	    key: 'render',
+	    key: "render",
 	    value: function render() {
 	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        'Home'
+	        "div",
+	        { className: "home" },
+	        _react2.default.createElement(
+	          "div",
+	          { className: "row" },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-6 col-12" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "col-12 card border-primary mb-3" },
+	              _react2.default.createElement(
+	                "div",
+	                { className: "card-header" },
+	                "Resultado del mes"
+	              ),
+	              _react2.default.createElement(
+	                "div",
+	                { className: "card-body" },
+	                _react2.default.createElement(
+	                  "h4",
+	                  { className: "card-title" },
+	                  "Ganancias de:"
+	                ),
+	                _react2.default.createElement(
+	                  "p",
+	                  { className: "card-text" },
+	                  "$40.000"
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-6 col-12" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "col-12 card border-primary mb-3" },
+	              _react2.default.createElement(
+	                "div",
+	                { className: "card-header" },
+	                "Movimientos de stock del mes"
+	              ),
+	              _react2.default.createElement(
+	                "div",
+	                { className: "card-body" },
+	                _react2.default.createElement(
+	                  "p",
+	                  { className: "card-text" },
+	                  "Productos que ingresaron: 200"
+	                ),
+	                _react2.default.createElement(
+	                  "p",
+	                  { className: "card-text" },
+	                  "Productos que egresaron: 160"
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-6 col-12" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "col-12 card border-success mb-3" },
+	              _react2.default.createElement(
+	                "div",
+	                { className: "card-header" },
+	                "Ingresos del mes"
+	              ),
+	              _react2.default.createElement(
+	                "div",
+	                { className: "card-body" },
+	                _react2.default.createElement(
+	                  "h4",
+	                  { className: "card-title" },
+	                  "Total Cobrado:"
+	                ),
+	                _react2.default.createElement(
+	                  "p",
+	                  { className: "card-text" },
+	                  "$140.000"
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-6 col-12" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "col-12 card border-danger mb-3" },
+	              _react2.default.createElement(
+	                "div",
+	                { className: "card-header" },
+	                "Egresos del mes"
+	              ),
+	              _react2.default.createElement(
+	                "div",
+	                { className: "card-body" },
+	                _react2.default.createElement(
+	                  "h4",
+	                  { className: "card-title" },
+	                  "Total Pagado:"
+	                ),
+	                _react2.default.createElement(
+	                  "p",
+	                  { className: "card-text" },
+	                  "$100.000"
+	                )
+	              )
+	            )
+	          )
+	        )
 	      );
 	    }
 	  }]);
