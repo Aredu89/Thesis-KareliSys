@@ -8,7 +8,7 @@ const app = express()
 
 app.use(express.static('static'))
 app.use(bodyParser.json())
-app.use('/api', apiRouter)
+// app.use('/api', apiRouter)
 
 app.get('*', (req, res) => {
   res.sendFile(path.resolve('static/index.html'))
