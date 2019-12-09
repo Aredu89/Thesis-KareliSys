@@ -31,9 +31,6 @@ export default class Header extends React.Component {
               <li className="nav-item active">
                 <Link className="nav-link" to="/">Home <span className="sr-only">(current)</span></Link>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/">Usuarios</Link>
-              </li>
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" 
                   data-toggle="dropdown" 
@@ -41,7 +38,7 @@ export default class Header extends React.Component {
                   aria-haspopup="true" 
                   aria-expanded="false">Fábricas</a>
                 <div className="dropdown-menu">
-                  <Link className="dropdown-item" to="#">Gestión de Fábricas</Link>
+                  <Link className="dropdown-item" to="/fabricas">Gestión de Fábricas</Link>
                   <Link className="dropdown-item" to="#">Gestión de Pagos</Link>
                 </div>
               </li>
@@ -58,6 +55,9 @@ export default class Header extends React.Component {
               </li>
               <li className="nav-item">
                 <Link className="nav-link" to="/">Stock</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/">Usuarios</Link>
               </li>
             </ul>
             <div className="form-inline my-2 my-lg-0">
