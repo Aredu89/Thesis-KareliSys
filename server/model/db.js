@@ -55,4 +55,4 @@ mongoose.connection.on('disconnected', () => {
     console.log('Mongoose disconnected')
 })
 
-require('./issue')
+require('./fabricas.js')

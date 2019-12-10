@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
-const issues = require('../controllers/issues')
+const fabricas = require('../controllers/fabricas.js')
 
 //issues
-router.get('/issues', issues.issueList)
-router.post('/issues', issues.issueCreate)
+router.get('/fabricas', fabricas.listaFabricas)
+router.post('/fabricas', fabricas.crearFabrica)
 
 module.exports = router
