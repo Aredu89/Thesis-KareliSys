@@ -1,0 +1,17 @@
+Crear la base de datos
+---------------------------------------
+use karelisys
+
+Limpiar colecciones
+---------------------------------------
+db.fabricas.drop()
+
+Insertar Fabricas
+---------------------------------------
+db.fabricas.insert({nombre:"Fabrica Leon",direccion:"Ciudad de Leon, Guanajuato",telefono:6543216464,contactos:[{nombre:"Juan Alberto",apellido:"Hernandez",email:"pepito@hotmail.com",telefono:987654321},{nombre:"Enzo",apellido:"Fernandez",email:"enzito@hotmail.com",telefono:123987654}],pedidos:[]})
+
+
+db.createUser({user:"myUserAdmin",pwd:passwordPrompt(),roles:[{role:"userAdminAnyDatabase",db:"admin"},"readWriteAnyDatabase"]})
+
+myUserAdmin
+123456

@@ -28463,6 +28463,157 @@
 /* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _TablaFlexible = __webpack_require__(252);
+	
+	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var FabricasLista = function (_React$Component) {
+	  _inherits(FabricasLista, _React$Component);
+	
+	  function FabricasLista() {
+	    _classCallCheck(this, FabricasLista);
+	
+	    var _this = _possibleConstructorReturn(this, (FabricasLista.__proto__ || Object.getPrototypeOf(FabricasLista)).call(this));
+	
+	    _this.state = {
+	      fabricas: [],
+	      cargando: true,
+	      error: ""
+	    };
+	    _this.cargarLista = _this.cargarLista.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(FabricasLista, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.cargarLista();
+	    }
+	
+	    //Obtener lista de fábricas
+	
+	  }, {
+	    key: 'cargarLista',
+	    value: function cargarLista() {
+	      var _this2 = this;
+	
+	      fetch('/api/fabricas').then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            console.log("Get List: ", data);
+	            _this2.setState({
+	              cargando: false,
+	              fabricas: data,
+	              error: ""
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener la lista. ", error.message);
+	            _this2.setState({
+	              cargando: false,
+	              error: error.message
+	            });
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.log("Error: ", error.message);
+	        _this2.setState({
+	          cargando: false,
+	          error: error.message
+	        });
+	      });
+	    }
+	
+	    //Crear una nueva fábrica
+	
+	  }, {
+	    key: 'crearRegistro',
+	    value: function crearRegistro(nuevaFabrica) {
+	      fetch('/api/fabricas', {
+	        method: 'POST',
+	        headers: { 'Content-Type': 'application/json' },
+	        body: JSON.stringify(nuevaFabrica)
+	      }).then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            console.log("Fabrica creada: ", data);
+	          });
+	        } else {
+	          res.json().then(function (err) {
+	            console.log("Error al crear fabrica: ", err.message);
+	          });
+	        }
+	      }).catch(function (err) {
+	        console.log("Error al crear: ", err.message);
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'fabricas-lista' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 d-flex justify-content-between' },
+	            _react2.default.createElement(
+	              'h3',
+	              null,
+	              'Fabricas'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { type: 'button', className: 'btn btn-success' },
+	              '+ Agregar Fabrica'
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12' },
+	            _react2.default.createElement(_TablaFlexible2.default, null)
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return FabricasLista;
+	}(_react2.default.Component);
+	
+	exports.default = FabricasLista;
+
+/***/ },
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
@@ -28483,33 +28634,30 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FabricasLista = function (_React$Component) {
-	  _inherits(FabricasLista, _React$Component);
+	var TablaFlexible = function (_React$Component) {
+	  _inherits(TablaFlexible, _React$Component);
 	
-	  function FabricasLista() {
-	    _classCallCheck(this, FabricasLista);
+	  function TablaFlexible() {
+	    _classCallCheck(this, TablaFlexible);
 	
-	    var _this = _possibleConstructorReturn(this, (FabricasLista.__proto__ || Object.getPrototypeOf(FabricasLista)).call(this));
-	
-	    _this.state = {};
-	    return _this;
+	    return _possibleConstructorReturn(this, (TablaFlexible.__proto__ || Object.getPrototypeOf(TablaFlexible)).apply(this, arguments));
 	  }
 	
-	  _createClass(FabricasLista, [{
+	  _createClass(TablaFlexible, [{
 	    key: "render",
 	    value: function render() {
 	      return _react2.default.createElement(
 	        "div",
-	        { className: "fabricas-lista" },
-	        "Fabricas-lista"
+	        { className: "tabla-flexible" },
+	        "Tabla"
 	      );
 	    }
 	  }]);
 	
-	  return FabricasLista;
+	  return TablaFlexible;
 	}(_react2.default.Component);
 	
-	exports.default = FabricasLista;
+	exports.default = TablaFlexible;
 
 /***/ }
 /******/ ]);

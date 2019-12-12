@@ -9,7 +9,7 @@ module.exports.listaFabricas = (req, res) => {
   Fabricas
     .find(filter)
     .exec((err, results, status) => {
-      if(!results){
+      if(!results || results.length < 1){
         res.status(404).json({ message: "No se encontraron fabricas"})
       } else if (err) {
         res.status(404).json(err)
