@@ -23,6 +23,7 @@ const pedidos = new mongoose.Schema({
 const fabricas = new mongoose.Schema({
   nombre: {type: String, required: true},
   direccion: String,
+  ciudad: String,
   telefono: Number,
   contactos: [contactos],
   pedidos: [pedidos],

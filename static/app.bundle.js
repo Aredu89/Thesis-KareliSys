@@ -28571,6 +28571,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var columns = [["Nombre", "nombre", "String"], ["Ciudad", "ciudad", "String"], ["Dirección", "direccion", "String"]];
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fabricas-lista' },
@@ -28597,8 +28598,41 @@
 	          { className: 'row' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'col-12' },
-	            _react2.default.createElement(_TablaFlexible2.default, null)
+	            { className: 'col-12 contenedor-tabla text-center' },
+	            !this.state.cargando ?
+	            // Tabla
+	            _react2.default.createElement(_TablaFlexible2.default, {
+	              columns: columns,
+	              data: this.state.fabricas,
+	              botones: ["ver", "editar", "eliminar"]
+	            }) : this.state.error ?
+	            //Mensaje de error
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'alert alert-dismissible alert-danger' },
+	              _react2.default.createElement(
+	                'button',
+	                { type: 'button', className: 'close', 'data-dismiss': 'alert' },
+	                '\xD7'
+	              ),
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Error!'
+	              ),
+	              ' ',
+	              this.state.error
+	            ) :
+	            // Spinner
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'spinner-border text-light', role: 'status' },
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'sr-only' },
+	                'Loading...'
+	              )
+	            )
 	          )
 	        )
 	      );
@@ -28645,6 +28679,12 @@
 	
 	  _createClass(TablaFlexible, [{
 	    key: "render",
+	
+	    // Props:
+	    // columns: Array de arrays con la siguiente estructura
+	    // [ ["Titulo de la columna","clave del objeto data","tipo"] ] el tipo puede ser: "String, Numero, Precio, Fecha"
+	    // data: Array de objetos con los datos para completar la tabla
+	    // botones: Array. ej: ["ver","editar","eliminar"]
 	    value: function render() {
 	      return _react2.default.createElement(
 	        "div",

@@ -76,6 +76,11 @@ export default class FabricasLista extends React.Component {
   }
 
   render() {
+    const columns = [
+      ["Nombre","nombre","String"],
+      ["Ciudad","ciudad","String"],
+      ["Dirección","direccion","String"]
+    ]
     return (
       <div className="fabricas-lista">
         <div className="row">
@@ -87,10 +92,28 @@ export default class FabricasLista extends React.Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-12">
-            {/* Tabla */}
-            <TablaFlexible
-            />
+          <div className="col-12 contenedor-tabla text-center">
+            {
+              !this.state.cargando ?
+                // Tabla
+                <TablaFlexible
+                  columns={columns}
+                  data={this.state.fabricas}
+                  botones={["ver","editar","eliminar"]}
+                />
+              :
+                this.state.error ?
+                  //Mensaje de error
+                  <div className="alert alert-dismissible alert-danger">
+                    <button type="button" className="close" data-dismiss="alert">&times;</button>
+                    <strong>Error!</strong> {this.state.error}
+                  </div>
+                :
+                  // Spinner
+                  <div className="spinner-border text-light" role="status">
+                    <span className="sr-only">Loading...</span>
+                  </div>
+            }
           </div>
         </div>
       </div>

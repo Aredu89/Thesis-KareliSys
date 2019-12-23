@@ -8,7 +8,8 @@ db.fabricas.remove({})
 db.fabricas.insert(
   {
     nombre:"Fabrica Leon",
-    direccion:"Ciudad de Leon, Guanajuato",
+    direccion:"",
+    ciudad:"León, Guanajuato",
     telefono:6543216464,
     contactos:[
       {

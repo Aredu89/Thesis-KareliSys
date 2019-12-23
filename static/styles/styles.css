@@ -31,3 +31,7 @@
   padding: 0px;
   margin-top:15px;
 }
+/* Estilos para la lista de Fabricas */
+.fabricas-lista .contenedor-tabla{
+  padding-top: 15px;
+}
