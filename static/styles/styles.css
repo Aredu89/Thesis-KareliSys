@@ -36,6 +36,22 @@
   padding-top: 15px;
 }
 /* Estilos para tabla */
-.tabla-flexible .table .table-primary:hover{
-  
+.tabla-flexible .table td{
+  vertical-align: middle;
+}
+.tabla-flexible .table thead th {
+  border-bottom: none;
+  height: 50px;
+  vertical-align: middle;
+}
+.tabla-flexible .table-secondary td {
+  border: none;
+}
+.tabla-flexible .btn-outline-primary {
+  height: 38px;
+  width: 48px;
+}
+.tabla-flexible .btn-outline-danger{
+  height: 38px;
+  width: 48px;
 }

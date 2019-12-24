@@ -88,7 +88,9 @@ export default class FabricasLista extends React.Component {
             {/* Titulo */}
             <h3>Fabricas</h3>
             {/* Boton para crear nuevo */}
-            <button type="button" className="btn btn-success">+ Agregar Fabrica</button>
+            <button type="button" 
+              className="btn btn-success"
+              >+ Agregar Fabrica</button>
           </div>
         </div>
         <div className="row">

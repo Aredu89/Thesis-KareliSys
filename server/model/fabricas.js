@@ -8,16 +8,23 @@ const contactos = new mongoose.Schema({
 })
 
 const productosRef = new mongoose.Schema({
-  idProducto: {type: mongoose.Schema.Types.ObjectId, ref: 'productos'},
+  idProducto: Number,//{type: mongoose.Schema.Types.ObjectId, ref: 'productos'},
+  nombre: String,
   cantidad: Number
+})
+
+const pagos = new mongoose.Schema({
+  fecha: {type: Date, default: Date.now},
+  monto: Number
 })
 
 const pedidos = new mongoose.Schema({
   numero: Number,
+  fecha: {type: Date, default: Date.now},
   detalle: [productosRef],
   precioTotal: Number,
   estado: {type: String, enum:["a pagar","pagado"], default: "a pagar"},
-  pagado: Number
+  pagos: [pagos]
 })
 
 const fabricas = new mongoose.Schema({
