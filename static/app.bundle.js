@@ -28686,10 +28686,71 @@
 	    // data: Array de objetos con los datos para completar la tabla
 	    // botones: Array. ej: ["ver","editar","eliminar"]
 	    value: function render() {
+	      var _this2 = this;
+	
 	      return _react2.default.createElement(
 	        "div",
 	        { className: "tabla-flexible" },
-	        "Tabla"
+	        _react2.default.createElement(
+	          "table",
+	          { className: "table table-hover" },
+	          _react2.default.createElement(
+	            "thead",
+	            null,
+	            _react2.default.createElement(
+	              "tr",
+	              { className: "table-primary" },
+	              this.props.columns.map(function (col, i) {
+	                return _react2.default.createElement(
+	                  "th",
+	                  { scope: "col", key: i },
+	                  col[0]
+	                );
+	              }),
+	              _react2.default.createElement(
+	                "th",
+	                { scope: "col", className: "d-flex justify-content-end" },
+	                "Acciones"
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "tbody",
+	            null,
+	            this.props.data.map(function (data, i) {
+	              return _react2.default.createElement(
+	                "tr",
+	                { className: i % 2 == 0 ? "" : "table-secondary", key: i },
+	                _this2.props.columns.map(function (col, i) {
+	                  return _react2.default.createElement(
+	                    "td",
+	                    { key: i },
+	                    data[col[1]]
+	                  );
+	                }),
+	                _react2.default.createElement(
+	                  "td",
+	                  { className: "d-flex justify-content-end" },
+	                  _react2.default.createElement(
+	                    "button",
+	                    { type: "button", className: "btn btn-outline-secondary" },
+	                    "Ver"
+	                  ),
+	                  _react2.default.createElement(
+	                    "button",
+	                    { type: "button", className: "btn btn-outline-secondary" },
+	                    "Editar"
+	                  ),
+	                  _react2.default.createElement(
+	                    "button",
+	                    { type: "button", className: "btn btn-outline-danger" },
+	                    "Eliminar"
+	                  )
+	                )
+	              );
+	            })
+	          )
+	        )
 	      );
 	    }
 	  }]);

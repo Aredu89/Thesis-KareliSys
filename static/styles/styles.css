@@ -35,3 +35,7 @@
 .fabricas-lista .contenedor-tabla{
   padding-top: 15px;
 }
+/* Estilos para tabla */
+.tabla-flexible .table .table-primary:hover{
+  
+}
