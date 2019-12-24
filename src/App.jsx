@@ -16,6 +16,7 @@ const RoutedApp = () => (
     <Route path="/" component={Header} >
       <Route path="home" component={withRouter(Home)} />
       <Route path="fabricas" component={FabricasLista} />
+      <Route path="fabricas/editar" component={FabricasEditar} />
       <Route path="fabricas/editar/:id" component={FabricasEditar} />
       <Route path="*" component={noMatch} />
     </Route>

@@ -93,6 +93,7 @@
 	      { path: '/', component: _Header2.default },
 	      _react2.default.createElement(_reactRouter.Route, { path: 'home', component: (0, _reactRouter.withRouter)(_Home2.default) }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas', component: _FabricasLista2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas/editar', component: _FabricasEditar2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas/editar/:id', component: _FabricasEditar2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '*', component: noMatch })
 	    )
@@ -28506,6 +28507,7 @@
 	      error: ""
 	    };
 	    _this.cargarLista = _this.cargarLista.bind(_this);
+	    _this.handleEditar = _this.handleEditar.bind(_this);
 	    return _this;
 	  }
 	
@@ -28574,8 +28576,20 @@
 	      });
 	    }
 	  }, {
+	    key: 'onClickAgregar',
+	    value: function onClickAgregar() {
+	      this.props.history.push("/fabricas/editar/");
+	    }
+	  }, {
+	    key: 'handleEditar',
+	    value: function handleEditar(id) {
+	      this.props.history.push('/fabricas/editar/' + id);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this3 = this;
+	
 	      var columns = [["Nombre", "nombre", "String"], ["Ciudad", "ciudad", "String"], ["Dirección", "direccion", "String"]];
 	      return _react2.default.createElement(
 	        'div',
@@ -28594,7 +28608,10 @@
 	            _react2.default.createElement(
 	              'button',
 	              { type: 'button',
-	                className: 'btn btn-success'
+	                className: 'btn btn-success',
+	                onClick: function onClick() {
+	                  return _this3.onClickAgregar();
+	                }
 	              },
 	              '+ Agregar Fabrica'
 	            )
@@ -28611,7 +28628,8 @@
 	            _react2.default.createElement(_TablaFlexible2.default, {
 	              columns: columns,
 	              data: this.state.fabricas,
-	              botones: ["ver", "editar", "eliminar"]
+	              botones: ["ver", "editar", "eliminar"],
+	              handleEditar: this.handleEditar
 	            }) : this.state.error ?
 	            //Mensaje de error
 	            _react2.default.createElement(
@@ -39413,9 +39431,76 @@
 
 /***/ },
 /* 254 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var FabricasEditar = function (_React$Component) {
+	  _inherits(FabricasEditar, _React$Component);
+	
+	  function FabricasEditar() {
+	    _classCallCheck(this, FabricasEditar);
+	
+	    var _this = _possibleConstructorReturn(this, (FabricasEditar.__proto__ || Object.getPrototypeOf(FabricasEditar)).call(this));
+	
+	    _this.state = {
+	      fabrica: {},
+	      nuevo: true,
+	      error: ""
+	    };
+	    return _this;
+	  }
+	
+	  _createClass(FabricasEditar, [{
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      if (this.props.params.id) {
+	        this.obtenerFabrica();
+	      }
+	    }
+	  }, {
+	    key: "obtenerFabrica",
+	    value: function obtenerFabrica() {
+	      null;
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      var nuevo = this.props.params.id ? true : false;
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "fabricas-editar" },
+	        _react2.default.createElement(
+	          "div",
+	          { className: "row" },
+	          _react2.default.createElement("div", { className: "col-12 d-flex justify-content-between" })
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return FabricasEditar;
+	}(_react2.default.Component);
+	
+	exports.default = FabricasEditar;
 
 /***/ }
 /******/ ]);

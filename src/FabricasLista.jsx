@@ -10,6 +10,7 @@ export default class FabricasLista extends React.Component {
       error: ""
     }
     this.cargarLista = this.cargarLista.bind(this)
+    this.handleEditar = this.handleEditar.bind(this)
   }
 
   componentDidMount(){
@@ -75,6 +76,14 @@ export default class FabricasLista extends React.Component {
       })
   }
 
+  onClickAgregar() {
+    this.props.history.push("/fabricas/editar/")
+  }
+
+  handleEditar(id){
+    this.props.history.push(`/fabricas/editar/${id}`)
+  }
+
   render() {
     const columns = [
       ["Nombre","nombre","String"],
@@ -90,6 +99,7 @@ export default class FabricasLista extends React.Component {
             {/* Boton para crear nuevo */}
             <button type="button" 
               className="btn btn-success"
+              onClick={() => this.onClickAgregar()}
               >+ Agregar Fabrica</button>
           </div>
         </div>
@@ -102,6 +112,7 @@ export default class FabricasLista extends React.Component {
                   columns={columns}
                   data={this.state.fabricas}
                   botones={["ver","editar","eliminar"]}
+                  handleEditar={this.handleEditar}
                 />
               :
                 this.state.error ?
