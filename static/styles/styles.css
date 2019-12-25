@@ -55,3 +55,7 @@
   height: 38px;
   width: 48px;
 }
+/* Estilos para formulario de fabricas */
+.fabricas-editar .contenedor-formulario{
+  padding-top: 15px;
+}

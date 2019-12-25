@@ -1,5 +1,6 @@
 import React from 'react'
 import TablaFlexible from './TablaFlexible.jsx'
+import Swal from 'sweetalert2'
 
 export default class FabricasLista extends React.Component {
   constructor() {
@@ -11,6 +12,8 @@ export default class FabricasLista extends React.Component {
     }
     this.cargarLista = this.cargarLista.bind(this)
     this.handleEditar = this.handleEditar.bind(this)
+    this.handleEliminar = this.handleEliminar.bind(this)
+    this.actualizarLista = this.actualizarLista.bind(this)
   }
 
   componentDidMount(){
@@ -51,37 +54,57 @@ export default class FabricasLista extends React.Component {
       })
   }
 
-  //Crear una nueva fábrica
-  crearRegistro(nuevaFabrica) {
-    fetch('/api/fabricas', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(nuevaFabrica),
-    })
-      .then(res => {
-        if(res.ok) {
-          res.json()
-            .then(data => {
-              console.log("Fabrica creada: ",data)
-            })
-        } else {
-          res.json()
-          .then(err => {
-            console.log("Error al crear fabrica: ",err.message)
-          })
-        }
-      })
-      .catch(err => {
-        console.log("Error al crear: ",err.message)
-      })
-  }
-
   onClickAgregar() {
     this.props.history.push("/fabricas/editar/")
   }
 
   handleEditar(id){
     this.props.history.push(`/fabricas/editar/${id}`)
+  }
+
+  handleEliminar(id){
+    fetch(`/api/fabricas/${id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(res => {
+        if(res.ok){
+            Swal.fire(
+              "Fabrica Eliminada",
+              "",
+              "success"
+            ).then(()=>{
+              this.actualizarLista(id)
+            })
+        } else {
+            Swal.fire(
+              "Error al eliminar",
+              "",
+              "error"
+            )
+        }
+      })
+      .catch(err=> {
+        Swal.fire(
+          "Error del servidor",
+          err.message,
+          "error"
+        )
+      })
+  }
+
+  actualizarLista(id){
+    let auxFabricas = this.state.fabricas
+    // Quito la fabricas eliminada de la lista del state
+    auxFabricas.forEach((fabrica,i)=>{
+      if(id === fabrica._id){
+        auxFabricas.splice(i,1)
+        this.setState({
+          fabricas: auxFabricas
+        })
+        return
+      }
+    })
   }
 
   render() {
@@ -111,8 +134,8 @@ export default class FabricasLista extends React.Component {
                 <TablaFlexible
                   columns={columns}
                   data={this.state.fabricas}
-                  botones={["ver","editar","eliminar"]}
                   handleEditar={this.handleEditar}
+                  handleEliminar={this.handleEliminar}
                 />
               :
                 this.state.error ?
