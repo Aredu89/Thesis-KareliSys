@@ -65,7 +65,8 @@ module.exports.modificarFabrica = (req,res) => {
   const auxFabrica = req.body
   Fabricas
     .findById(req.params.id)
-    exec(
+    .select('-creada')
+    .exec(
       (err,fabrica) => {
         if (!fabrica) {
           res.status(404).json({ message: "No se encontró el id de la fábrica"})
@@ -75,7 +76,12 @@ module.exports.modificarFabrica = (req,res) => {
           return
         }
         //Si no hay error, reemplazo con los datos del body
-        fabrica = auxFabrica
+        fabrica.nombre = auxFabrica.nombre
+        fabrica.direccion = auxFabrica.direccion
+        fabrica.ciudad = auxFabrica.ciudad
+        fabrica.telefono = auxFabrica.telefono
+        fabrica.contactos = auxFabrica.contactos
+        fabrica.pedidos = auxFabrica.pedidos
         fabrica.save((err, fabrica) => {
           if (err) {
             res.status(404).json(err)

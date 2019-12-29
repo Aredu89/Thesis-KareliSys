@@ -128,6 +128,48 @@ export default class FabricasEditar extends React.Component {
       })
   }
 
+  //Función para modificar una fábrica
+  modificarFabrica(nuevaFabrica, id){
+    fetch(`/api/fabricas/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(nuevaFabrica),
+    })
+      .then(res => {
+        if(res.ok) {
+          res.json()
+            .then(data => {
+              console.log("Fabrica modificada: ",data)
+              Swal.fire(
+                "Fabrica modificada!",
+                "",
+                "success"
+              ).then(()=>{
+                this.props.history.push("/fabricas")
+              })
+            })
+        } else {
+          res.json()
+          .then(err => {
+            console.log("Error al modificar fabrica: ",err.message)
+            Swal.fire(
+              "Error al modificar la fábrica",
+              "",
+              "error"
+            )
+          })
+        }
+      })
+      .catch(err => {
+        console.log("Error al modificar: ",err.message)
+        Swal.fire(
+          "Error del servidor",
+          "",
+          "error"
+        )
+      })
+  }
+
   onClickGuardar(){
     if(this.state.nombre){
       if(this.state.nuevo){
@@ -141,6 +183,17 @@ export default class FabricasEditar extends React.Component {
           pedidos: this.state.pedidos,
           creada: this.state.creada
         })
+      } else {
+        //Modifico un registro
+        this.modificarFabrica({
+          nombre: this.state.nombre,
+          direccion: this.state.direccion,
+          ciudad: this.state.ciudad,
+          telefono: this.state.telefono,
+          contactos: this.state.contactos,
+          pedidos: this.state.pedidos,
+          creada: this.state.creada
+        }, this.state._id)
       }
     } else {
       this.setState({
@@ -220,6 +273,14 @@ export default class FabricasEditar extends React.Component {
                 placeholder="Teléfono..."
                 value={this.state.telefono}
                 onChange={this.handleOnChange} />
+            </div>
+            {/* Contactos */}
+            <div className="col-12 d-flex justify-content-between">
+              <h5>Contactos</h5>
+              <button type="button" 
+                className="btn btn-outline-success"
+                // onClick={() => this.agregarContacto()}
+                >+ Agregar Contacto</button>
             </div>
           </div>
         </div>
