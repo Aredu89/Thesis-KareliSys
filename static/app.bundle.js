@@ -42474,6 +42474,10 @@
 	
 	var _sweetalert2 = _interopRequireDefault(_sweetalert);
 	
+	var _TablaFlexible = __webpack_require__(252);
+	
+	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -42482,9 +42486,8 @@
 	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //https://github.com/sweetalert2/sweetalert2
 	
-	//https://github.com/sweetalert2/sweetalert2
 	
 	var FabricasEditar = function (_React$Component) {
 	  _inherits(FabricasEditar, _React$Component);
@@ -42678,6 +42681,7 @@
 	    value: function render() {
 	      var _this5 = this;
 	
+	      var columnsContactos = [["Nombre", "nombre", "String"], ["Apellido", "apellido", "String"], ["Email", "email", "String"], ["Teléfono", "telefono", "String"]];
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fabricas-editar text-center' },
@@ -42786,19 +42790,59 @@
 	            ),
 	            _react2.default.createElement(
 	              'div',
-	              { className: 'col-12 d-flex justify-content-between' },
+	              { className: 'col-12 mt-2' },
 	              _react2.default.createElement(
-	                'h5',
-	                null,
-	                'Contactos'
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                { type: 'button',
-	                  className: 'btn btn-outline-success'
-	                  // onClick={() => this.agregarContacto()}
-	                },
-	                '+ Agregar Contacto'
+	                'div',
+	                { className: 'card border-primary', id: 'card' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'card-header d-flex justify-content-between', id: 'headingOne' },
+	                  _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-link collapsed col-sm-8 col-6',
+	                      'data-toggle': 'collapse',
+	                      'data-target': '#collapseOne',
+	                      'aria-expanded': 'false',
+	                      'aria-controls': 'collapseOne' },
+	                    _react2.default.createElement(
+	                      'h5',
+	                      { className: 'd-flex align-items-center' },
+	                      'Contactos: ',
+	                      this.state.contactos.length,
+	                      _react2.default.createElement(
+	                        'i',
+	                        { className: 'material-icons ml-3' },
+	                        'keyboard_arrow_down'
+	                      )
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-outline-success'
+	                      // onClick={() => this.agregarContacto()}
+	                    },
+	                    '+ Agregar Contacto'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { id: 'collapseOne',
+	                    className: 'collapse',
+	                    'aria-labelledby': 'headingOne',
+	                    'data-parent': '#card' },
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'card-body contenedor-tabla' },
+	                    _react2.default.createElement(_TablaFlexible2.default, {
+	                      columns: columnsContactos,
+	                      data: this.state.contactos
+	                      // handleEditar={this.handleEditar}
+	                      // handleEliminar={this.handleEliminar}
+	                    })
+	                  )
+	                )
 	              )
 	            )
 	          )

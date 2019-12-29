@@ -1,5 +1,6 @@
 import React from 'react'
 import Swal from 'sweetalert2' //https://github.com/sweetalert2/sweetalert2
+import TablaFlexible from './TablaFlexible.jsx'
 
 export default class FabricasEditar extends React.Component {
   constructor() {
@@ -203,6 +204,12 @@ export default class FabricasEditar extends React.Component {
   }
 
   render() {
+    const columnsContactos = [
+      ["Nombre","nombre","String"],
+      ["Apellido","apellido","String"],
+      ["Email","email","String"],
+      ["Teléfono","telefono","String"]
+    ]
     return (
       <div className="fabricas-editar text-center">
         {!this.state.cargando ?
@@ -275,12 +282,39 @@ export default class FabricasEditar extends React.Component {
                 onChange={this.handleOnChange} />
             </div>
             {/* Contactos */}
-            <div className="col-12 d-flex justify-content-between">
-              <h5>Contactos</h5>
-              <button type="button" 
-                className="btn btn-outline-success"
-                // onClick={() => this.agregarContacto()}
-                >+ Agregar Contacto</button>
+            <div className="col-12 mt-2">
+              <div className="card border-primary" id="card">
+                <div className="card-header d-flex justify-content-between" id="headingOne">
+                  <button type="button"
+                    className="btn btn-link collapsed col-sm-8 col-6"
+                    data-toggle="collapse"
+                    data-target="#collapseOne"
+                    aria-expanded="false" 
+                    aria-controls="collapseOne">
+                      <h5 className="d-flex align-items-center">
+                        Contactos: {this.state.contactos.length}
+                        <i className="material-icons ml-3">keyboard_arrow_down</i>
+                      </h5>
+                    </button>
+                  <button type="button" 
+                    className="btn btn-outline-success"
+                    // onClick={() => this.agregarContacto()}
+                    >+ Agregar Contacto</button>
+                </div>
+                <div id="collapseOne" 
+                  className="collapse" 
+                  aria-labelledby="headingOne" 
+                  data-parent="#card">
+                  <div className="card-body contenedor-tabla">
+                    <TablaFlexible
+                      columns={columnsContactos}
+                      data={this.state.contactos}
+                      // handleEditar={this.handleEditar}
+                      // handleEliminar={this.handleEliminar}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
