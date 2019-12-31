@@ -78,3 +78,45 @@
   transform: rotate(180deg);
   transition-duration: 0.25s;
 }
+/* Modal */
+.modal-custom{
+  padding: 0px;
+  width: 400px;
+}
+@media (max-width: 450px){
+  .modal-custom{
+    padding: 0px;
+    width: 300px;
+  }
+}
+@media (max-width: 350px){
+  .modal-custom{
+    padding: 0px;
+    width: 200px;
+  }
+}
+/* Editar Contactos Modal */
+.contactos-editar .header{
+  height: 65px;
+  background-color: #DF691A;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.contactos-editar .modal-cerrar{
+  color: #fff;
+  background-color: #DF691A;
+  border: none;
+}
+.contactos-editar .formulario{
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 15px;
+  font-size: 15px;
+  background-color: #2B3E50;
+  border-left: solid 1px #DF691A;
+  border-right: solid 1px #DF691A;
+  border-bottom: solid 1px #DF691A;
+}

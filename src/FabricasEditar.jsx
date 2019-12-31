@@ -1,6 +1,8 @@
 import React from 'react'
 import Swal from 'sweetalert2' //https://github.com/sweetalert2/sweetalert2
 import TablaFlexible from './TablaFlexible.jsx'
+import Modal from 'react-responsive-modal'
+import ContactosEditar from './ContactosEditar.jsx'
 
 export default class FabricasEditar extends React.Component {
   constructor() {
@@ -18,10 +20,14 @@ export default class FabricasEditar extends React.Component {
       contactos: [],
       pedidos: [],
       creada: new Date(),
-      errorNombre: false
+      errorNombre: false,
+      modalContactos: false,
+      contactoEditar: null
     }
     this.handleOnChange = this.handleOnChange.bind(this)
     this.obtenerFabrica = this.obtenerFabrica.bind(this)
+    this.onOpenModal = this.onOpenModal.bind(this)
+    this.onCloseModal = this.onCloseModal.bind(this)
   }
 
   componentDidMount(){
@@ -203,6 +209,18 @@ export default class FabricasEditar extends React.Component {
     }
   }
 
+  //Modal
+  onOpenModal(cual){
+    this.setState({
+      [cual]: true
+    })
+  }
+  onCloseModal(cual){
+    this.setState({
+      [cual]: false
+    })
+  }
+
   render() {
     const columnsContactos = [
       ["Nombre","nombre","String"],
@@ -291,14 +309,14 @@ export default class FabricasEditar extends React.Component {
                     data-target="#collapseOne"
                     aria-expanded="false" 
                     aria-controls="collapseOne">
-                      <h5 className="d-flex align-items-center">
+                      <h5 className="d-flex align-items-center mb-0">
                         Contactos: {this.state.contactos.length}
                         <i className="material-icons ml-3">keyboard_arrow_down</i>
                       </h5>
                     </button>
                   <button type="button" 
                     className="btn btn-outline-success"
-                    // onClick={() => this.agregarContacto()}
+                    onClick={() => this.onOpenModal("modalContactos")}
                     >+ Agregar Contacto</button>
                 </div>
                 <div id="collapseOne" 
@@ -317,6 +335,21 @@ export default class FabricasEditar extends React.Component {
               </div>
             </div>
           </div>
+          {/* Modal */}
+          <Modal
+            classNames={{modal: ['modal-custom'], closeButton: ['modal-custom-button']}}
+            onClose={()=>this.onCloseModal("modalContactos")}
+            showCloseIcon={false}
+            open={this.state.modalContactos}
+            center
+            >
+              <ContactosEditar
+                data={this.state.contactoEditar}
+                onSave={(obj)=>console.log("onSave: ",obj)}
+                onClose={()=>this.onCloseModal("modalContactos")}
+                titulo={this.state.contactoEditar ? "EDITAR CONTACTO" : "CREAR CONTACTO"}
+              />
+          </Modal>
         </div>
         :
         this.state.error ?
