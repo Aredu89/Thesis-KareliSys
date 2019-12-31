@@ -282,7 +282,7 @@ export default class FabricasEditar extends React.Component {
                 onChange={this.handleOnChange} />
             </div>
             {/* Contactos */}
-            <div className="col-12 mt-2">
+            <div className="col-12 mt-3">
               <div className="card border-primary" id="card">
                 <div className="card-header d-flex justify-content-between" id="headingOne">
                   <button type="button"

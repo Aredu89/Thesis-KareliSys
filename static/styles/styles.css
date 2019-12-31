@@ -71,3 +71,10 @@
   color: #fff;
   text-decoration: none;
 }
+.fabricas-editar .btn-link.collapsed .material-icons{
+  transform: rotate(0deg);
+}
+.fabricas-editar .btn-link .material-icons{
+  transform: rotate(180deg);
+  transition-duration: 0.25s;
+}

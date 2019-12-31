@@ -42790,7 +42790,7 @@
 	            ),
 	            _react2.default.createElement(
 	              'div',
-	              { className: 'col-12 mt-2' },
+	              { className: 'col-12 mt-3' },
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'card border-primary', id: 'card' },
