@@ -1,5 +1,5 @@
 import React from 'react'
-import TablaFlexible from './TablaFlexible.jsx'
+import TablaFlexible from '../common/TablaFlexible.jsx'
 import Swal from 'sweetalert2'
 
 export default class FabricasLista extends React.Component {

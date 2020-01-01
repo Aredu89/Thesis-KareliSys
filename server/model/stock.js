@@ -4,7 +4,7 @@ const stock = new mongoose.Schema({
   producto: {type: String, required: true},
   tipo: String,
   material: String,
-  talle: [Number],
+  talle: Number,
   estilo: String,
   cantidad: Number,
   estante: String

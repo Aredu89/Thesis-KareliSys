@@ -76,6 +76,7 @@ module.exports.modificarFabrica = (req,res) => {
           return
         }
         //Si no hay error, reemplazo con los datos del body
+        fabrica._id = auxFabrica._id
         fabrica.nombre = auxFabrica.nombre
         fabrica.direccion = auxFabrica.direccion
         fabrica.ciudad = auxFabrica.ciudad

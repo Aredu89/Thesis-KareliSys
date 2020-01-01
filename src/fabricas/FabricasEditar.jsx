@@ -1,6 +1,6 @@
 import React from 'react'
 import Swal from 'sweetalert2' //https://github.com/sweetalert2/sweetalert2
-import TablaFlexible from './TablaFlexible.jsx'
+import TablaFlexible from '../common/TablaFlexible.jsx'
 import Modal from 'react-responsive-modal'
 import ContactosEditar from './ContactosEditar.jsx'
 
