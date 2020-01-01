@@ -23,8 +23,7 @@ const pedidos = new mongoose.Schema({
   fecha: {type: Date, default: Date.now},
   detalle: [productosRef],
   precioTotal: Number,
-  estado: {type: String, enum:["a pagar","pagado"], default: "a pagar"},
-  pagos: [pagos]
+  estado: {type: String, enum:["a pagar","pago parcial","pagado"], default: "a pagar"}
 })
 
 const fabricas = new mongoose.Schema({
@@ -34,7 +33,8 @@ const fabricas = new mongoose.Schema({
   telefono: Number,
   contactos: [contactos],
   pedidos: [pedidos],
-  creada: {type: Date, default: Date.now}
+  creada: {type: Date, default: Date.now},
+  pagos: [pagos]
 })
 
 mongoose.model('Fabricas', fabricas)

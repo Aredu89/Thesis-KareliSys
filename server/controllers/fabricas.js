@@ -80,7 +80,14 @@ module.exports.modificarFabrica = (req,res) => {
         fabrica.direccion = auxFabrica.direccion
         fabrica.ciudad = auxFabrica.ciudad
         fabrica.telefono = auxFabrica.telefono
-        fabrica.contactos = auxFabrica.contactos
+        fabrica.contactos = auxFabrica.contactos.map(contacto=>{
+          return {
+            nombre: contacto.nombre,
+            apellido: contacto.apellido,
+            email: contacto.email,
+            telefono: contacto.telefono
+          }
+        })
         fabrica.pedidos = auxFabrica.pedidos
         fabrica.save((err, fabrica) => {
           if (err) {

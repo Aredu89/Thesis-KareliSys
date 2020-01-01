@@ -7,8 +7,8 @@ export default class TablaFlexible extends React.Component {
   // [ ["Titulo de la columna","clave del objeto data","tipo"] ] el tipo puede ser: "String, Numero, Precio, Fecha"
   // data: Array de objetos con los datos para completar la tabla
   // ---------- botones -------------
-  // handleEditar: función para el botón editar
-  // handleEliminar: función para el botón eliminar
+  // handleEditar: función para el botón editar. Parametro: _id
+  // handleEliminar: función para el botón eliminar. Parametro: _id
   componentDidMount(){
     //JQuery para el filtro de la tabla
     $(document).ready(function(){

@@ -56,3 +56,4 @@ mongoose.connection.on('disconnected', () => {
 })
 
 require('./fabricas.js')
+require('./stock.js')

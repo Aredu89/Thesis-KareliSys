@@ -28572,19 +28572,33 @@
 	    value: function handleEliminar(id) {
 	      var _this3 = this;
 	
-	      fetch('/api/fabricas/' + id, {
-	        method: 'DELETE',
-	        headers: { 'Content-Type': 'application/json' }
-	      }).then(function (res) {
-	        if (res.ok) {
-	          _sweetalert2.default.fire("Fabrica Eliminada", "", "success").then(function () {
-	            _this3.actualizarLista(id);
+	      //Primero pido confirmación
+	      _sweetalert2.default.fire({
+	        title: "¿Seguro que desea eliminar?",
+	        text: "Esta acción no se puede revertir",
+	        icon: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#3085d6",
+	        cancelButtonColor: "#d33",
+	        confirmButtonText: "Si, eliminar"
+	      }).then(function (result) {
+	        if (result.value) {
+	          //Elimino
+	          fetch('/api/fabricas/' + id, {
+	            method: 'DELETE',
+	            headers: { 'Content-Type': 'application/json' }
+	          }).then(function (res) {
+	            if (res.ok) {
+	              _sweetalert2.default.fire("Fabrica Eliminada", "", "success").then(function () {
+	                _this3.actualizarLista(id);
+	              });
+	            } else {
+	              _sweetalert2.default.fire("Error al eliminar", "", "error");
+	            }
+	          }).catch(function (err) {
+	            _sweetalert2.default.fire("Error del servidor", err.message, "error");
 	          });
-	        } else {
-	          _sweetalert2.default.fire("Error al eliminar", "", "error");
 	        }
-	      }).catch(function (err) {
-	        _sweetalert2.default.fire("Error del servidor", err.message, "error");
 	      });
 	    }
 	  }, {
@@ -28733,8 +28747,8 @@
 	    // [ ["Titulo de la columna","clave del objeto data","tipo"] ] el tipo puede ser: "String, Numero, Precio, Fecha"
 	    // data: Array de objetos con los datos para completar la tabla
 	    // ---------- botones -------------
-	    // handleEditar: función para el botón editar
-	    // handleEliminar: función para el botón eliminar
+	    // handleEditar: función para el botón editar. Parametro: _id
+	    // handleEliminar: función para el botón eliminar. Parametro: _id
 	    value: function componentDidMount() {
 	      //JQuery para el filtro de la tabla
 	      (0, _jquery2.default)(document).ready(function () {
@@ -42520,12 +42534,14 @@
 	      creada: new Date(),
 	      errorNombre: false,
 	      modalContactos: false,
-	      contactoEditar: null
+	      modalContactosEditar: null
 	    };
 	    _this.handleOnChange = _this.handleOnChange.bind(_this);
 	    _this.obtenerFabrica = _this.obtenerFabrica.bind(_this);
 	    _this.onOpenModal = _this.onOpenModal.bind(_this);
 	    _this.onCloseModal = _this.onCloseModal.bind(_this);
+	    _this.handleEditarContacto = _this.handleEditarContacto.bind(_this);
+	    _this.onSaveModal = _this.onSaveModal.bind(_this);
 	    return _this;
 	  }
 	
@@ -42688,6 +42704,21 @@
 	        });
 	      }
 	    }
+	  }, {
+	    key: 'handleEditarContacto',
+	    value: function handleEditarContacto(id) {
+	      var _this5 = this;
+	
+	      //Busco el id
+	      this.state.contactos.forEach(function (contacto) {
+	        if (contacto._id === id) {
+	          _this5.setState({
+	            modalContactosEditar: contacto
+	          }, _this5.onOpenModal("modalContactos"));
+	          return;
+	        }
+	      });
+	    }
 	
 	    //Modal
 	
@@ -42699,12 +42730,31 @@
 	  }, {
 	    key: 'onCloseModal',
 	    value: function onCloseModal(cual) {
-	      this.setState(_defineProperty({}, cual, false));
+	      var _setState3;
+	
+	      this.setState((_setState3 = {}, _defineProperty(_setState3, cual, false), _defineProperty(_setState3, cual + "Editar", null), _setState3));
+	    }
+	  }, {
+	    key: 'onSaveModal',
+	    value: function onSaveModal(obj, array) {
+	      var auxArray = this.state[array];
+	      if (!obj._id) {
+	        //Inserto un nuevo registro
+	        auxArray.push(obj);
+	      } else {
+	        //reemplazo el registro
+	        auxArray.forEach(function (elemento, i) {
+	          if (obj._id === elemento._id) {
+	            auxArray.splice(i, 1, obj);
+	          }
+	        });
+	      }
+	      this.setState(_defineProperty({}, array, auxArray));
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this5 = this;
+	      var _this6 = this;
 	
 	      var columnsContactos = [["Nombre", "nombre", "String"], ["Apellido", "apellido", "String"], ["Email", "email", "String"], ["Teléfono", "telefono", "String"]];
 	      return _react2.default.createElement(
@@ -42734,7 +42784,7 @@
 	                { type: 'button',
 	                  className: 'btn btn-success',
 	                  onClick: function onClick() {
-	                    return _this5.onClickGuardar();
+	                    return _this6.onClickGuardar();
 	                  }
 	                },
 	                '+ Guardar'
@@ -42847,7 +42897,7 @@
 	                    { type: 'button',
 	                      className: 'btn btn-outline-success',
 	                      onClick: function onClick() {
-	                        return _this5.onOpenModal("modalContactos");
+	                        return _this6.onOpenModal("modalContactos");
 	                      }
 	                    },
 	                    '+ Agregar Contacto'
@@ -42864,8 +42914,8 @@
 	                    { className: 'card-body contenedor-tabla' },
 	                    _react2.default.createElement(_TablaFlexible2.default, {
 	                      columns: columnsContactos,
-	                      data: this.state.contactos
-	                      // handleEditar={this.handleEditar}
+	                      data: this.state.contactos,
+	                      handleEditar: this.handleEditarContacto
 	                      // handleEliminar={this.handleEliminar}
 	                    })
 	                  )
@@ -42878,21 +42928,19 @@
 	            {
 	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
 	              onClose: function onClose() {
-	                return _this5.onCloseModal("modalContactos");
+	                return _this6.onCloseModal("modalContactos");
 	              },
 	              showCloseIcon: false,
 	              open: this.state.modalContactos,
 	              center: true
 	            },
 	            _react2.default.createElement(_ContactosEditar2.default, {
-	              data: this.state.contactoEditar,
-	              onSave: function onSave(obj) {
-	                return console.log("onSave: ", obj);
-	              },
+	              data: this.state.modalContactosEditar,
+	              onSave: this.onSaveModal,
 	              onClose: function onClose() {
-	                return _this5.onCloseModal("modalContactos");
+	                return _this6.onCloseModal("modalContactos");
 	              },
-	              titulo: this.state.contactoEditar ? "EDITAR CONTACTO" : "CREAR CONTACTO"
+	              titulo: this.state.modalContactosEditar ? "EDITAR CONTACTO" : "CREAR CONTACTO"
 	            })
 	          )
 	        ) : this.state.error ?
@@ -46806,7 +46854,9 @@
 	    var _this = _possibleConstructorReturn(this, (ContactosEditar.__proto__ || Object.getPrototypeOf(ContactosEditar)).call(this));
 	
 	    _this.state = {
+	      _id: "",
 	      nombre: "",
+	      errorNombre: false,
 	      apellido: "",
 	      email: "",
 	      telefono: ""
@@ -46816,9 +46866,45 @@
 	  }
 	
 	  _createClass(ContactosEditar, [{
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      if (this.props.data) {
+	        this.setState({
+	          _id: this.props.data._id,
+	          nombre: this.props.data.nombre,
+	          apellido: this.props.data.apellido,
+	          email: this.props.data.email,
+	          telefono: this.props.data.telefono
+	        });
+	      }
+	    }
+	  }, {
 	    key: "handleOnChange",
 	    value: function handleOnChange(event) {
 	      this.setState(_defineProperty({}, event.target.name, event.target.value));
+	      if (event.target.name === "nombre") {
+	        this.setState({
+	          errorNombre: false
+	        });
+	      }
+	    }
+	  }, {
+	    key: "onSave",
+	    value: function onSave() {
+	      if (!this.state.nombre) {
+	        this.setState({
+	          errorNombre: true
+	        });
+	      } else {
+	        this.props.onSave({
+	          _id: this.state._id,
+	          nombre: this.state.nombre,
+	          apellido: this.state.apellido,
+	          email: this.state.email,
+	          telefono: this.state.telefono
+	        }, "contactos");
+	        this.props.onClose();
+	      }
 	    }
 	  }, {
 	    key: "render",
@@ -46854,7 +46940,7 @@
 	        ),
 	        _react2.default.createElement(
 	          "div",
-	          { className: "formulario" },
+	          { className: "formulario pt-2" },
 	          _react2.default.createElement(
 	            "div",
 	            { className: "col-12 form-group text-center pt-2" },
@@ -46864,13 +46950,18 @@
 	              "Nombre"
 	            ),
 	            _react2.default.createElement("input", { type: "text",
-	              className: "form-control",
+	              className: this.state.errorNombre ? "form-control is-invalid" : "form-control",
 	              id: "nombre",
 	              name: "nombre",
 	              placeholder: "Nombre...",
 	              value: this.state.nombre,
 	              onChange: this.handleOnChange
-	            })
+	            }),
+	            this.state.errorNombre ? _react2.default.createElement(
+	              "div",
+	              { className: "invalid-feedback" },
+	              "El nombre es requerido"
+	            ) : null
 	          ),
 	          _react2.default.createElement(
 	            "div",
@@ -46922,6 +47013,21 @@
 	              value: this.state.telefono,
 	              onChange: this.handleOnChange
 	            })
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2 boton-guardar" },
+	            _react2.default.createElement(
+	              "button",
+	              {
+	                type: "button",
+	                className: "btn btn-success",
+	                onClick: function onClick() {
+	                  return _this2.onSave();
+	                }
+	              },
+	              "Guardar"
+	            )
 	          )
 	        )
 	      );

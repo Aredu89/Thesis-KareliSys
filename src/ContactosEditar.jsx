@@ -4,7 +4,9 @@ export default class ContactosEditar extends React.Component {
   constructor() {
     super()
     this.state={
+      _id: "",
       nombre: "",
+      errorNombre: false,
       apellido: "",
       email: "",
       telefono: ""
@@ -12,10 +14,44 @@ export default class ContactosEditar extends React.Component {
     this.handleOnChange = this.handleOnChange.bind(this)
   }
 
+  componentDidMount(){
+    if(this.props.data){
+      this.setState({
+        _id: this.props.data._id,
+        nombre: this.props.data.nombre,
+        apellido: this.props.data.apellido,
+        email: this.props.data.email,
+        telefono: this.props.data.telefono
+      })
+    }
+  }
+
   handleOnChange(event){
     this.setState({
       [event.target.name]: event.target.value
     })
+    if(event.target.name === "nombre"){
+      this.setState({
+        errorNombre: false
+      })
+    }
+  }
+
+  onSave(){
+    if(!this.state.nombre){
+      this.setState({
+        errorNombre: true
+      })
+    } else {
+      this.props.onSave({
+        _id: this.state._id,
+        nombre: this.state.nombre,
+        apellido: this.state.apellido,
+        email: this.state.email,
+        telefono: this.state.telefono
+      }, "contactos")
+      this.props.onClose()
+    }
   }
 
   render(){
@@ -33,17 +69,23 @@ export default class ContactosEditar extends React.Component {
             </button>
         </div>
         {/* Formulario */}
-        <div className="formulario">
+        <div className="formulario pt-2">
           <div className="col-12 form-group text-center pt-2">
             <label>Nombre</label>
             <input type="text" 
-              className="form-control"
+              className={this.state.errorNombre ? "form-control is-invalid":"form-control"}
               id="nombre" 
               name="nombre"
               placeholder="Nombre..."
               value={this.state.nombre}
               onChange={this.handleOnChange} 
               />
+            {/* Mensaje de error */}
+            {
+              this.state.errorNombre ?
+              <div className="invalid-feedback">El nombre es requerido</div>
+              : null
+            }
           </div>
           <div className="col-12 form-group text-center pt-2">
             <label>Apellido</label>
@@ -78,7 +120,16 @@ export default class ContactosEditar extends React.Component {
               onChange={this.handleOnChange} 
               />
           </div>
+          {/* Boton de guardar */}
+          <div className="col-12 form-group text-center pt-2 boton-guardar">
+            <button 
+              type="button"
+              className="btn btn-success"
+              onClick={()=>this.onSave()}
+              >Guardar</button>
+          </div>
         </div>
+        
       </div>
     )
   }

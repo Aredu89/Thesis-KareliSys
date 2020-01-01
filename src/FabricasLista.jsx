@@ -63,34 +63,48 @@ export default class FabricasLista extends React.Component {
   }
 
   handleEliminar(id){
-    fetch(`/api/fabricas/${id}`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' }
-    })
-      .then(res => {
-        if(res.ok){
+    //Primero pido confirmación
+    Swal.fire({
+      title: "¿Seguro que desea eliminar?",
+      text: "Esta acción no se puede revertir",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, eliminar"
+    }).then((result)=>{
+      if(result.value){
+        //Elimino
+        fetch(`/api/fabricas/${id}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' }
+        })
+          .then(res => {
+            if(res.ok){
+                Swal.fire(
+                  "Fabrica Eliminada",
+                  "",
+                  "success"
+                ).then(()=>{
+                  this.actualizarLista(id)
+                })
+            } else {
+                Swal.fire(
+                  "Error al eliminar",
+                  "",
+                  "error"
+                )
+            }
+          })
+          .catch(err=> {
             Swal.fire(
-              "Fabrica Eliminada",
-              "",
-              "success"
-            ).then(()=>{
-              this.actualizarLista(id)
-            })
-        } else {
-            Swal.fire(
-              "Error al eliminar",
-              "",
+              "Error del servidor",
+              err.message,
               "error"
             )
-        }
-      })
-      .catch(err=> {
-        Swal.fire(
-          "Error del servidor",
-          err.message,
-          "error"
-        )
-      })
+          })
+      }
+    })
   }
 
   actualizarLista(id){

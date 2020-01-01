@@ -22,12 +22,14 @@ export default class FabricasEditar extends React.Component {
       creada: new Date(),
       errorNombre: false,
       modalContactos: false,
-      contactoEditar: null
+      modalContactosEditar: null
     }
     this.handleOnChange = this.handleOnChange.bind(this)
     this.obtenerFabrica = this.obtenerFabrica.bind(this)
     this.onOpenModal = this.onOpenModal.bind(this)
     this.onCloseModal = this.onCloseModal.bind(this)
+    this.handleEditarContacto = this.handleEditarContacto.bind(this)
+    this.onSaveModal = this.onSaveModal.bind(this)
   }
 
   componentDidMount(){
@@ -209,6 +211,18 @@ export default class FabricasEditar extends React.Component {
     }
   }
 
+  handleEditarContacto(id){
+    //Busco el id
+    this.state.contactos.forEach(contacto => {
+      if(contacto._id === id){
+        this.setState({
+          modalContactosEditar: contacto
+        }, this.onOpenModal("modalContactos"))
+        return
+      }
+    })
+  }
+
   //Modal
   onOpenModal(cual){
     this.setState({
@@ -217,7 +231,25 @@ export default class FabricasEditar extends React.Component {
   }
   onCloseModal(cual){
     this.setState({
-      [cual]: false
+      [cual]: false,
+      [cual+"Editar"]: null
+    })
+  }
+  onSaveModal(obj, array){
+    let auxArray = this.state[array]
+    if(!obj._id){
+      //Inserto un nuevo registro
+      auxArray.push(obj)
+    } else {
+      //reemplazo el registro
+      auxArray.forEach((elemento, i)=>{
+        if(obj._id === elemento._id){
+          auxArray.splice(i,1,obj)
+        }
+      })
+    }
+    this.setState({
+      [array]: auxArray
     })
   }
 
@@ -327,15 +359,17 @@ export default class FabricasEditar extends React.Component {
                     <TablaFlexible
                       columns={columnsContactos}
                       data={this.state.contactos}
-                      // handleEditar={this.handleEditar}
+                      handleEditar={this.handleEditarContacto}
                       // handleEliminar={this.handleEliminar}
                     />
                   </div>
                 </div>
               </div>
             </div>
+            {/* Pedidos */}
+
           </div>
-          {/* Modal */}
+          {/* Modal contactos */}
           <Modal
             classNames={{modal: ['modal-custom'], closeButton: ['modal-custom-button']}}
             onClose={()=>this.onCloseModal("modalContactos")}
@@ -344,10 +378,10 @@ export default class FabricasEditar extends React.Component {
             center
             >
               <ContactosEditar
-                data={this.state.contactoEditar}
-                onSave={(obj)=>console.log("onSave: ",obj)}
+                data={this.state.modalContactosEditar}
+                onSave={this.onSaveModal}
                 onClose={()=>this.onCloseModal("modalContactos")}
-                titulo={this.state.contactoEditar ? "EDITAR CONTACTO" : "CREAR CONTACTO"}
+                titulo={this.state.modalContactosEditar ? "EDITAR CONTACTO" : "CREAR CONTACTO"}
               />
           </Modal>
         </div>
