@@ -56,7 +56,7 @@
 	
 	var _reactRouter = __webpack_require__(172);
 	
-	var _Header = __webpack_require__(281);
+	var _Header = __webpack_require__(248);
 	
 	var _Header2 = _interopRequireDefault(_Header);
 	
@@ -64,19 +64,19 @@
 	
 	var _Home2 = _interopRequireDefault(_Home);
 	
-	var _FabricasLista = __webpack_require__(282);
+	var _FabricasLista = __webpack_require__(251);
 	
 	var _FabricasLista2 = _interopRequireDefault(_FabricasLista);
 	
-	var _FabricasEditar = __webpack_require__(284);
+	var _FabricasEditar = __webpack_require__(255);
 	
 	var _FabricasEditar2 = _interopRequireDefault(_FabricasEditar);
 	
-	var _StockLista = __webpack_require__(286);
+	var _StockLista = __webpack_require__(281);
 	
 	var _StockLista2 = _interopRequireDefault(_StockLista);
 	
-	var _StockEditar = __webpack_require__(287);
+	var _StockEditar = __webpack_require__(282);
 	
 	var _StockEditar2 = _interopRequireDefault(_StockEditar);
 	
@@ -27659,7 +27659,222 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 248 */,
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(172);
+	
+	__webpack_require__(249);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Header = function (_React$Component) {
+	  _inherits(Header, _React$Component);
+	
+	  function Header() {
+	    _classCallCheck(this, Header);
+	
+	    var _this = _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this));
+	
+	    _this.state = {};
+	    return _this;
+	  }
+	
+	  _createClass(Header, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'header' },
+	        _react2.default.createElement(
+	          'nav',
+	          { className: 'navbar navbar-expand-lg navbar-dark bg-primary' },
+	          _react2.default.createElement(
+	            _reactRouter.Link,
+	            { className: 'navbar-brand', to: '/' },
+	            'KareliSys'
+	          ),
+	          _react2.default.createElement(
+	            'button',
+	            {
+	              className: 'navbar-toggler collapsed',
+	              type: 'button',
+	              'data-toggle': 'collapse',
+	              'data-target': '#navbarColor01',
+	              'aria-controls': 'navbarColor01',
+	              'aria-expanded': 'false',
+	              'aria-label': 'Toggle navigation' },
+	            _react2.default.createElement('span', { className: 'navbar-toggler-icon' })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'navbar-collapse collapse', id: 'navbarColor01' },
+	            _react2.default.createElement(
+	              'ul',
+	              { className: 'navbar-nav mr-auto' },
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'nav-item active' },
+	                _react2.default.createElement(
+	                  _reactRouter.Link,
+	                  { className: 'nav-link', to: '/' },
+	                  'Home ',
+	                  _react2.default.createElement(
+	                    'span',
+	                    { className: 'sr-only' },
+	                    '(current)'
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'nav-item dropdown' },
+	                _react2.default.createElement(
+	                  'a',
+	                  { className: 'nav-link dropdown-toggle',
+	                    'data-toggle': 'dropdown',
+	                    href: '#', role: 'button',
+	                    'aria-haspopup': 'true',
+	                    'aria-expanded': 'false' },
+	                  'F\xE1bricas'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'dropdown-menu' },
+	                  _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { className: 'dropdown-item', to: '/fabricas' },
+	                    'Gesti\xF3n de F\xE1bricas'
+	                  ),
+	                  _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { className: 'dropdown-item', to: '#' },
+	                    'Gesti\xF3n de Pagos'
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'nav-item dropdown' },
+	                _react2.default.createElement(
+	                  'a',
+	                  { className: 'nav-link dropdown-toggle',
+	                    'data-toggle': 'dropdown',
+	                    href: '#', role: 'button',
+	                    'aria-haspopup': 'true',
+	                    'aria-expanded': 'false' },
+	                  'Clientes'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'dropdown-menu' },
+	                  _react2.default.createElement(
+	                    'a',
+	                    { className: 'dropdown-item', href: '#' },
+	                    'Gesti\xF3n de Clientes'
+	                  ),
+	                  _react2.default.createElement(
+	                    'a',
+	                    { className: 'dropdown-item', href: '#' },
+	                    'Gesti\xF3n de Cobros'
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'nav-item' },
+	                _react2.default.createElement(
+	                  _reactRouter.Link,
+	                  { className: 'nav-link', to: '/stock' },
+	                  'Stock'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'nav-item' },
+	                _react2.default.createElement(
+	                  _reactRouter.Link,
+	                  { className: 'nav-link', to: '/' },
+	                  'Usuarios'
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-inline my-2 my-lg-0' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'nav-item dropdown mr-sm-2' },
+	                _react2.default.createElement(
+	                  'a',
+	                  { className: 'user-name nav-link dropdown-toggle',
+	                    'data-toggle': 'dropdown',
+	                    href: '#', role: 'button',
+	                    'aria-haspopup': 'true',
+	                    'aria-expanded': 'false' },
+	                  'Ariel Rosales'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'dropdown-menu' },
+	                  _react2.default.createElement(
+	                    'a',
+	                    { className: 'dropdown-item', href: '#' },
+	                    'Opciones de Usuario'
+	                  ),
+	                  _react2.default.createElement('div', { className: 'dropdown-divider' }),
+	                  _react2.default.createElement(
+	                    'a',
+	                    { className: 'logout dropdown-item', href: '#' },
+	                    'Cerrar Sesi\xF3n'
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'profile-image' },
+	                _react2.default.createElement(
+	                  'span',
+	                  null,
+	                  'A'
+	                )
+	              )
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'content' },
+	          this.props.children
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Header;
+	}(_react2.default.Component);
+	
+	exports.default = Header;
+
+/***/ },
 /* 249 */
 /***/ function(module, exports) {
 
@@ -28262,8 +28477,404 @@
 	exports.default = Home;
 
 /***/ },
-/* 251 */,
-/* 252 */,
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _TablaFlexible = __webpack_require__(252);
+	
+	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
+	
+	var _sweetalert = __webpack_require__(254);
+	
+	var _sweetalert2 = _interopRequireDefault(_sweetalert);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var FabricasLista = function (_React$Component) {
+	  _inherits(FabricasLista, _React$Component);
+	
+	  function FabricasLista() {
+	    _classCallCheck(this, FabricasLista);
+	
+	    var _this = _possibleConstructorReturn(this, (FabricasLista.__proto__ || Object.getPrototypeOf(FabricasLista)).call(this));
+	
+	    _this.state = {
+	      fabricas: [],
+	      cargando: true,
+	      error: ""
+	    };
+	    _this.cargarLista = _this.cargarLista.bind(_this);
+	    _this.handleEditar = _this.handleEditar.bind(_this);
+	    _this.handleEliminar = _this.handleEliminar.bind(_this);
+	    _this.actualizarLista = _this.actualizarLista.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(FabricasLista, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.cargarLista();
+	    }
+	
+	    //Obtener lista de fábricas
+	
+	  }, {
+	    key: 'cargarLista',
+	    value: function cargarLista() {
+	      var _this2 = this;
+	
+	      fetch('/api/fabricas').then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            console.log("Get List: ", data);
+	            _this2.setState({
+	              cargando: false,
+	              fabricas: data,
+	              error: ""
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener la lista. ", error.message);
+	            _this2.setState({
+	              cargando: false,
+	              error: error.message
+	            });
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.log("Error: ", error.message);
+	        _this2.setState({
+	          cargando: false,
+	          error: error.message
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'onClickAgregar',
+	    value: function onClickAgregar() {
+	      this.props.history.push("/fabricas/editar/");
+	    }
+	  }, {
+	    key: 'handleEditar',
+	    value: function handleEditar(id) {
+	      this.props.history.push('/fabricas/editar/' + id);
+	    }
+	  }, {
+	    key: 'handleEliminar',
+	    value: function handleEliminar(id) {
+	      var _this3 = this;
+	
+	      //Primero pido confirmación
+	      _sweetalert2.default.fire({
+	        title: "¿Seguro que desea eliminar?",
+	        text: "Esta acción no se puede revertir",
+	        icon: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#3085d6",
+	        cancelButtonColor: "#d33",
+	        confirmButtonText: "Si, eliminar"
+	      }).then(function (result) {
+	        if (result.value) {
+	          //Elimino
+	          fetch('/api/fabricas/' + id, {
+	            method: 'DELETE',
+	            headers: { 'Content-Type': 'application/json' }
+	          }).then(function (res) {
+	            if (res.ok) {
+	              _sweetalert2.default.fire("Fabrica Eliminada", "", "success").then(function () {
+	                _this3.actualizarLista(id);
+	              });
+	            } else {
+	              _sweetalert2.default.fire("Error al eliminar", "", "error");
+	            }
+	          }).catch(function (err) {
+	            _sweetalert2.default.fire("Error del servidor", err.message, "error");
+	          });
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'actualizarLista',
+	    value: function actualizarLista(id) {
+	      var _this4 = this;
+	
+	      var auxFabricas = this.state.fabricas;
+	      // Quito la fabricas eliminada de la lista del state
+	      auxFabricas.forEach(function (fabrica, i) {
+	        if (id === fabrica._id) {
+	          auxFabricas.splice(i, 1);
+	          _this4.setState({
+	            fabricas: auxFabricas
+	          });
+	          return;
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this5 = this;
+	
+	      var columns = [["Nombre", "nombre", "String"], ["Ciudad", "ciudad", "String"], ["Dirección", "direccion", "String"]];
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'fabricas-lista' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 d-flex justify-content-between' },
+	            _react2.default.createElement(
+	              'h3',
+	              null,
+	              'Fabricas'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { type: 'button',
+	                className: 'btn btn-success',
+	                onClick: function onClick() {
+	                  return _this5.onClickAgregar();
+	                }
+	              },
+	              '+ Agregar Fabrica'
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 contenedor-tabla text-center' },
+	            !this.state.cargando ?
+	            // Tabla
+	            _react2.default.createElement(_TablaFlexible2.default, {
+	              columns: columns,
+	              data: this.state.fabricas,
+	              handleEditar: this.handleEditar,
+	              handleEliminar: this.handleEliminar
+	            }) : this.state.error ?
+	            //Mensaje de error
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'alert alert-dismissible alert-danger' },
+	              _react2.default.createElement(
+	                'button',
+	                { type: 'button', className: 'close', 'data-dismiss': 'alert' },
+	                '\xD7'
+	              ),
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Error!'
+	              ),
+	              ' ',
+	              this.state.error
+	            ) :
+	            // Spinner
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'spinner-border text-light', role: 'status' },
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'sr-only' },
+	                'Loading...'
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return FabricasLista;
+	}(_react2.default.Component);
+	
+	exports.default = FabricasLista;
+
+/***/ },
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _jquery = __webpack_require__(253);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var TablaFlexible = function (_React$Component) {
+	  _inherits(TablaFlexible, _React$Component);
+	
+	  function TablaFlexible() {
+	    _classCallCheck(this, TablaFlexible);
+	
+	    return _possibleConstructorReturn(this, (TablaFlexible.__proto__ || Object.getPrototypeOf(TablaFlexible)).apply(this, arguments));
+	  }
+	
+	  _createClass(TablaFlexible, [{
+	    key: 'componentDidMount',
+	
+	    // Props:
+	    // columns: Array de arrays con la siguiente estructura
+	    // [ ["Titulo de la columna","clave del objeto data","tipo"] ] el tipo puede ser: "String, Numero, Precio, Fecha"
+	    // data: Array de objetos con los datos para completar la tabla
+	    // ---------- botones -------------
+	    // handleEditar: función para el botón editar. Parametro: _id
+	    // handleEliminar: función para el botón eliminar. Parametro: _id
+	    value: function componentDidMount() {
+	      var lista = this.props.lista;
+	      //JQuery para el filtro de la tabla
+	      (0, _jquery2.default)(document).ready(function () {
+	        (0, _jquery2.default)('#myInput' + lista).on("keyup", function () {
+	          var value = (0, _jquery2.default)(this).val().toLowerCase();
+	          (0, _jquery2.default)('#myTable' + lista + ' tr').filter(function () {
+	            (0, _jquery2.default)(this).toggle((0, _jquery2.default)(this).text().toLowerCase().indexOf(value) > -1);
+	          });
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'tabla-flexible table-responsive-md' },
+	        _react2.default.createElement('input', { className: 'form-control buscador-tabla', id: 'myInput' + this.props.lista, type: 'text', placeholder: 'Buscar en la tabla...' }),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(
+	          'table',
+	          { className: 'table' },
+	          _react2.default.createElement(
+	            'thead',
+	            null,
+	            _react2.default.createElement(
+	              'tr',
+	              { className: 'table-primary' },
+	              this.props.columns.map(function (col, i) {
+	                return _react2.default.createElement(
+	                  'th',
+	                  { scope: 'col', key: i },
+	                  col[0]
+	                );
+	              }),
+	              _react2.default.createElement(
+	                'th',
+	                { scope: 'col', className: 'd-flex justify-content-end' },
+	                'Acciones'
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'tbody',
+	            { id: 'myTable' + this.props.lista },
+	            this.props.data.map(function (data, i) {
+	              return _react2.default.createElement(
+	                'tr',
+	                { className: i % 2 == 0 ? "" : "table-secondary", key: i },
+	                _this2.props.columns.map(function (col, i) {
+	                  if (col[2] === "Largo") {
+	                    return _react2.default.createElement(
+	                      'td',
+	                      { key: i },
+	                      data[col[1]].length
+	                    );
+	                  } else {
+	                    return _react2.default.createElement(
+	                      'td',
+	                      { key: i },
+	                      data[col[1]]
+	                    );
+	                  }
+	                }),
+	                _react2.default.createElement(
+	                  'td',
+	                  { className: 'd-flex justify-content-end' },
+	                  _this2.props.handleEditar ? _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-outline-primary',
+	                      title: 'Editar',
+	                      onClick: function onClick() {
+	                        return _this2.props.handleEditar(data._id);
+	                      }
+	                    },
+	                    _react2.default.createElement(
+	                      'i',
+	                      { className: 'material-icons' },
+	                      'create'
+	                    )
+	                  ) : null,
+	                  _this2.props.handleEliminar ? _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-outline-danger',
+	                      title: 'Eliminar',
+	                      onClick: function onClick() {
+	                        return _this2.props.handleEliminar(data._id);
+	                      }
+	                    },
+	                    _react2.default.createElement(
+	                      'i',
+	                      { className: 'material-icons' },
+	                      'clear'
+	                    )
+	                  ) : null
+	                )
+	              );
+	            })
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return TablaFlexible;
+	}(_react2.default.Component);
+	
+	exports.default = TablaFlexible;
+
+/***/ },
 /* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -41878,7 +42489,658 @@
 	"undefined"!=typeof document&&function(e,t){var n=e.createElement("style");if(e.getElementsByTagName("head")[0].appendChild(n),n.styleSheet)n.styleSheet.disabled||(n.styleSheet.cssText=t);else try{n.innerHTML=t}catch(e){n.innerText=t}}(document,".swal2-popup.swal2-toast{-webkit-box-orient:horizontal;-webkit-box-direction:normal;flex-direction:row;-webkit-box-align:center;align-items:center;width:auto;padding:.625em;overflow-y:hidden;background:#fff;box-shadow:0 0 .625em #d9d9d9}.swal2-popup.swal2-toast .swal2-header{-webkit-box-orient:horizontal;-webkit-box-direction:normal;flex-direction:row}.swal2-popup.swal2-toast .swal2-title{-webkit-box-flex:1;flex-grow:1;-webkit-box-pack:start;justify-content:flex-start;margin:0 .6em;font-size:1em}.swal2-popup.swal2-toast .swal2-footer{margin:.5em 0 0;padding:.5em 0 0;font-size:.8em}.swal2-popup.swal2-toast .swal2-close{position:static;width:.8em;height:.8em;line-height:.8}.swal2-popup.swal2-toast .swal2-content{-webkit-box-pack:start;justify-content:flex-start;font-size:1em}.swal2-popup.swal2-toast .swal2-icon{width:2em;min-width:2em;height:2em;margin:0}.swal2-popup.swal2-toast .swal2-icon .swal2-icon-content{display:-webkit-box;display:flex;-webkit-box-align:center;align-items:center;font-size:1.8em;font-weight:700}@media all and (-ms-high-contrast:none),(-ms-high-contrast:active){.swal2-popup.swal2-toast .swal2-icon .swal2-icon-content{font-size:.25em}}.swal2-popup.swal2-toast .swal2-icon.swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line]{top:.875em;width:1.375em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left]{left:.3125em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right]{right:.3125em}.swal2-popup.swal2-toast .swal2-actions{flex-basis:auto!important;width:auto;height:auto;margin:0 .3125em}.swal2-popup.swal2-toast .swal2-styled{margin:0 .3125em;padding:.3125em .625em;font-size:1em}.swal2-popup.swal2-toast .swal2-styled:focus{box-shadow:0 0 0 1px #fff,0 0 0 3px rgba(50,100,150,.4)}.swal2-popup.swal2-toast .swal2-success{border-color:#a5dc86}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line]{position:absolute;width:1.6em;height:3em;-webkit-transform:rotate(45deg);transform:rotate(45deg);border-radius:50%}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=left]{top:-.8em;left:-.5em;-webkit-transform:rotate(-45deg);transform:rotate(-45deg);-webkit-transform-origin:2em 2em;transform-origin:2em 2em;border-radius:4em 0 0 4em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=right]{top:-.25em;left:.9375em;-webkit-transform-origin:0 1.5em;transform-origin:0 1.5em;border-radius:0 4em 4em 0}.swal2-popup.swal2-toast .swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-popup.swal2-toast .swal2-success .swal2-success-fix{top:0;left:.4375em;width:.4375em;height:2.6875em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line]{height:.3125em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=tip]{top:1.125em;left:.1875em;width:.75em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=long]{top:.9375em;right:.1875em;width:1.375em}.swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-tip{-webkit-animation:swal2-toast-animate-success-line-tip .75s;animation:swal2-toast-animate-success-line-tip .75s}.swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-long{-webkit-animation:swal2-toast-animate-success-line-long .75s;animation:swal2-toast-animate-success-line-long .75s}.swal2-popup.swal2-toast.swal2-show{-webkit-animation:swal2-toast-show .5s;animation:swal2-toast-show .5s}.swal2-popup.swal2-toast.swal2-hide{-webkit-animation:swal2-toast-hide .1s forwards;animation:swal2-toast-hide .1s forwards}.swal2-container{display:-webkit-box;display:flex;position:fixed;z-index:1060;top:0;right:0;bottom:0;left:0;-webkit-box-orient:horizontal;-webkit-box-direction:normal;flex-direction:row;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;padding:.625em;overflow-x:hidden;-webkit-transition:background-color .1s;transition:background-color .1s;-webkit-overflow-scrolling:touch}.swal2-container.swal2-backdrop-show{background:rgba(0,0,0,.4)}.swal2-container.swal2-backdrop-hide{background:0 0!important}.swal2-container.swal2-top{-webkit-box-align:start;align-items:flex-start}.swal2-container.swal2-top-left,.swal2-container.swal2-top-start{-webkit-box-align:start;align-items:flex-start;-webkit-box-pack:start;justify-content:flex-start}.swal2-container.swal2-top-end,.swal2-container.swal2-top-right{-webkit-box-align:start;align-items:flex-start;-webkit-box-pack:end;justify-content:flex-end}.swal2-container.swal2-center{-webkit-box-align:center;align-items:center}.swal2-container.swal2-center-left,.swal2-container.swal2-center-start{-webkit-box-align:center;align-items:center;-webkit-box-pack:start;justify-content:flex-start}.swal2-container.swal2-center-end,.swal2-container.swal2-center-right{-webkit-box-align:center;align-items:center;-webkit-box-pack:end;justify-content:flex-end}.swal2-container.swal2-bottom{-webkit-box-align:end;align-items:flex-end}.swal2-container.swal2-bottom-left,.swal2-container.swal2-bottom-start{-webkit-box-align:end;align-items:flex-end;-webkit-box-pack:start;justify-content:flex-start}.swal2-container.swal2-bottom-end,.swal2-container.swal2-bottom-right{-webkit-box-align:end;align-items:flex-end;-webkit-box-pack:end;justify-content:flex-end}.swal2-container.swal2-bottom-end>:first-child,.swal2-container.swal2-bottom-left>:first-child,.swal2-container.swal2-bottom-right>:first-child,.swal2-container.swal2-bottom-start>:first-child,.swal2-container.swal2-bottom>:first-child{margin-top:auto}.swal2-container.swal2-grow-fullscreen>.swal2-modal{display:-webkit-box!important;display:flex!important;-webkit-box-flex:1;flex:1;align-self:stretch;-webkit-box-pack:center;justify-content:center}.swal2-container.swal2-grow-row>.swal2-modal{display:-webkit-box!important;display:flex!important;-webkit-box-flex:1;flex:1;align-content:center;-webkit-box-pack:center;justify-content:center}.swal2-container.swal2-grow-column{-webkit-box-flex:1;flex:1;-webkit-box-orient:vertical;-webkit-box-direction:normal;flex-direction:column}.swal2-container.swal2-grow-column.swal2-bottom,.swal2-container.swal2-grow-column.swal2-center,.swal2-container.swal2-grow-column.swal2-top{-webkit-box-align:center;align-items:center}.swal2-container.swal2-grow-column.swal2-bottom-left,.swal2-container.swal2-grow-column.swal2-bottom-start,.swal2-container.swal2-grow-column.swal2-center-left,.swal2-container.swal2-grow-column.swal2-center-start,.swal2-container.swal2-grow-column.swal2-top-left,.swal2-container.swal2-grow-column.swal2-top-start{-webkit-box-align:start;align-items:flex-start}.swal2-container.swal2-grow-column.swal2-bottom-end,.swal2-container.swal2-grow-column.swal2-bottom-right,.swal2-container.swal2-grow-column.swal2-center-end,.swal2-container.swal2-grow-column.swal2-center-right,.swal2-container.swal2-grow-column.swal2-top-end,.swal2-container.swal2-grow-column.swal2-top-right{-webkit-box-align:end;align-items:flex-end}.swal2-container.swal2-grow-column>.swal2-modal{display:-webkit-box!important;display:flex!important;-webkit-box-flex:1;flex:1;align-content:center;-webkit-box-pack:center;justify-content:center}.swal2-container:not(.swal2-top):not(.swal2-top-start):not(.swal2-top-end):not(.swal2-top-left):not(.swal2-top-right):not(.swal2-center-start):not(.swal2-center-end):not(.swal2-center-left):not(.swal2-center-right):not(.swal2-bottom):not(.swal2-bottom-start):not(.swal2-bottom-end):not(.swal2-bottom-left):not(.swal2-bottom-right):not(.swal2-grow-fullscreen)>.swal2-modal{margin:auto}@media all and (-ms-high-contrast:none),(-ms-high-contrast:active){.swal2-container .swal2-modal{margin:0!important}}.swal2-popup{display:none;position:relative;box-sizing:border-box;-webkit-box-orient:vertical;-webkit-box-direction:normal;flex-direction:column;-webkit-box-pack:center;justify-content:center;width:32em;max-width:100%;padding:1.25em;border:none;border-radius:.3125em;background:#fff;font-family:inherit;font-size:1rem}.swal2-popup:focus{outline:0}.swal2-popup.swal2-loading{overflow-y:hidden}.swal2-header{display:-webkit-box;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;flex-direction:column;-webkit-box-align:center;align-items:center}.swal2-title{position:relative;max-width:100%;margin:0 0 .4em;padding:0;color:#595959;font-size:1.875em;font-weight:600;text-align:center;text-transform:none;word-wrap:break-word}.swal2-actions{display:-webkit-box;display:flex;z-index:1;flex-wrap:wrap;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;width:100%;margin:1.25em auto 0}.swal2-actions:not(.swal2-loading) .swal2-styled[disabled]{opacity:.4}.swal2-actions:not(.swal2-loading) .swal2-styled:hover{background-image:-webkit-gradient(linear,left top,left bottom,from(rgba(0,0,0,.1)),to(rgba(0,0,0,.1)));background-image:linear-gradient(rgba(0,0,0,.1),rgba(0,0,0,.1))}.swal2-actions:not(.swal2-loading) .swal2-styled:active{background-image:-webkit-gradient(linear,left top,left bottom,from(rgba(0,0,0,.2)),to(rgba(0,0,0,.2)));background-image:linear-gradient(rgba(0,0,0,.2),rgba(0,0,0,.2))}.swal2-actions.swal2-loading .swal2-styled.swal2-confirm{box-sizing:border-box;width:2.5em;height:2.5em;margin:.46875em;padding:0;-webkit-animation:swal2-rotate-loading 1.5s linear 0s infinite normal;animation:swal2-rotate-loading 1.5s linear 0s infinite normal;border:.25em solid transparent;border-radius:100%;border-color:transparent;background-color:transparent!important;color:transparent;cursor:default;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.swal2-actions.swal2-loading .swal2-styled.swal2-cancel{margin-right:30px;margin-left:30px}.swal2-actions.swal2-loading :not(.swal2-styled).swal2-confirm::after{content:\"\";display:inline-block;width:15px;height:15px;margin-left:5px;-webkit-animation:swal2-rotate-loading 1.5s linear 0s infinite normal;animation:swal2-rotate-loading 1.5s linear 0s infinite normal;border:3px solid #999;border-radius:50%;border-right-color:transparent;box-shadow:1px 1px 1px #fff}.swal2-styled{margin:.3125em;padding:.625em 2em;box-shadow:none;font-weight:500}.swal2-styled:not([disabled]){cursor:pointer}.swal2-styled.swal2-confirm{border:0;border-radius:.25em;background:initial;background-color:#3085d6;color:#fff;font-size:1.0625em}.swal2-styled.swal2-cancel{border:0;border-radius:.25em;background:initial;background-color:#aaa;color:#fff;font-size:1.0625em}.swal2-styled:focus{outline:0;box-shadow:0 0 0 1px #fff,0 0 0 3px rgba(50,100,150,.4)}.swal2-styled::-moz-focus-inner{border:0}.swal2-footer{-webkit-box-pack:center;justify-content:center;margin:1.25em 0 0;padding:1em 0 0;border-top:1px solid #eee;color:#545454;font-size:1em}.swal2-timer-progress-bar{position:absolute;bottom:0;left:0;width:100%;height:.25em;background:rgba(0,0,0,.2)}.swal2-image{max-width:100%;margin:1.25em auto}.swal2-close{position:absolute;z-index:2;top:0;right:0;-webkit-box-pack:center;justify-content:center;width:1.2em;height:1.2em;padding:0;overflow:hidden;-webkit-transition:color .1s ease-out;transition:color .1s ease-out;border:none;border-radius:0;outline:initial;background:0 0;color:#ccc;font-family:serif;font-size:2.5em;line-height:1.2;cursor:pointer}.swal2-close:hover{-webkit-transform:none;transform:none;background:0 0;color:#f27474}.swal2-close::-moz-focus-inner{border:0}.swal2-content{z-index:1;-webkit-box-pack:center;justify-content:center;margin:0;padding:0;color:#545454;font-size:1.125em;font-weight:400;line-height:normal;text-align:center;word-wrap:break-word}.swal2-checkbox,.swal2-file,.swal2-input,.swal2-radio,.swal2-select,.swal2-textarea{margin:1em auto}.swal2-file,.swal2-input,.swal2-textarea{box-sizing:border-box;width:100%;-webkit-transition:border-color .3s,box-shadow .3s;transition:border-color .3s,box-shadow .3s;border:1px solid #d9d9d9;border-radius:.1875em;background:inherit;box-shadow:inset 0 1px 1px rgba(0,0,0,.06);color:inherit;font-size:1.125em}.swal2-file.swal2-inputerror,.swal2-input.swal2-inputerror,.swal2-textarea.swal2-inputerror{border-color:#f27474!important;box-shadow:0 0 2px #f27474!important}.swal2-file:focus,.swal2-input:focus,.swal2-textarea:focus{border:1px solid #b4dbed;outline:0;box-shadow:0 0 3px #c4e6f5}.swal2-file::-webkit-input-placeholder,.swal2-input::-webkit-input-placeholder,.swal2-textarea::-webkit-input-placeholder{color:#ccc}.swal2-file::-moz-placeholder,.swal2-input::-moz-placeholder,.swal2-textarea::-moz-placeholder{color:#ccc}.swal2-file:-ms-input-placeholder,.swal2-input:-ms-input-placeholder,.swal2-textarea:-ms-input-placeholder{color:#ccc}.swal2-file::-ms-input-placeholder,.swal2-input::-ms-input-placeholder,.swal2-textarea::-ms-input-placeholder{color:#ccc}.swal2-file::placeholder,.swal2-input::placeholder,.swal2-textarea::placeholder{color:#ccc}.swal2-range{margin:1em auto;background:#fff}.swal2-range input{width:80%}.swal2-range output{width:20%;color:inherit;font-weight:600;text-align:center}.swal2-range input,.swal2-range output{height:2.625em;padding:0;font-size:1.125em;line-height:2.625em}.swal2-input{height:2.625em;padding:0 .75em}.swal2-input[type=number]{max-width:10em}.swal2-file{background:inherit;font-size:1.125em}.swal2-textarea{height:6.75em;padding:.75em}.swal2-select{min-width:50%;max-width:100%;padding:.375em .625em;background:inherit;color:inherit;font-size:1.125em}.swal2-checkbox,.swal2-radio{-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;background:#fff;color:inherit}.swal2-checkbox label,.swal2-radio label{margin:0 .6em;font-size:1.125em}.swal2-checkbox input,.swal2-radio input{margin:0 .4em}.swal2-validation-message{display:none;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;padding:.625em;overflow:hidden;background:#f0f0f0;color:#666;font-size:1em;font-weight:300}.swal2-validation-message::before{content:\"!\";display:inline-block;width:1.5em;min-width:1.5em;height:1.5em;margin:0 .625em;border-radius:50%;background-color:#f27474;color:#fff;font-weight:600;line-height:1.5em;text-align:center}.swal2-icon{position:relative;box-sizing:content-box;-webkit-box-pack:center;justify-content:center;width:5em;height:5em;margin:1.25em auto 1.875em;border:.25em solid transparent;border-radius:50%;font-family:inherit;line-height:5em;cursor:default;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.swal2-icon .swal2-icon-content{display:-webkit-box;display:flex;-webkit-box-align:center;align-items:center;font-size:3.75em}.swal2-icon.swal2-error{border-color:#f27474;color:#f27474}.swal2-icon.swal2-error .swal2-x-mark{position:relative;-webkit-box-flex:1;flex-grow:1}.swal2-icon.swal2-error [class^=swal2-x-mark-line]{display:block;position:absolute;top:2.3125em;width:2.9375em;height:.3125em;border-radius:.125em;background-color:#f27474}.swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left]{left:1.0625em;-webkit-transform:rotate(45deg);transform:rotate(45deg)}.swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right]{right:1em;-webkit-transform:rotate(-45deg);transform:rotate(-45deg)}.swal2-icon.swal2-error.swal2-icon-show{-webkit-animation:swal2-animate-error-icon .5s;animation:swal2-animate-error-icon .5s}.swal2-icon.swal2-error.swal2-icon-show .swal2-x-mark{-webkit-animation:swal2-animate-error-x-mark .5s;animation:swal2-animate-error-x-mark .5s}.swal2-icon.swal2-warning{border-color:#facea8;color:#f8bb86}.swal2-icon.swal2-info{border-color:#9de0f6;color:#3fc3ee}.swal2-icon.swal2-question{border-color:#c9dae1;color:#87adbd}.swal2-icon.swal2-success{border-color:#a5dc86;color:#a5dc86}.swal2-icon.swal2-success [class^=swal2-success-circular-line]{position:absolute;width:3.75em;height:7.5em;-webkit-transform:rotate(45deg);transform:rotate(45deg);border-radius:50%}.swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=left]{top:-.4375em;left:-2.0635em;-webkit-transform:rotate(-45deg);transform:rotate(-45deg);-webkit-transform-origin:3.75em 3.75em;transform-origin:3.75em 3.75em;border-radius:7.5em 0 0 7.5em}.swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=right]{top:-.6875em;left:1.875em;-webkit-transform:rotate(-45deg);transform:rotate(-45deg);-webkit-transform-origin:0 3.75em;transform-origin:0 3.75em;border-radius:0 7.5em 7.5em 0}.swal2-icon.swal2-success .swal2-success-ring{position:absolute;z-index:2;top:-.25em;left:-.25em;box-sizing:content-box;width:100%;height:100%;border:.25em solid rgba(165,220,134,.3);border-radius:50%}.swal2-icon.swal2-success .swal2-success-fix{position:absolute;z-index:1;top:.5em;left:1.625em;width:.4375em;height:5.625em;-webkit-transform:rotate(-45deg);transform:rotate(-45deg)}.swal2-icon.swal2-success [class^=swal2-success-line]{display:block;position:absolute;z-index:2;height:.3125em;border-radius:.125em;background-color:#a5dc86}.swal2-icon.swal2-success [class^=swal2-success-line][class$=tip]{top:2.875em;left:.875em;width:1.5625em;-webkit-transform:rotate(45deg);transform:rotate(45deg)}.swal2-icon.swal2-success [class^=swal2-success-line][class$=long]{top:2.375em;right:.5em;width:2.9375em;-webkit-transform:rotate(-45deg);transform:rotate(-45deg)}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-line-tip{-webkit-animation:swal2-animate-success-line-tip .75s;animation:swal2-animate-success-line-tip .75s}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-line-long{-webkit-animation:swal2-animate-success-line-long .75s;animation:swal2-animate-success-line-long .75s}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-circular-line-right{-webkit-animation:swal2-rotate-success-circular-line 4.25s ease-in;animation:swal2-rotate-success-circular-line 4.25s ease-in}.swal2-progress-steps{-webkit-box-align:center;align-items:center;margin:0 0 1.25em;padding:0;background:inherit;font-weight:600}.swal2-progress-steps li{display:inline-block;position:relative}.swal2-progress-steps .swal2-progress-step{z-index:20;width:2em;height:2em;border-radius:2em;background:#3085d6;color:#fff;line-height:2em;text-align:center}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step{background:#3085d6}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step{background:#add8e6;color:#fff}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step-line{background:#add8e6}.swal2-progress-steps .swal2-progress-step-line{z-index:10;width:2.5em;height:.4em;margin:0 -1px;background:#3085d6}[class^=swal2]{-webkit-tap-highlight-color:transparent}.swal2-show{-webkit-animation:swal2-show .3s;animation:swal2-show .3s}.swal2-hide{-webkit-animation:swal2-hide .15s forwards;animation:swal2-hide .15s forwards}.swal2-noanimation{-webkit-transition:none;transition:none}.swal2-scrollbar-measure{position:absolute;top:-9999px;width:50px;height:50px;overflow:scroll}.swal2-rtl .swal2-close{right:auto;left:0}.swal2-rtl .swal2-timer-progress-bar{right:0;left:auto}@supports (-ms-accelerator:true){.swal2-range input{width:100%!important}.swal2-range output{display:none}}@media all and (-ms-high-contrast:none),(-ms-high-contrast:active){.swal2-range input{width:100%!important}.swal2-range output{display:none}}@-moz-document url-prefix(){.swal2-close:focus{outline:2px solid rgba(50,100,150,.4)}}@-webkit-keyframes swal2-toast-show{0%{-webkit-transform:translateY(-.625em) rotateZ(2deg);transform:translateY(-.625em) rotateZ(2deg)}33%{-webkit-transform:translateY(0) rotateZ(-2deg);transform:translateY(0) rotateZ(-2deg)}66%{-webkit-transform:translateY(.3125em) rotateZ(2deg);transform:translateY(.3125em) rotateZ(2deg)}100%{-webkit-transform:translateY(0) rotateZ(0);transform:translateY(0) rotateZ(0)}}@keyframes swal2-toast-show{0%{-webkit-transform:translateY(-.625em) rotateZ(2deg);transform:translateY(-.625em) rotateZ(2deg)}33%{-webkit-transform:translateY(0) rotateZ(-2deg);transform:translateY(0) rotateZ(-2deg)}66%{-webkit-transform:translateY(.3125em) rotateZ(2deg);transform:translateY(.3125em) rotateZ(2deg)}100%{-webkit-transform:translateY(0) rotateZ(0);transform:translateY(0) rotateZ(0)}}@-webkit-keyframes swal2-toast-hide{100%{-webkit-transform:rotateZ(1deg);transform:rotateZ(1deg);opacity:0}}@keyframes swal2-toast-hide{100%{-webkit-transform:rotateZ(1deg);transform:rotateZ(1deg);opacity:0}}@-webkit-keyframes swal2-toast-animate-success-line-tip{0%{top:.5625em;left:.0625em;width:0}54%{top:.125em;left:.125em;width:0}70%{top:.625em;left:-.25em;width:1.625em}84%{top:1.0625em;left:.75em;width:.5em}100%{top:1.125em;left:.1875em;width:.75em}}@keyframes swal2-toast-animate-success-line-tip{0%{top:.5625em;left:.0625em;width:0}54%{top:.125em;left:.125em;width:0}70%{top:.625em;left:-.25em;width:1.625em}84%{top:1.0625em;left:.75em;width:.5em}100%{top:1.125em;left:.1875em;width:.75em}}@-webkit-keyframes swal2-toast-animate-success-line-long{0%{top:1.625em;right:1.375em;width:0}65%{top:1.25em;right:.9375em;width:0}84%{top:.9375em;right:0;width:1.125em}100%{top:.9375em;right:.1875em;width:1.375em}}@keyframes swal2-toast-animate-success-line-long{0%{top:1.625em;right:1.375em;width:0}65%{top:1.25em;right:.9375em;width:0}84%{top:.9375em;right:0;width:1.125em}100%{top:.9375em;right:.1875em;width:1.375em}}@-webkit-keyframes swal2-show{0%{-webkit-transform:scale(.7);transform:scale(.7)}45%{-webkit-transform:scale(1.05);transform:scale(1.05)}80%{-webkit-transform:scale(.95);transform:scale(.95)}100%{-webkit-transform:scale(1);transform:scale(1)}}@keyframes swal2-show{0%{-webkit-transform:scale(.7);transform:scale(.7)}45%{-webkit-transform:scale(1.05);transform:scale(1.05)}80%{-webkit-transform:scale(.95);transform:scale(.95)}100%{-webkit-transform:scale(1);transform:scale(1)}}@-webkit-keyframes swal2-hide{0%{-webkit-transform:scale(1);transform:scale(1);opacity:1}100%{-webkit-transform:scale(.5);transform:scale(.5);opacity:0}}@keyframes swal2-hide{0%{-webkit-transform:scale(1);transform:scale(1);opacity:1}100%{-webkit-transform:scale(.5);transform:scale(.5);opacity:0}}@-webkit-keyframes swal2-animate-success-line-tip{0%{top:1.1875em;left:.0625em;width:0}54%{top:1.0625em;left:.125em;width:0}70%{top:2.1875em;left:-.375em;width:3.125em}84%{top:3em;left:1.3125em;width:1.0625em}100%{top:2.8125em;left:.875em;width:1.5625em}}@keyframes swal2-animate-success-line-tip{0%{top:1.1875em;left:.0625em;width:0}54%{top:1.0625em;left:.125em;width:0}70%{top:2.1875em;left:-.375em;width:3.125em}84%{top:3em;left:1.3125em;width:1.0625em}100%{top:2.8125em;left:.875em;width:1.5625em}}@-webkit-keyframes swal2-animate-success-line-long{0%{top:3.375em;right:2.875em;width:0}65%{top:3.375em;right:2.875em;width:0}84%{top:2.1875em;right:0;width:3.4375em}100%{top:2.375em;right:.5em;width:2.9375em}}@keyframes swal2-animate-success-line-long{0%{top:3.375em;right:2.875em;width:0}65%{top:3.375em;right:2.875em;width:0}84%{top:2.1875em;right:0;width:3.4375em}100%{top:2.375em;right:.5em;width:2.9375em}}@-webkit-keyframes swal2-rotate-success-circular-line{0%{-webkit-transform:rotate(-45deg);transform:rotate(-45deg)}5%{-webkit-transform:rotate(-45deg);transform:rotate(-45deg)}12%{-webkit-transform:rotate(-405deg);transform:rotate(-405deg)}100%{-webkit-transform:rotate(-405deg);transform:rotate(-405deg)}}@keyframes swal2-rotate-success-circular-line{0%{-webkit-transform:rotate(-45deg);transform:rotate(-45deg)}5%{-webkit-transform:rotate(-45deg);transform:rotate(-45deg)}12%{-webkit-transform:rotate(-405deg);transform:rotate(-405deg)}100%{-webkit-transform:rotate(-405deg);transform:rotate(-405deg)}}@-webkit-keyframes swal2-animate-error-x-mark{0%{margin-top:1.625em;-webkit-transform:scale(.4);transform:scale(.4);opacity:0}50%{margin-top:1.625em;-webkit-transform:scale(.4);transform:scale(.4);opacity:0}80%{margin-top:-.375em;-webkit-transform:scale(1.15);transform:scale(1.15)}100%{margin-top:0;-webkit-transform:scale(1);transform:scale(1);opacity:1}}@keyframes swal2-animate-error-x-mark{0%{margin-top:1.625em;-webkit-transform:scale(.4);transform:scale(.4);opacity:0}50%{margin-top:1.625em;-webkit-transform:scale(.4);transform:scale(.4);opacity:0}80%{margin-top:-.375em;-webkit-transform:scale(1.15);transform:scale(1.15)}100%{margin-top:0;-webkit-transform:scale(1);transform:scale(1);opacity:1}}@-webkit-keyframes swal2-animate-error-icon{0%{-webkit-transform:rotateX(100deg);transform:rotateX(100deg);opacity:0}100%{-webkit-transform:rotateX(0);transform:rotateX(0);opacity:1}}@keyframes swal2-animate-error-icon{0%{-webkit-transform:rotateX(100deg);transform:rotateX(100deg);opacity:0}100%{-webkit-transform:rotateX(0);transform:rotateX(0);opacity:1}}@-webkit-keyframes swal2-rotate-loading{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes swal2-rotate-loading{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown){overflow:hidden}body.swal2-height-auto{height:auto!important}body.swal2-no-backdrop .swal2-container{top:auto;right:auto;bottom:auto;left:auto;max-width:calc(100% - .625em * 2);background-color:transparent!important}body.swal2-no-backdrop .swal2-container>.swal2-modal{box-shadow:0 0 10px rgba(0,0,0,.4)}body.swal2-no-backdrop .swal2-container.swal2-top{top:0;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%)}body.swal2-no-backdrop .swal2-container.swal2-top-left,body.swal2-no-backdrop .swal2-container.swal2-top-start{top:0;left:0}body.swal2-no-backdrop .swal2-container.swal2-top-end,body.swal2-no-backdrop .swal2-container.swal2-top-right{top:0;right:0}body.swal2-no-backdrop .swal2-container.swal2-center{top:50%;left:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}body.swal2-no-backdrop .swal2-container.swal2-center-left,body.swal2-no-backdrop .swal2-container.swal2-center-start{top:50%;left:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}body.swal2-no-backdrop .swal2-container.swal2-center-end,body.swal2-no-backdrop .swal2-container.swal2-center-right{top:50%;right:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}body.swal2-no-backdrop .swal2-container.swal2-bottom{bottom:0;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%)}body.swal2-no-backdrop .swal2-container.swal2-bottom-left,body.swal2-no-backdrop .swal2-container.swal2-bottom-start{bottom:0;left:0}body.swal2-no-backdrop .swal2-container.swal2-bottom-end,body.swal2-no-backdrop .swal2-container.swal2-bottom-right{right:0;bottom:0}@media print{body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown){overflow-y:scroll!important}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown)>[aria-hidden=true]{display:none}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) .swal2-container{position:static!important}}body.swal2-toast-shown .swal2-container{background-color:transparent}body.swal2-toast-shown .swal2-container.swal2-top{top:0;right:auto;bottom:auto;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-top-end,body.swal2-toast-shown .swal2-container.swal2-top-right{top:0;right:0;bottom:auto;left:auto}body.swal2-toast-shown .swal2-container.swal2-top-left,body.swal2-toast-shown .swal2-container.swal2-top-start{top:0;right:auto;bottom:auto;left:0}body.swal2-toast-shown .swal2-container.swal2-center-left,body.swal2-toast-shown .swal2-container.swal2-center-start{top:50%;right:auto;bottom:auto;left:0;-webkit-transform:translateY(-50%);transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-center{top:50%;right:auto;bottom:auto;left:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}body.swal2-toast-shown .swal2-container.swal2-center-end,body.swal2-toast-shown .swal2-container.swal2-center-right{top:50%;right:0;bottom:auto;left:auto;-webkit-transform:translateY(-50%);transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-left,body.swal2-toast-shown .swal2-container.swal2-bottom-start{top:auto;right:auto;bottom:0;left:0}body.swal2-toast-shown .swal2-container.swal2-bottom{top:auto;right:auto;bottom:0;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-end,body.swal2-toast-shown .swal2-container.swal2-bottom-right{top:auto;right:0;bottom:0;left:auto}body.swal2-toast-column .swal2-toast{-webkit-box-orient:vertical;-webkit-box-direction:normal;flex-direction:column;-webkit-box-align:stretch;align-items:stretch}body.swal2-toast-column .swal2-toast .swal2-actions{-webkit-box-flex:1;flex:1;align-self:stretch;height:2.2em;margin-top:.3125em}body.swal2-toast-column .swal2-toast .swal2-loading{-webkit-box-pack:center;justify-content:center}body.swal2-toast-column .swal2-toast .swal2-input{height:2em;margin:.3125em auto;font-size:1em}body.swal2-toast-column .swal2-toast .swal2-validation-message{font-size:1em}");
 
 /***/ },
-/* 255 */,
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _sweetalert = __webpack_require__(254);
+	
+	var _sweetalert2 = _interopRequireDefault(_sweetalert);
+	
+	var _TablaFlexible = __webpack_require__(252);
+	
+	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
+	
+	var _reactResponsiveModal = __webpack_require__(256);
+	
+	var _reactResponsiveModal2 = _interopRequireDefault(_reactResponsiveModal);
+	
+	var _ContactosEditar = __webpack_require__(280);
+	
+	var _ContactosEditar2 = _interopRequireDefault(_ContactosEditar);
+	
+	var _PedidosEditar = __webpack_require__(283);
+	
+	var _PedidosEditar2 = _interopRequireDefault(_PedidosEditar);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //https://github.com/sweetalert2/sweetalert2
+	
+	
+	var FabricasEditar = function (_React$Component) {
+	  _inherits(FabricasEditar, _React$Component);
+	
+	  function FabricasEditar() {
+	    _classCallCheck(this, FabricasEditar);
+	
+	    var _this = _possibleConstructorReturn(this, (FabricasEditar.__proto__ || Object.getPrototypeOf(FabricasEditar)).call(this));
+	
+	    _this.state = {
+	      nuevo: true,
+	      cargando: true,
+	      error: "",
+	      _id: "",
+	      // Campos del formulario
+	      nombre: "",
+	      direccion: "",
+	      ciudad: "",
+	      telefono: "",
+	      contactos: [],
+	      pedidos: [],
+	      creada: new Date(),
+	      errorNombre: false,
+	      modalContactos: false,
+	      modalContactosEditar: null,
+	      modalPedidos: false,
+	      modalPedidosEditar: null
+	    };
+	    _this.handleOnChange = _this.handleOnChange.bind(_this);
+	    _this.obtenerFabrica = _this.obtenerFabrica.bind(_this);
+	    _this.onOpenModal = _this.onOpenModal.bind(_this);
+	    _this.onCloseModal = _this.onCloseModal.bind(_this);
+	    _this.handleEditarContacto = _this.handleEditarContacto.bind(_this);
+	    _this.onSaveModal = _this.onSaveModal.bind(_this);
+	    _this.handleEliminarContacto = _this.handleEliminarContacto.bind(_this);
+	    _this.handleEditarPedido = _this.handleEditarPedido.bind(_this);
+	    _this.handleEliminarPedido = _this.handleEliminarPedido.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(FabricasEditar, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      if (this.props.params.id) {
+	        this.obtenerFabrica();
+	      } else {
+	        this.setState({
+	          cargando: false
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'obtenerFabrica',
+	    value: function obtenerFabrica() {
+	      var _this2 = this;
+	
+	      fetch('/api/fabricas/' + this.props.params.id).then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            console.log("Fabrica: ", data);
+	            _this2.setState({
+	              _id: data._id,
+	              nuevo: false,
+	              cargando: false,
+	              nombre: data.nombre,
+	              direccion: data.direccion,
+	              ciudad: data.ciudad,
+	              telefono: data.telefono,
+	              contactos: data.contactos,
+	              pedidos: data.pedidos,
+	              creada: data.creada
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener fabrica - ", error.message);
+	            _this2.setState({
+	              cargando: false,
+	              error: error.message
+	            });
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.log("Error en el fetch. ", error.message);
+	        _this2.setState({
+	          cargando: false,
+	          error: error.message
+	        });
+	      });
+	    }
+	
+	    //Manejo de cambios en el formulario
+	
+	  }, {
+	    key: 'handleOnChange',
+	    value: function handleOnChange(event) {
+	      this.setState(_defineProperty({}, event.target.name, event.target.value));
+	      //Quito el error del campo obligatorio
+	      if (event.target.name === "nombre") {
+	        this.setState({
+	          errorNombre: false
+	        });
+	      }
+	    }
+	
+	    //Función para crear una nueva fábrica
+	
+	  }, {
+	    key: 'crearFabrica',
+	    value: function crearFabrica(nuevaFabrica) {
+	      var _this3 = this;
+	
+	      fetch('/api/fabricas', {
+	        method: 'POST',
+	        headers: { 'Content-Type': 'application/json' },
+	        body: JSON.stringify(nuevaFabrica)
+	      }).then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            console.log("Fabrica creada: ", data);
+	            _sweetalert2.default.fire("Fabrica creada!", "", "success").then(function () {
+	              _this3.props.history.push("/fabricas");
+	            });
+	          });
+	        } else {
+	          res.json().then(function (err) {
+	            console.log("Error al crear fabrica: ", err.message);
+	            _sweetalert2.default.fire("Error al crear la fábrica", "", "error");
+	          });
+	        }
+	      }).catch(function (err) {
+	        console.log("Error al crear: ", err.message);
+	        _sweetalert2.default.fire("Error del servidor", "", "error");
+	      });
+	    }
+	
+	    //Función para modificar una fábrica
+	
+	  }, {
+	    key: 'modificarFabrica',
+	    value: function modificarFabrica(nuevaFabrica, id) {
+	      var _this4 = this;
+	
+	      fetch('/api/fabricas/' + id, {
+	        method: 'PUT',
+	        headers: { 'Content-Type': 'application/json' },
+	        body: JSON.stringify(nuevaFabrica)
+	      }).then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            console.log("Fabrica modificada: ", data);
+	            _sweetalert2.default.fire("Fabrica modificada!", "", "success").then(function () {
+	              _this4.props.history.push("/fabricas");
+	            });
+	          });
+	        } else {
+	          res.json().then(function (err) {
+	            console.log("Error al modificar fabrica: ", err.message);
+	            _sweetalert2.default.fire("Error al modificar la fábrica", "", "error");
+	          });
+	        }
+	      }).catch(function (err) {
+	        console.log("Error al modificar: ", err.message);
+	        _sweetalert2.default.fire("Error del servidor", "", "error");
+	      });
+	    }
+	  }, {
+	    key: 'onClickGuardar',
+	    value: function onClickGuardar() {
+	      if (this.state.nombre) {
+	        if (this.state.nuevo) {
+	          //Creo un registro
+	          this.crearFabrica({
+	            nombre: this.state.nombre,
+	            direccion: this.state.direccion,
+	            ciudad: this.state.ciudad,
+	            telefono: this.state.telefono,
+	            contactos: this.state.contactos,
+	            pedidos: this.state.pedidos,
+	            creada: this.state.creada
+	          });
+	        } else {
+	          //Modifico un registro
+	          this.modificarFabrica({
+	            nombre: this.state.nombre,
+	            direccion: this.state.direccion,
+	            ciudad: this.state.ciudad,
+	            telefono: this.state.telefono,
+	            contactos: this.state.contactos,
+	            pedidos: this.state.pedidos,
+	            creada: this.state.creada
+	          }, this.state._id);
+	        }
+	      } else {
+	        this.setState({
+	          errorNombre: true
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'handleEditarContacto',
+	    value: function handleEditarContacto(id) {
+	      var _this5 = this;
+	
+	      //Busco el id
+	      this.state.contactos.forEach(function (contacto) {
+	        if (contacto._id === id) {
+	          _this5.setState({
+	            modalContactosEditar: contacto
+	          }, _this5.onOpenModal("modalContactos"));
+	          return;
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'handleEliminarContacto',
+	    value: function handleEliminarContacto(id) {
+	      var _this6 = this;
+	
+	      var auxContactos = this.state.contactos;
+	      //Elimino el contacto del state
+	      auxContactos.forEach(function (contacto, i) {
+	        if (contacto._id === id) {
+	          auxContactos.splice(i, 1);
+	          _this6.setState({
+	            contactos: auxContactos
+	          });
+	          return;
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'handleEditarPedido',
+	    value: function handleEditarPedido(id) {
+	      var _this7 = this;
+	
+	      //Busco el id
+	      this.state.pedidos.forEach(function (pedido) {
+	        if (pedido._id === id) {
+	          _this7.setState({
+	            modalPedidosEditar: pedido
+	          }, _this7.onOpenModal("modalPedidos"));
+	          return;
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'handleEliminarPedido',
+	    value: function handleEliminarPedido(id) {
+	      var _this8 = this;
+	
+	      var auxPedidos = this.state.pedidos;
+	      //Elimino el contacto del state
+	      auxPedidos.forEach(function (pedido, i) {
+	        if (pedido._id === id) {
+	          auxPedidos.splice(i, 1);
+	          _this8.setState({
+	            pedidos: auxPedidos
+	          });
+	          return;
+	        }
+	      });
+	    }
+	
+	    //Modal
+	
+	  }, {
+	    key: 'onOpenModal',
+	    value: function onOpenModal(cual) {
+	      this.setState(_defineProperty({}, cual, true));
+	    }
+	  }, {
+	    key: 'onCloseModal',
+	    value: function onCloseModal(cual) {
+	      var _setState3;
+	
+	      this.setState((_setState3 = {}, _defineProperty(_setState3, cual, false), _defineProperty(_setState3, cual + "Editar", null), _setState3));
+	    }
+	  }, {
+	    key: 'onSaveModal',
+	    value: function onSaveModal(obj, array) {
+	      var auxArray = this.state[array];
+	      if (!obj._id) {
+	        //Inserto un nuevo registro
+	        auxArray.push(obj);
+	      } else {
+	        //reemplazo el registro
+	        auxArray.forEach(function (elemento, i) {
+	          if (obj._id === elemento._id) {
+	            auxArray.splice(i, 1, obj);
+	          }
+	        });
+	      }
+	      this.setState(_defineProperty({}, array, auxArray));
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this9 = this;
+	
+	      var columnsContactos = [["Nombre", "nombre", "String"], ["Apellido", "apellido", "String"], ["Email", "email", "String"], ["Teléfono", "telefono", "String"]];
+	      var columnsPedidos = [["Fecha", "fecha", "Fecha"], ["Productos", "detalle", "Largo"], ["Precio", "precioTotal", "String"], ["Estado", "estado", "String"]];
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'fabricas-editar text-center' },
+	        !this.state.cargando ? _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 d-flex justify-content-between' },
+	              this.state.nuevo ? _react2.default.createElement(
+	                'h3',
+	                null,
+	                'Crear Fabrica'
+	              ) : _react2.default.createElement(
+	                'h3',
+	                null,
+	                'Modificar F\xE1brica: ',
+	                this.state.nombre
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                { type: 'button',
+	                  className: 'btn btn-success',
+	                  onClick: function onClick() {
+	                    return _this9.onClickGuardar();
+	                  }
+	                },
+	                '+ Guardar'
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row contenedor-formulario text-center' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Nombre'
+	              ),
+	              _react2.default.createElement('input', { type: 'text',
+	                className: this.state.errorNombre ? "form-control is-invalid" : "form-control",
+	                id: 'nombre',
+	                name: 'nombre',
+	                placeholder: 'Nombre...',
+	                value: this.state.nombre,
+	                onChange: this.handleOnChange }),
+	              this.state.errorNombre ? _react2.default.createElement(
+	                'div',
+	                { className: 'invalid-feedback' },
+	                'El nombre es requerido'
+	              ) : null
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Direcci\xF3n'
+	              ),
+	              _react2.default.createElement('input', { type: 'text',
+	                className: 'form-control',
+	                id: 'direccion',
+	                name: 'direccion',
+	                placeholder: 'Direcci\xF3n...',
+	                value: this.state.direccion,
+	                onChange: this.handleOnChange })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Ciudad'
+	              ),
+	              _react2.default.createElement('input', { type: 'text',
+	                className: 'form-control',
+	                id: 'ciudad',
+	                name: 'ciudad',
+	                placeholder: 'Ciudad...',
+	                value: this.state.ciudad,
+	                onChange: this.handleOnChange })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Tel\xE9fono'
+	              ),
+	              _react2.default.createElement('input', { type: 'number',
+	                className: 'form-control',
+	                id: 'telefono',
+	                name: 'telefono',
+	                placeholder: 'Tel\xE9fono...',
+	                value: this.state.telefono,
+	                onChange: this.handleOnChange })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 mt-3' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card border-primary', id: 'card' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'card-header d-flex justify-content-between', id: 'headingOne' },
+	                  _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-link collapsed col-sm-8 col-6',
+	                      'data-toggle': 'collapse',
+	                      'data-target': '#collapseOne',
+	                      'aria-expanded': 'false',
+	                      'aria-controls': 'collapseOne' },
+	                    _react2.default.createElement(
+	                      'h5',
+	                      { className: 'd-flex align-items-center mb-0' },
+	                      'Contactos: ',
+	                      this.state.contactos.length,
+	                      _react2.default.createElement(
+	                        'i',
+	                        { className: 'material-icons ml-3' },
+	                        'keyboard_arrow_down'
+	                      )
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-outline-success',
+	                      onClick: function onClick() {
+	                        return _this9.onOpenModal("modalContactos");
+	                      }
+	                    },
+	                    '+ Agregar Contacto'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { id: 'collapseOne',
+	                    className: 'collapse',
+	                    'aria-labelledby': 'headingOne',
+	                    'data-parent': '#card' },
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'card-body contenedor-tabla' },
+	                    _react2.default.createElement(_TablaFlexible2.default, {
+	                      lista: "contactos",
+	                      columns: columnsContactos,
+	                      data: this.state.contactos,
+	                      handleEditar: this.handleEditarContacto,
+	                      handleEliminar: this.handleEliminarContacto
+	                    })
+	                  )
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 mt-3' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card border-primary', id: 'card' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'card-header d-flex justify-content-between', id: 'headingOne' },
+	                  _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-link collapsed col-sm-8 col-6',
+	                      'data-toggle': 'collapse',
+	                      'data-target': '#collapseTwo',
+	                      'aria-expanded': 'false',
+	                      'aria-controls': 'collapseTwo' },
+	                    _react2.default.createElement(
+	                      'h5',
+	                      { className: 'd-flex align-items-center mb-0' },
+	                      'Pedidos: ',
+	                      this.state.pedidos.length,
+	                      _react2.default.createElement(
+	                        'i',
+	                        { className: 'material-icons ml-3' },
+	                        'keyboard_arrow_down'
+	                      )
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-outline-success',
+	                      onClick: function onClick() {
+	                        return _this9.onOpenModal("modalPedidos");
+	                      }
+	                    },
+	                    '+ Agregar Pedido'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { id: 'collapseTwo',
+	                    className: 'collapse',
+	                    'aria-labelledby': 'headingTwo',
+	                    'data-parent': '#card' },
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'card-body contenedor-tabla' },
+	                    _react2.default.createElement(_TablaFlexible2.default, {
+	                      lista: "pedidos",
+	                      columns: columnsPedidos,
+	                      data: this.state.pedidos,
+	                      handleEditar: this.handleEditarPedido,
+	                      handleEliminar: this.handleEliminarPedido
+	                    })
+	                  )
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            _reactResponsiveModal2.default,
+	            {
+	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
+	              onClose: function onClose() {
+	                return _this9.onCloseModal("modalContactos");
+	              },
+	              showCloseIcon: false,
+	              open: this.state.modalContactos,
+	              center: true
+	            },
+	            _react2.default.createElement(_ContactosEditar2.default, {
+	              data: this.state.modalContactosEditar,
+	              onSave: this.onSaveModal,
+	              onClose: function onClose() {
+	                return _this9.onCloseModal("modalContactos");
+	              },
+	              titulo: this.state.modalContactosEditar ? "EDITAR CONTACTO" : "CREAR CONTACTO"
+	            })
+	          ),
+	          _react2.default.createElement(
+	            _reactResponsiveModal2.default,
+	            {
+	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
+	              onClose: function onClose() {
+	                return _this9.onCloseModal("modalPedidos");
+	              },
+	              showCloseIcon: false,
+	              open: this.state.modalPedidos,
+	              center: true
+	            },
+	            _react2.default.createElement(_PedidosEditar2.default, {
+	              data: this.state.modalPedidosEditar,
+	              onSave: this.onSaveModal,
+	              onClose: function onClose() {
+	                return _this9.onCloseModal("modalPedidos");
+	              },
+	              titulo: this.state.modalContactosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"
+	            })
+	          )
+	        ) : this.state.error ?
+	        //Mensaje de error
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'alert alert-dismissible alert-danger' },
+	          _react2.default.createElement(
+	            'button',
+	            { type: 'button', className: 'close', 'data-dismiss': 'alert' },
+	            '\xD7'
+	          ),
+	          _react2.default.createElement(
+	            'strong',
+	            null,
+	            'Error!'
+	          ),
+	          ' ',
+	          this.state.error
+	        ) :
+	        // Spinner
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'spinner-border text-light', role: 'status' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'sr-only' },
+	            'Loading...'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return FabricasEditar;
+	}(_react2.default.Component);
+	
+	exports.default = FabricasEditar;
+
+/***/ },
 /* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -45718,1125 +46980,7 @@
 
 
 /***/ },
-/* 280 */,
-/* 281 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRouter = __webpack_require__(172);
-	
-	__webpack_require__(249);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Header = function (_React$Component) {
-	  _inherits(Header, _React$Component);
-	
-	  function Header() {
-	    _classCallCheck(this, Header);
-	
-	    var _this = _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this));
-	
-	    _this.state = {};
-	    return _this;
-	  }
-	
-	  _createClass(Header, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'header' },
-	        _react2.default.createElement(
-	          'nav',
-	          { className: 'navbar navbar-expand-lg navbar-dark bg-primary' },
-	          _react2.default.createElement(
-	            _reactRouter.Link,
-	            { className: 'navbar-brand', to: '/' },
-	            'KareliSys'
-	          ),
-	          _react2.default.createElement(
-	            'button',
-	            {
-	              className: 'navbar-toggler collapsed',
-	              type: 'button',
-	              'data-toggle': 'collapse',
-	              'data-target': '#navbarColor01',
-	              'aria-controls': 'navbarColor01',
-	              'aria-expanded': 'false',
-	              'aria-label': 'Toggle navigation' },
-	            _react2.default.createElement('span', { className: 'navbar-toggler-icon' })
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'navbar-collapse collapse', id: 'navbarColor01' },
-	            _react2.default.createElement(
-	              'ul',
-	              { className: 'navbar-nav mr-auto' },
-	              _react2.default.createElement(
-	                'li',
-	                { className: 'nav-item active' },
-	                _react2.default.createElement(
-	                  _reactRouter.Link,
-	                  { className: 'nav-link', to: '/' },
-	                  'Home ',
-	                  _react2.default.createElement(
-	                    'span',
-	                    { className: 'sr-only' },
-	                    '(current)'
-	                  )
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'li',
-	                { className: 'nav-item dropdown' },
-	                _react2.default.createElement(
-	                  'a',
-	                  { className: 'nav-link dropdown-toggle',
-	                    'data-toggle': 'dropdown',
-	                    href: '#', role: 'button',
-	                    'aria-haspopup': 'true',
-	                    'aria-expanded': 'false' },
-	                  'F\xE1bricas'
-	                ),
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'dropdown-menu' },
-	                  _react2.default.createElement(
-	                    _reactRouter.Link,
-	                    { className: 'dropdown-item', to: '/fabricas' },
-	                    'Gesti\xF3n de F\xE1bricas'
-	                  ),
-	                  _react2.default.createElement(
-	                    _reactRouter.Link,
-	                    { className: 'dropdown-item', to: '#' },
-	                    'Gesti\xF3n de Pagos'
-	                  )
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'li',
-	                { className: 'nav-item dropdown' },
-	                _react2.default.createElement(
-	                  'a',
-	                  { className: 'nav-link dropdown-toggle',
-	                    'data-toggle': 'dropdown',
-	                    href: '#', role: 'button',
-	                    'aria-haspopup': 'true',
-	                    'aria-expanded': 'false' },
-	                  'Clientes'
-	                ),
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'dropdown-menu' },
-	                  _react2.default.createElement(
-	                    'a',
-	                    { className: 'dropdown-item', href: '#' },
-	                    'Gesti\xF3n de Clientes'
-	                  ),
-	                  _react2.default.createElement(
-	                    'a',
-	                    { className: 'dropdown-item', href: '#' },
-	                    'Gesti\xF3n de Cobros'
-	                  )
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'li',
-	                { className: 'nav-item' },
-	                _react2.default.createElement(
-	                  _reactRouter.Link,
-	                  { className: 'nav-link', to: '/stock' },
-	                  'Stock'
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'li',
-	                { className: 'nav-item' },
-	                _react2.default.createElement(
-	                  _reactRouter.Link,
-	                  { className: 'nav-link', to: '/' },
-	                  'Usuarios'
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-inline my-2 my-lg-0' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'nav-item dropdown mr-sm-2' },
-	                _react2.default.createElement(
-	                  'a',
-	                  { className: 'user-name nav-link dropdown-toggle',
-	                    'data-toggle': 'dropdown',
-	                    href: '#', role: 'button',
-	                    'aria-haspopup': 'true',
-	                    'aria-expanded': 'false' },
-	                  'Ariel Rosales'
-	                ),
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'dropdown-menu' },
-	                  _react2.default.createElement(
-	                    'a',
-	                    { className: 'dropdown-item', href: '#' },
-	                    'Opciones de Usuario'
-	                  ),
-	                  _react2.default.createElement('div', { className: 'dropdown-divider' }),
-	                  _react2.default.createElement(
-	                    'a',
-	                    { className: 'logout dropdown-item', href: '#' },
-	                    'Cerrar Sesi\xF3n'
-	                  )
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'profile-image' },
-	                _react2.default.createElement(
-	                  'span',
-	                  null,
-	                  'A'
-	                )
-	              )
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'content' },
-	          this.props.children
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return Header;
-	}(_react2.default.Component);
-	
-	exports.default = Header;
-
-/***/ },
-/* 282 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _TablaFlexible = __webpack_require__(283);
-	
-	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
-	
-	var _sweetalert = __webpack_require__(254);
-	
-	var _sweetalert2 = _interopRequireDefault(_sweetalert);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var FabricasLista = function (_React$Component) {
-	  _inherits(FabricasLista, _React$Component);
-	
-	  function FabricasLista() {
-	    _classCallCheck(this, FabricasLista);
-	
-	    var _this = _possibleConstructorReturn(this, (FabricasLista.__proto__ || Object.getPrototypeOf(FabricasLista)).call(this));
-	
-	    _this.state = {
-	      fabricas: [],
-	      cargando: true,
-	      error: ""
-	    };
-	    _this.cargarLista = _this.cargarLista.bind(_this);
-	    _this.handleEditar = _this.handleEditar.bind(_this);
-	    _this.handleEliminar = _this.handleEliminar.bind(_this);
-	    _this.actualizarLista = _this.actualizarLista.bind(_this);
-	    return _this;
-	  }
-	
-	  _createClass(FabricasLista, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      this.cargarLista();
-	    }
-	
-	    //Obtener lista de fábricas
-	
-	  }, {
-	    key: 'cargarLista',
-	    value: function cargarLista() {
-	      var _this2 = this;
-	
-	      fetch('/api/fabricas').then(function (res) {
-	        if (res.ok) {
-	          res.json().then(function (data) {
-	            console.log("Get List: ", data);
-	            _this2.setState({
-	              cargando: false,
-	              fabricas: data,
-	              error: ""
-	            });
-	          });
-	        } else {
-	          res.json().then(function (error) {
-	            console.log("Error al obtener la lista. ", error.message);
-	            _this2.setState({
-	              cargando: false,
-	              error: error.message
-	            });
-	          });
-	        }
-	      }).catch(function (error) {
-	        console.log("Error: ", error.message);
-	        _this2.setState({
-	          cargando: false,
-	          error: error.message
-	        });
-	      });
-	    }
-	  }, {
-	    key: 'onClickAgregar',
-	    value: function onClickAgregar() {
-	      this.props.history.push("/fabricas/editar/");
-	    }
-	  }, {
-	    key: 'handleEditar',
-	    value: function handleEditar(id) {
-	      this.props.history.push('/fabricas/editar/' + id);
-	    }
-	  }, {
-	    key: 'handleEliminar',
-	    value: function handleEliminar(id) {
-	      var _this3 = this;
-	
-	      //Primero pido confirmación
-	      _sweetalert2.default.fire({
-	        title: "¿Seguro que desea eliminar?",
-	        text: "Esta acción no se puede revertir",
-	        icon: "warning",
-	        showCancelButton: true,
-	        confirmButtonColor: "#3085d6",
-	        cancelButtonColor: "#d33",
-	        confirmButtonText: "Si, eliminar"
-	      }).then(function (result) {
-	        if (result.value) {
-	          //Elimino
-	          fetch('/api/fabricas/' + id, {
-	            method: 'DELETE',
-	            headers: { 'Content-Type': 'application/json' }
-	          }).then(function (res) {
-	            if (res.ok) {
-	              _sweetalert2.default.fire("Fabrica Eliminada", "", "success").then(function () {
-	                _this3.actualizarLista(id);
-	              });
-	            } else {
-	              _sweetalert2.default.fire("Error al eliminar", "", "error");
-	            }
-	          }).catch(function (err) {
-	            _sweetalert2.default.fire("Error del servidor", err.message, "error");
-	          });
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'actualizarLista',
-	    value: function actualizarLista(id) {
-	      var _this4 = this;
-	
-	      var auxFabricas = this.state.fabricas;
-	      // Quito la fabricas eliminada de la lista del state
-	      auxFabricas.forEach(function (fabrica, i) {
-	        if (id === fabrica._id) {
-	          auxFabricas.splice(i, 1);
-	          _this4.setState({
-	            fabricas: auxFabricas
-	          });
-	          return;
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this5 = this;
-	
-	      var columns = [["Nombre", "nombre", "String"], ["Ciudad", "ciudad", "String"], ["Dirección", "direccion", "String"]];
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'fabricas-lista' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'row' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'col-12 d-flex justify-content-between' },
-	            _react2.default.createElement(
-	              'h3',
-	              null,
-	              'Fabricas'
-	            ),
-	            _react2.default.createElement(
-	              'button',
-	              { type: 'button',
-	                className: 'btn btn-success',
-	                onClick: function onClick() {
-	                  return _this5.onClickAgregar();
-	                }
-	              },
-	              '+ Agregar Fabrica'
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'row' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'col-12 contenedor-tabla text-center' },
-	            !this.state.cargando ?
-	            // Tabla
-	            _react2.default.createElement(_TablaFlexible2.default, {
-	              columns: columns,
-	              data: this.state.fabricas,
-	              handleEditar: this.handleEditar,
-	              handleEliminar: this.handleEliminar
-	            }) : this.state.error ?
-	            //Mensaje de error
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'alert alert-dismissible alert-danger' },
-	              _react2.default.createElement(
-	                'button',
-	                { type: 'button', className: 'close', 'data-dismiss': 'alert' },
-	                '\xD7'
-	              ),
-	              _react2.default.createElement(
-	                'strong',
-	                null,
-	                'Error!'
-	              ),
-	              ' ',
-	              this.state.error
-	            ) :
-	            // Spinner
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'spinner-border text-light', role: 'status' },
-	              _react2.default.createElement(
-	                'span',
-	                { className: 'sr-only' },
-	                'Loading...'
-	              )
-	            )
-	          )
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return FabricasLista;
-	}(_react2.default.Component);
-	
-	exports.default = FabricasLista;
-
-/***/ },
-/* 283 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _jquery = __webpack_require__(253);
-	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var TablaFlexible = function (_React$Component) {
-	  _inherits(TablaFlexible, _React$Component);
-	
-	  function TablaFlexible() {
-	    _classCallCheck(this, TablaFlexible);
-	
-	    return _possibleConstructorReturn(this, (TablaFlexible.__proto__ || Object.getPrototypeOf(TablaFlexible)).apply(this, arguments));
-	  }
-	
-	  _createClass(TablaFlexible, [{
-	    key: 'componentDidMount',
-	
-	    // Props:
-	    // columns: Array de arrays con la siguiente estructura
-	    // [ ["Titulo de la columna","clave del objeto data","tipo"] ] el tipo puede ser: "String, Numero, Precio, Fecha"
-	    // data: Array de objetos con los datos para completar la tabla
-	    // ---------- botones -------------
-	    // handleEditar: función para el botón editar. Parametro: _id
-	    // handleEliminar: función para el botón eliminar. Parametro: _id
-	    value: function componentDidMount() {
-	      //JQuery para el filtro de la tabla
-	      (0, _jquery2.default)(document).ready(function () {
-	        (0, _jquery2.default)("#myInput").on("keyup", function () {
-	          var value = (0, _jquery2.default)(this).val().toLowerCase();
-	          (0, _jquery2.default)("#myTable tr").filter(function () {
-	            (0, _jquery2.default)(this).toggle((0, _jquery2.default)(this).text().toLowerCase().indexOf(value) > -1);
-	          });
-	        });
-	      });
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this;
-	
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'tabla-flexible table-responsive-md' },
-	        _react2.default.createElement('input', { className: 'form-control buscador-tabla', id: 'myInput', type: 'text', placeholder: 'Buscar en la tabla...' }),
-	        _react2.default.createElement('br', null),
-	        _react2.default.createElement(
-	          'table',
-	          { className: 'table' },
-	          _react2.default.createElement(
-	            'thead',
-	            null,
-	            _react2.default.createElement(
-	              'tr',
-	              { className: 'table-primary' },
-	              this.props.columns.map(function (col, i) {
-	                return _react2.default.createElement(
-	                  'th',
-	                  { scope: 'col', key: i },
-	                  col[0]
-	                );
-	              }),
-	              _react2.default.createElement(
-	                'th',
-	                { scope: 'col', className: 'd-flex justify-content-end' },
-	                'Acciones'
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'tbody',
-	            { id: 'myTable' },
-	            this.props.data.map(function (data, i) {
-	              return _react2.default.createElement(
-	                'tr',
-	                { className: i % 2 == 0 ? "" : "table-secondary", key: i },
-	                _this2.props.columns.map(function (col, i) {
-	                  return _react2.default.createElement(
-	                    'td',
-	                    { key: i },
-	                    data[col[1]]
-	                  );
-	                }),
-	                _react2.default.createElement(
-	                  'td',
-	                  { className: 'd-flex justify-content-end' },
-	                  _this2.props.handleEditar ? _react2.default.createElement(
-	                    'button',
-	                    { type: 'button',
-	                      className: 'btn btn-outline-primary',
-	                      title: 'Editar',
-	                      onClick: function onClick() {
-	                        return _this2.props.handleEditar(data._id);
-	                      }
-	                    },
-	                    _react2.default.createElement(
-	                      'i',
-	                      { className: 'material-icons' },
-	                      'create'
-	                    )
-	                  ) : null,
-	                  _this2.props.handleEliminar ? _react2.default.createElement(
-	                    'button',
-	                    { type: 'button',
-	                      className: 'btn btn-outline-danger',
-	                      title: 'Eliminar',
-	                      onClick: function onClick() {
-	                        return _this2.props.handleEliminar(data._id);
-	                      }
-	                    },
-	                    _react2.default.createElement(
-	                      'i',
-	                      { className: 'material-icons' },
-	                      'clear'
-	                    )
-	                  ) : null
-	                )
-	              );
-	            })
-	          )
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return TablaFlexible;
-	}(_react2.default.Component);
-	
-	exports.default = TablaFlexible;
-
-/***/ },
-/* 284 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _sweetalert = __webpack_require__(254);
-	
-	var _sweetalert2 = _interopRequireDefault(_sweetalert);
-	
-	var _TablaFlexible = __webpack_require__(283);
-	
-	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
-	
-	var _reactResponsiveModal = __webpack_require__(256);
-	
-	var _reactResponsiveModal2 = _interopRequireDefault(_reactResponsiveModal);
-	
-	var _ContactosEditar = __webpack_require__(285);
-	
-	var _ContactosEditar2 = _interopRequireDefault(_ContactosEditar);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //https://github.com/sweetalert2/sweetalert2
-	
-	
-	var FabricasEditar = function (_React$Component) {
-	  _inherits(FabricasEditar, _React$Component);
-	
-	  function FabricasEditar() {
-	    _classCallCheck(this, FabricasEditar);
-	
-	    var _this = _possibleConstructorReturn(this, (FabricasEditar.__proto__ || Object.getPrototypeOf(FabricasEditar)).call(this));
-	
-	    _this.state = {
-	      nuevo: true,
-	      cargando: true,
-	      error: "",
-	      _id: "",
-	      // Campos del formulario
-	      nombre: "",
-	      direccion: "",
-	      ciudad: "",
-	      telefono: "",
-	      contactos: [],
-	      pedidos: [],
-	      creada: new Date(),
-	      errorNombre: false,
-	      modalContactos: false,
-	      modalContactosEditar: null
-	    };
-	    _this.handleOnChange = _this.handleOnChange.bind(_this);
-	    _this.obtenerFabrica = _this.obtenerFabrica.bind(_this);
-	    _this.onOpenModal = _this.onOpenModal.bind(_this);
-	    _this.onCloseModal = _this.onCloseModal.bind(_this);
-	    _this.handleEditarContacto = _this.handleEditarContacto.bind(_this);
-	    _this.onSaveModal = _this.onSaveModal.bind(_this);
-	    return _this;
-	  }
-	
-	  _createClass(FabricasEditar, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      if (this.props.params.id) {
-	        this.obtenerFabrica();
-	      } else {
-	        this.setState({
-	          cargando: false
-	        });
-	      }
-	    }
-	  }, {
-	    key: 'obtenerFabrica',
-	    value: function obtenerFabrica() {
-	      var _this2 = this;
-	
-	      fetch('/api/fabricas/' + this.props.params.id).then(function (res) {
-	        if (res.ok) {
-	          res.json().then(function (data) {
-	            console.log("Fabrica: ", data);
-	            _this2.setState({
-	              _id: data._id,
-	              nuevo: false,
-	              cargando: false,
-	              nombre: data.nombre,
-	              direccion: data.direccion,
-	              ciudad: data.ciudad,
-	              telefono: data.telefono,
-	              contactos: data.contactos,
-	              pedidos: data.pedidos,
-	              creada: data.creada
-	            });
-	          });
-	        } else {
-	          res.json().then(function (error) {
-	            console.log("Error al obtener fabrica - ", error.message);
-	            _this2.setState({
-	              cargando: false,
-	              error: error.message
-	            });
-	          });
-	        }
-	      }).catch(function (error) {
-	        console.log("Error en el fetch. ", error.message);
-	        _this2.setState({
-	          cargando: false,
-	          error: error.message
-	        });
-	      });
-	    }
-	
-	    //Manejo de cambios en el formulario
-	
-	  }, {
-	    key: 'handleOnChange',
-	    value: function handleOnChange(event) {
-	      this.setState(_defineProperty({}, event.target.name, event.target.value));
-	      //Quito el error del campo obligatorio
-	      if (event.target.name === "nombre") {
-	        this.setState({
-	          errorNombre: false
-	        });
-	      }
-	    }
-	
-	    //Función para crear una nueva fábrica
-	
-	  }, {
-	    key: 'crearFabrica',
-	    value: function crearFabrica(nuevaFabrica) {
-	      var _this3 = this;
-	
-	      fetch('/api/fabricas', {
-	        method: 'POST',
-	        headers: { 'Content-Type': 'application/json' },
-	        body: JSON.stringify(nuevaFabrica)
-	      }).then(function (res) {
-	        if (res.ok) {
-	          res.json().then(function (data) {
-	            console.log("Fabrica creada: ", data);
-	            _sweetalert2.default.fire("Fabrica creada!", "", "success").then(function () {
-	              _this3.props.history.push("/fabricas");
-	            });
-	          });
-	        } else {
-	          res.json().then(function (err) {
-	            console.log("Error al crear fabrica: ", err.message);
-	            _sweetalert2.default.fire("Error al crear la fábrica", "", "error");
-	          });
-	        }
-	      }).catch(function (err) {
-	        console.log("Error al crear: ", err.message);
-	        _sweetalert2.default.fire("Error del servidor", "", "error");
-	      });
-	    }
-	
-	    //Función para modificar una fábrica
-	
-	  }, {
-	    key: 'modificarFabrica',
-	    value: function modificarFabrica(nuevaFabrica, id) {
-	      var _this4 = this;
-	
-	      fetch('/api/fabricas/' + id, {
-	        method: 'PUT',
-	        headers: { 'Content-Type': 'application/json' },
-	        body: JSON.stringify(nuevaFabrica)
-	      }).then(function (res) {
-	        if (res.ok) {
-	          res.json().then(function (data) {
-	            console.log("Fabrica modificada: ", data);
-	            _sweetalert2.default.fire("Fabrica modificada!", "", "success").then(function () {
-	              _this4.props.history.push("/fabricas");
-	            });
-	          });
-	        } else {
-	          res.json().then(function (err) {
-	            console.log("Error al modificar fabrica: ", err.message);
-	            _sweetalert2.default.fire("Error al modificar la fábrica", "", "error");
-	          });
-	        }
-	      }).catch(function (err) {
-	        console.log("Error al modificar: ", err.message);
-	        _sweetalert2.default.fire("Error del servidor", "", "error");
-	      });
-	    }
-	  }, {
-	    key: 'onClickGuardar',
-	    value: function onClickGuardar() {
-	      if (this.state.nombre) {
-	        if (this.state.nuevo) {
-	          //Creo un registro
-	          this.crearFabrica({
-	            nombre: this.state.nombre,
-	            direccion: this.state.direccion,
-	            ciudad: this.state.ciudad,
-	            telefono: this.state.telefono,
-	            contactos: this.state.contactos,
-	            pedidos: this.state.pedidos,
-	            creada: this.state.creada
-	          });
-	        } else {
-	          //Modifico un registro
-	          this.modificarFabrica({
-	            nombre: this.state.nombre,
-	            direccion: this.state.direccion,
-	            ciudad: this.state.ciudad,
-	            telefono: this.state.telefono,
-	            contactos: this.state.contactos,
-	            pedidos: this.state.pedidos,
-	            creada: this.state.creada
-	          }, this.state._id);
-	        }
-	      } else {
-	        this.setState({
-	          errorNombre: true
-	        });
-	      }
-	    }
-	  }, {
-	    key: 'handleEditarContacto',
-	    value: function handleEditarContacto(id) {
-	      var _this5 = this;
-	
-	      //Busco el id
-	      this.state.contactos.forEach(function (contacto) {
-	        if (contacto._id === id) {
-	          _this5.setState({
-	            modalContactosEditar: contacto
-	          }, _this5.onOpenModal("modalContactos"));
-	          return;
-	        }
-	      });
-	    }
-	
-	    //Modal
-	
-	  }, {
-	    key: 'onOpenModal',
-	    value: function onOpenModal(cual) {
-	      this.setState(_defineProperty({}, cual, true));
-	    }
-	  }, {
-	    key: 'onCloseModal',
-	    value: function onCloseModal(cual) {
-	      var _setState3;
-	
-	      this.setState((_setState3 = {}, _defineProperty(_setState3, cual, false), _defineProperty(_setState3, cual + "Editar", null), _setState3));
-	    }
-	  }, {
-	    key: 'onSaveModal',
-	    value: function onSaveModal(obj, array) {
-	      var auxArray = this.state[array];
-	      if (!obj._id) {
-	        //Inserto un nuevo registro
-	        auxArray.push(obj);
-	      } else {
-	        //reemplazo el registro
-	        auxArray.forEach(function (elemento, i) {
-	          if (obj._id === elemento._id) {
-	            auxArray.splice(i, 1, obj);
-	          }
-	        });
-	      }
-	      this.setState(_defineProperty({}, array, auxArray));
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this6 = this;
-	
-	      var columnsContactos = [["Nombre", "nombre", "String"], ["Apellido", "apellido", "String"], ["Email", "email", "String"], ["Teléfono", "telefono", "String"]];
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'fabricas-editar text-center' },
-	        !this.state.cargando ? _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-12 d-flex justify-content-between' },
-	              this.state.nuevo ? _react2.default.createElement(
-	                'h3',
-	                null,
-	                'Crear Fabrica'
-	              ) : _react2.default.createElement(
-	                'h3',
-	                null,
-	                'Modificar F\xE1brica: ',
-	                this.state.nombre
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                { type: 'button',
-	                  className: 'btn btn-success',
-	                  onClick: function onClick() {
-	                    return _this6.onClickGuardar();
-	                  }
-	                },
-	                '+ Guardar'
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'row contenedor-formulario text-center' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-sm-6 col-12 form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                'Nombre'
-	              ),
-	              _react2.default.createElement('input', { type: 'text',
-	                className: this.state.errorNombre ? "form-control is-invalid" : "form-control",
-	                id: 'nombre',
-	                name: 'nombre',
-	                placeholder: 'Nombre...',
-	                value: this.state.nombre,
-	                onChange: this.handleOnChange }),
-	              this.state.errorNombre ? _react2.default.createElement(
-	                'div',
-	                { className: 'invalid-feedback' },
-	                'El nombre es requerido'
-	              ) : null
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-sm-6 col-12 form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                'Direcci\xF3n'
-	              ),
-	              _react2.default.createElement('input', { type: 'text',
-	                className: 'form-control',
-	                id: 'direccion',
-	                name: 'direccion',
-	                placeholder: 'Direcci\xF3n...',
-	                value: this.state.direccion,
-	                onChange: this.handleOnChange })
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-sm-6 col-12 form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                'Ciudad'
-	              ),
-	              _react2.default.createElement('input', { type: 'text',
-	                className: 'form-control',
-	                id: 'ciudad',
-	                name: 'ciudad',
-	                placeholder: 'Ciudad...',
-	                value: this.state.ciudad,
-	                onChange: this.handleOnChange })
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-sm-6 col-12 form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                'Tel\xE9fono'
-	              ),
-	              _react2.default.createElement('input', { type: 'number',
-	                className: 'form-control',
-	                id: 'telefono',
-	                name: 'telefono',
-	                placeholder: 'Tel\xE9fono...',
-	                value: this.state.telefono,
-	                onChange: this.handleOnChange })
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-12 mt-3' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'card border-primary', id: 'card' },
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'card-header d-flex justify-content-between', id: 'headingOne' },
-	                  _react2.default.createElement(
-	                    'button',
-	                    { type: 'button',
-	                      className: 'btn btn-link collapsed col-sm-8 col-6',
-	                      'data-toggle': 'collapse',
-	                      'data-target': '#collapseOne',
-	                      'aria-expanded': 'false',
-	                      'aria-controls': 'collapseOne' },
-	                    _react2.default.createElement(
-	                      'h5',
-	                      { className: 'd-flex align-items-center mb-0' },
-	                      'Contactos: ',
-	                      this.state.contactos.length,
-	                      _react2.default.createElement(
-	                        'i',
-	                        { className: 'material-icons ml-3' },
-	                        'keyboard_arrow_down'
-	                      )
-	                    )
-	                  ),
-	                  _react2.default.createElement(
-	                    'button',
-	                    { type: 'button',
-	                      className: 'btn btn-outline-success',
-	                      onClick: function onClick() {
-	                        return _this6.onOpenModal("modalContactos");
-	                      }
-	                    },
-	                    '+ Agregar Contacto'
-	                  )
-	                ),
-	                _react2.default.createElement(
-	                  'div',
-	                  { id: 'collapseOne',
-	                    className: 'collapse',
-	                    'aria-labelledby': 'headingOne',
-	                    'data-parent': '#card' },
-	                  _react2.default.createElement(
-	                    'div',
-	                    { className: 'card-body contenedor-tabla' },
-	                    _react2.default.createElement(_TablaFlexible2.default, {
-	                      columns: columnsContactos,
-	                      data: this.state.contactos,
-	                      handleEditar: this.handleEditarContacto
-	                      // handleEliminar={this.handleEliminar}
-	                    })
-	                  )
-	                )
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            _reactResponsiveModal2.default,
-	            {
-	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
-	              onClose: function onClose() {
-	                return _this6.onCloseModal("modalContactos");
-	              },
-	              showCloseIcon: false,
-	              open: this.state.modalContactos,
-	              center: true
-	            },
-	            _react2.default.createElement(_ContactosEditar2.default, {
-	              data: this.state.modalContactosEditar,
-	              onSave: this.onSaveModal,
-	              onClose: function onClose() {
-	                return _this6.onCloseModal("modalContactos");
-	              },
-	              titulo: this.state.modalContactosEditar ? "EDITAR CONTACTO" : "CREAR CONTACTO"
-	            })
-	          )
-	        ) : this.state.error ?
-	        //Mensaje de error
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'alert alert-dismissible alert-danger' },
-	          _react2.default.createElement(
-	            'button',
-	            { type: 'button', className: 'close', 'data-dismiss': 'alert' },
-	            '\xD7'
-	          ),
-	          _react2.default.createElement(
-	            'strong',
-	            null,
-	            'Error!'
-	          ),
-	          ' ',
-	          this.state.error
-	        ) :
-	        // Spinner
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'spinner-border text-light', role: 'status' },
-	          _react2.default.createElement(
-	            'span',
-	            { className: 'sr-only' },
-	            'Loading...'
-	          )
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return FabricasEditar;
-	}(_react2.default.Component);
-	
-	exports.default = FabricasEditar;
-
-/***/ },
-/* 285 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -47056,7 +47200,7 @@
 	exports.default = ContactosEditar;
 
 /***/ },
-/* 286 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47071,7 +47215,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _TablaFlexible = __webpack_require__(283);
+	var _TablaFlexible = __webpack_require__(252);
 	
 	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
 	
@@ -47293,7 +47437,7 @@
 	exports.default = StockLista;
 
 /***/ },
-/* 287 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47708,6 +47852,214 @@
 	}(_react2.default.Component);
 	
 	exports.default = FabricasEditar;
+
+/***/ },
+/* 283 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ContactosEditar = function (_React$Component) {
+	  _inherits(ContactosEditar, _React$Component);
+	
+	  function ContactosEditar() {
+	    _classCallCheck(this, ContactosEditar);
+	
+	    var _this = _possibleConstructorReturn(this, (ContactosEditar.__proto__ || Object.getPrototypeOf(ContactosEditar)).call(this));
+	
+	    _this.state = {
+	      _id: "",
+	      fecha: "",
+	      detalle: [],
+	      precioTotal: "",
+	      estado: ""
+	    };
+	    _this.handleOnChange = _this.handleOnChange.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(ContactosEditar, [{
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      if (this.props.data) {
+	        this.setState({
+	          _id: this.props.data._id,
+	          fecha: this.props.data.fecha,
+	          detalle: this.props.data.detalle,
+	          precioTotal: this.props.data.precioTotal,
+	          estado: this.props.data.estado
+	        });
+	      }
+	    }
+	  }, {
+	    key: "handleOnChange",
+	    value: function handleOnChange(event) {
+	      this.setState(_defineProperty({}, event.target.name, event.target.value));
+	    }
+	  }, {
+	    key: "onSave",
+	    value: function onSave() {
+	      this.props.onSave({
+	        _id: this.state._id,
+	        fecha: this.state.fecha,
+	        detalle: this.state.detalle,
+	        precioTotal: this.state.precioTotal,
+	        estado: this.state.estado
+	      }, "pedidos");
+	      this.props.onClose();
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      var _this2 = this;
+	
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "contactos-editar" },
+	        _react2.default.createElement(
+	          "div",
+	          { className: "header d-flex justify-content-between align-items-center" },
+	          _react2.default.createElement(
+	            "span",
+	            null,
+	            this.props.titulo
+	          ),
+	          _react2.default.createElement(
+	            "button",
+	            {
+	              type: "button",
+	              className: "modal-cerrar d-flex align-items-center",
+	              onClick: function onClick() {
+	                return _this2.props.onClose();
+	              }
+	            },
+	            _react2.default.createElement(
+	              "i",
+	              { className: "material-icons" },
+	              "clear"
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "formulario pt-2" },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Nombre"
+	            ),
+	            _react2.default.createElement("input", { type: "text",
+	              className: this.state.errorNombre ? "form-control is-invalid" : "form-control",
+	              id: "nombre",
+	              name: "nombre",
+	              placeholder: "Nombre...",
+	              value: this.state.nombre,
+	              onChange: this.handleOnChange
+	            }),
+	            this.state.errorNombre ? _react2.default.createElement(
+	              "div",
+	              { className: "invalid-feedback" },
+	              "El nombre es requerido"
+	            ) : null
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Apellido"
+	            ),
+	            _react2.default.createElement("input", { type: "text",
+	              className: "form-control",
+	              id: "apellido",
+	              name: "apellido",
+	              placeholder: "Apellido...",
+	              value: this.state.apellido,
+	              onChange: this.handleOnChange
+	            })
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Email"
+	            ),
+	            _react2.default.createElement("input", { type: "text",
+	              className: "form-control",
+	              id: "email",
+	              name: "email",
+	              placeholder: "Email...",
+	              value: this.state.email,
+	              onChange: this.handleOnChange
+	            })
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Tel\xE9fono"
+	            ),
+	            _react2.default.createElement("input", { type: "text",
+	              className: "form-control",
+	              id: "telefono",
+	              name: "telefono",
+	              placeholder: "Tel\xE9fono...",
+	              value: this.state.telefono,
+	              onChange: this.handleOnChange
+	            })
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2 boton-guardar" },
+	            _react2.default.createElement(
+	              "button",
+	              {
+	                type: "button",
+	                className: "btn btn-success",
+	                onClick: function onClick() {
+	                  return _this2.onSave();
+	                }
+	              },
+	              "Guardar"
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return ContactosEditar;
+	}(_react2.default.Component);
+	
+	exports.default = ContactosEditar;
 
 /***/ }
 /******/ ]);

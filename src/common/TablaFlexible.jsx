@@ -10,11 +10,12 @@ export default class TablaFlexible extends React.Component {
   // handleEditar: función para el botón editar. Parametro: _id
   // handleEliminar: función para el botón eliminar. Parametro: _id
   componentDidMount(){
+    const lista = this.props.lista
     //JQuery para el filtro de la tabla
     $(document).ready(function(){
-      $("#myInput").on("keyup", function() {
+      $(`#myInput${lista}`).on("keyup", function() {
         var value = $(this).val().toLowerCase();
-        $("#myTable tr").filter(function() {
+        $(`#myTable${lista} tr`).filter(function() {
           $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
       });
@@ -23,7 +24,7 @@ export default class TablaFlexible extends React.Component {
   render() {
     return (
       <div className="tabla-flexible table-responsive-md">
-        <input className="form-control buscador-tabla" id="myInput" type="text" placeholder="Buscar en la tabla..." />
+        <input className="form-control buscador-tabla" id={`myInput${this.props.lista}`} type="text" placeholder="Buscar en la tabla..." />
         <br></br>
         <table className="table">
           <thead>
@@ -36,13 +37,17 @@ export default class TablaFlexible extends React.Component {
               <th scope="col" className="d-flex justify-content-end">Acciones</th>
             </tr>
           </thead>
-          <tbody id="myTable">
+          <tbody id={`myTable${this.props.lista}`}>
             {
               this.props.data.map((data,i)=>{
                 return <tr className={i%2 == 0 ? "" : "table-secondary"} key={i}>
                   {
                     this.props.columns.map((col,i)=>{
-                      return <td key={i}>{data[col[1]]}</td>
+                      if(col[2] === "Largo"){
+                        return <td key={i}>{data[col[1]].length}</td>
+                      } else {
+                        return <td key={i}>{data[col[1]]}</td>
+                      }
                     })
                   }
                   {/* Acciones */}

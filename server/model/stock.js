@@ -1,7 +1,7 @@
 const mongoose = require( 'mongoose' )
 
 const stock = new mongoose.Schema({
-  producto: {type: String, required: true},
+  producto: {type: String, unique: true, required: true},
   tipo: String,
   material: String,
   talle: Number,

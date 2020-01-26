@@ -3,6 +3,7 @@ import Swal from 'sweetalert2' //https://github.com/sweetalert2/sweetalert2
 import TablaFlexible from '../common/TablaFlexible.jsx'
 import Modal from 'react-responsive-modal'
 import ContactosEditar from './ContactosEditar.jsx'
+import PedidosEditar from './PedidosEditar.jsx'
 
 export default class FabricasEditar extends React.Component {
   constructor() {
@@ -22,7 +23,9 @@ export default class FabricasEditar extends React.Component {
       creada: new Date(),
       errorNombre: false,
       modalContactos: false,
-      modalContactosEditar: null
+      modalContactosEditar: null,
+      modalPedidos: false,
+      modalPedidosEditar: null
     }
     this.handleOnChange = this.handleOnChange.bind(this)
     this.obtenerFabrica = this.obtenerFabrica.bind(this)
@@ -30,6 +33,9 @@ export default class FabricasEditar extends React.Component {
     this.onCloseModal = this.onCloseModal.bind(this)
     this.handleEditarContacto = this.handleEditarContacto.bind(this)
     this.onSaveModal = this.onSaveModal.bind(this)
+    this.handleEliminarContacto = this.handleEliminarContacto.bind(this)
+    this.handleEditarPedido = this.handleEditarPedido.bind(this)
+    this.handleEliminarPedido = this.handleEliminarPedido.bind(this)
   }
 
   componentDidMount(){
@@ -222,6 +228,46 @@ export default class FabricasEditar extends React.Component {
       }
     })
   }
+  
+  handleEliminarContacto(id){
+    let auxContactos = this.state.contactos
+    //Elimino el contacto del state
+    auxContactos.forEach((contacto, i) => {
+      if(contacto._id === id){
+        auxContactos.splice(i,1)
+        this.setState({
+          contactos: auxContactos
+        })
+        return
+      }
+    })
+  }
+
+  handleEditarPedido(id){
+    //Busco el id
+    this.state.pedidos.forEach(pedido => {
+      if(pedido._id === id){
+        this.setState({
+          modalPedidosEditar: pedido
+        }, this.onOpenModal("modalPedidos"))
+        return
+      }
+    })
+  }
+  
+  handleEliminarPedido(id){
+    let auxPedidos = this.state.pedidos
+    //Elimino el contacto del state
+    auxPedidos.forEach((pedido, i) => {
+      if(pedido._id === id){
+        auxPedidos.splice(i,1)
+        this.setState({
+          pedidos: auxPedidos
+        })
+        return
+      }
+    })
+  }
 
   //Modal
   onOpenModal(cual){
@@ -259,6 +305,12 @@ export default class FabricasEditar extends React.Component {
       ["Apellido","apellido","String"],
       ["Email","email","String"],
       ["Teléfono","telefono","String"]
+    ]
+    const columnsPedidos = [
+      ["Fecha","fecha","Fecha"],
+      ["Productos","detalle","Largo"],
+      ["Precio","precioTotal","String"],
+      ["Estado","estado","String"]
     ]
     return (
       <div className="fabricas-editar text-center">
@@ -357,17 +409,52 @@ export default class FabricasEditar extends React.Component {
                   data-parent="#card">
                   <div className="card-body contenedor-tabla">
                     <TablaFlexible
+                      lista={"contactos"}
                       columns={columnsContactos}
                       data={this.state.contactos}
                       handleEditar={this.handleEditarContacto}
-                      // handleEliminar={this.handleEliminar}
+                      handleEliminar={this.handleEliminarContacto}
                     />
                   </div>
                 </div>
               </div>
             </div>
             {/* Pedidos */}
-
+            <div className="col-12 mt-3">
+              <div className="card border-primary" id="card">
+                <div className="card-header d-flex justify-content-between" id="headingOne">
+                  <button type="button"
+                    className="btn btn-link collapsed col-sm-8 col-6"
+                    data-toggle="collapse"
+                    data-target="#collapseTwo"
+                    aria-expanded="false" 
+                    aria-controls="collapseTwo">
+                      <h5 className="d-flex align-items-center mb-0">
+                        Pedidos: {this.state.pedidos.length}
+                        <i className="material-icons ml-3">keyboard_arrow_down</i>
+                      </h5>
+                    </button>
+                  <button type="button" 
+                    className="btn btn-outline-success"
+                    onClick={() => this.onOpenModal("modalPedidos")}
+                    >+ Agregar Pedido</button>
+                </div>
+                <div id="collapseTwo" 
+                  className="collapse" 
+                  aria-labelledby="headingTwo" 
+                  data-parent="#card">
+                  <div className="card-body contenedor-tabla">
+                    <TablaFlexible
+                      lista={"pedidos"}
+                      columns={columnsPedidos}
+                      data={this.state.pedidos}
+                      handleEditar={this.handleEditarPedido}
+                      handleEliminar={this.handleEliminarPedido}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           {/* Modal contactos */}
           <Modal
@@ -384,6 +471,21 @@ export default class FabricasEditar extends React.Component {
                 titulo={this.state.modalContactosEditar ? "EDITAR CONTACTO" : "CREAR CONTACTO"}
               />
           </Modal>
+          {/* Modal Pedidos */}
+          <Modal
+            classNames={{modal: ['modal-custom'], closeButton: ['modal-custom-button']}}
+            onClose={()=>this.onCloseModal("modalPedidos")}
+            showCloseIcon={false}
+            open={this.state.modalPedidos}
+            center
+            >
+              <PedidosEditar
+                data={this.state.modalPedidosEditar}
+                onSave={this.onSaveModal}
+                onClose={()=>this.onCloseModal("modalPedidos")}
+                titulo={this.state.modalContactosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"}
+              />
+            </Modal>
         </div>
         :
         this.state.error ?

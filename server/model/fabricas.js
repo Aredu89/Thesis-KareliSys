@@ -10,6 +10,7 @@ const contactos = new mongoose.Schema({
 const productosRef = new mongoose.Schema({
   idProducto: Number,//{type: mongoose.Schema.Types.ObjectId, ref: 'productos'},
   nombre: String,
+  talle: Number,
   cantidad: Number
 })
 
