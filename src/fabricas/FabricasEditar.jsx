@@ -483,7 +483,7 @@ export default class FabricasEditar extends React.Component {
                 data={this.state.modalPedidosEditar}
                 onSave={this.onSaveModal}
                 onClose={()=>this.onCloseModal("modalPedidos")}
-                titulo={this.state.modalContactosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"}
+                titulo={this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"}
               />
             </Modal>
         </div>

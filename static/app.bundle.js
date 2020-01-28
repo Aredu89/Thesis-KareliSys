@@ -72,11 +72,11 @@
 	
 	var _FabricasEditar2 = _interopRequireDefault(_FabricasEditar);
 	
-	var _StockLista = __webpack_require__(281);
+	var _StockLista = __webpack_require__(282);
 	
 	var _StockLista2 = _interopRequireDefault(_StockLista);
 	
-	var _StockEditar = __webpack_require__(282);
+	var _StockEditar = __webpack_require__(283);
 	
 	var _StockEditar2 = _interopRequireDefault(_StockEditar);
 	
@@ -42520,7 +42520,7 @@
 	
 	var _ContactosEditar2 = _interopRequireDefault(_ContactosEditar);
 	
-	var _PedidosEditar = __webpack_require__(283);
+	var _PedidosEditar = __webpack_require__(281);
 	
 	var _PedidosEditar2 = _interopRequireDefault(_PedidosEditar);
 	
@@ -43100,7 +43100,7 @@
 	              onClose: function onClose() {
 	                return _this9.onCloseModal("modalPedidos");
 	              },
-	              titulo: this.state.modalContactosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"
+	              titulo: this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"
 	            })
 	          )
 	        ) : this.state.error ?
@@ -47203,6 +47203,199 @@
 /* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ContactosEditar = function (_React$Component) {
+	  _inherits(ContactosEditar, _React$Component);
+	
+	  function ContactosEditar() {
+	    _classCallCheck(this, ContactosEditar);
+	
+	    var _this = _possibleConstructorReturn(this, (ContactosEditar.__proto__ || Object.getPrototypeOf(ContactosEditar)).call(this));
+	
+	    _this.state = {
+	      _id: "",
+	      fecha: "",
+	      detalle: [],
+	      precioTotal: "",
+	      estado: ""
+	    };
+	    _this.handleOnChange = _this.handleOnChange.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(ContactosEditar, [{
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      if (this.props.data) {
+	        this.setState({
+	          _id: this.props.data._id,
+	          fecha: this.props.data.fecha,
+	          detalle: this.props.data.detalle,
+	          precioTotal: this.props.data.precioTotal,
+	          estado: this.props.data.estado
+	        });
+	      }
+	    }
+	  }, {
+	    key: "handleOnChange",
+	    value: function handleOnChange(event) {
+	      this.setState(_defineProperty({}, event.target.name, event.target.value));
+	    }
+	  }, {
+	    key: "onSave",
+	    value: function onSave() {
+	      this.props.onSave({
+	        _id: this.state._id,
+	        fecha: this.state.fecha,
+	        detalle: this.state.detalle,
+	        precioTotal: this.state.precioTotal,
+	        estado: this.state.estado
+	      }, "pedidos");
+	      this.props.onClose();
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      var _this2 = this;
+	
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "contactos-editar" },
+	        _react2.default.createElement(
+	          "div",
+	          { className: "header d-flex justify-content-between align-items-center" },
+	          _react2.default.createElement(
+	            "span",
+	            null,
+	            this.props.titulo
+	          ),
+	          _react2.default.createElement(
+	            "button",
+	            {
+	              type: "button",
+	              className: "modal-cerrar d-flex align-items-center",
+	              onClick: function onClick() {
+	                return _this2.props.onClose();
+	              }
+	            },
+	            _react2.default.createElement(
+	              "i",
+	              { className: "material-icons" },
+	              "clear"
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "formulario pt-2" },
+	          this.state.fecha ? _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              this.state.fecha
+	            )
+	          ) : null,
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Precio Total"
+	            ),
+	            _react2.default.createElement("input", { type: "number",
+	              className: "form-control",
+	              id: "precioTotal",
+	              name: "precioTotal",
+	              placeholder: "Precio Total...",
+	              value: this.state.precioTotal,
+	              onChange: this.handleOnChange
+	            })
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Estado"
+	            ),
+	            _react2.default.createElement(
+	              "div",
+	              { className: "form-group" },
+	              _react2.default.createElement(
+	                "select",
+	                { className: "custom-select" },
+	                _react2.default.createElement(
+	                  "option",
+	                  { value: "a pagar" },
+	                  "A pagar"
+	                ),
+	                _react2.default.createElement(
+	                  "option",
+	                  { value: "pago parcial" },
+	                  "Pago parcial"
+	                ),
+	                _react2.default.createElement(
+	                  "option",
+	                  { value: "pagado" },
+	                  "Pagado"
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2 boton-guardar" },
+	            _react2.default.createElement(
+	              "button",
+	              {
+	                type: "button",
+	                className: "btn btn-success",
+	                onClick: function onClick() {
+	                  return _this2.onSave();
+	                }
+	              },
+	              "Guardar"
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return ContactosEditar;
+	}(_react2.default.Component);
+	
+	exports.default = ContactosEditar;
+
+/***/ },
+/* 282 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
@@ -47437,7 +47630,7 @@
 	exports.default = StockLista;
 
 /***/ },
-/* 282 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47852,214 +48045,6 @@
 	}(_react2.default.Component);
 	
 	exports.default = FabricasEditar;
-
-/***/ },
-/* 283 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var ContactosEditar = function (_React$Component) {
-	  _inherits(ContactosEditar, _React$Component);
-	
-	  function ContactosEditar() {
-	    _classCallCheck(this, ContactosEditar);
-	
-	    var _this = _possibleConstructorReturn(this, (ContactosEditar.__proto__ || Object.getPrototypeOf(ContactosEditar)).call(this));
-	
-	    _this.state = {
-	      _id: "",
-	      fecha: "",
-	      detalle: [],
-	      precioTotal: "",
-	      estado: ""
-	    };
-	    _this.handleOnChange = _this.handleOnChange.bind(_this);
-	    return _this;
-	  }
-	
-	  _createClass(ContactosEditar, [{
-	    key: "componentDidMount",
-	    value: function componentDidMount() {
-	      if (this.props.data) {
-	        this.setState({
-	          _id: this.props.data._id,
-	          fecha: this.props.data.fecha,
-	          detalle: this.props.data.detalle,
-	          precioTotal: this.props.data.precioTotal,
-	          estado: this.props.data.estado
-	        });
-	      }
-	    }
-	  }, {
-	    key: "handleOnChange",
-	    value: function handleOnChange(event) {
-	      this.setState(_defineProperty({}, event.target.name, event.target.value));
-	    }
-	  }, {
-	    key: "onSave",
-	    value: function onSave() {
-	      this.props.onSave({
-	        _id: this.state._id,
-	        fecha: this.state.fecha,
-	        detalle: this.state.detalle,
-	        precioTotal: this.state.precioTotal,
-	        estado: this.state.estado
-	      }, "pedidos");
-	      this.props.onClose();
-	    }
-	  }, {
-	    key: "render",
-	    value: function render() {
-	      var _this2 = this;
-	
-	      return _react2.default.createElement(
-	        "div",
-	        { className: "contactos-editar" },
-	        _react2.default.createElement(
-	          "div",
-	          { className: "header d-flex justify-content-between align-items-center" },
-	          _react2.default.createElement(
-	            "span",
-	            null,
-	            this.props.titulo
-	          ),
-	          _react2.default.createElement(
-	            "button",
-	            {
-	              type: "button",
-	              className: "modal-cerrar d-flex align-items-center",
-	              onClick: function onClick() {
-	                return _this2.props.onClose();
-	              }
-	            },
-	            _react2.default.createElement(
-	              "i",
-	              { className: "material-icons" },
-	              "clear"
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          "div",
-	          { className: "formulario pt-2" },
-	          _react2.default.createElement(
-	            "div",
-	            { className: "col-12 form-group text-center pt-2" },
-	            _react2.default.createElement(
-	              "label",
-	              null,
-	              "Nombre"
-	            ),
-	            _react2.default.createElement("input", { type: "text",
-	              className: this.state.errorNombre ? "form-control is-invalid" : "form-control",
-	              id: "nombre",
-	              name: "nombre",
-	              placeholder: "Nombre...",
-	              value: this.state.nombre,
-	              onChange: this.handleOnChange
-	            }),
-	            this.state.errorNombre ? _react2.default.createElement(
-	              "div",
-	              { className: "invalid-feedback" },
-	              "El nombre es requerido"
-	            ) : null
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            { className: "col-12 form-group text-center pt-2" },
-	            _react2.default.createElement(
-	              "label",
-	              null,
-	              "Apellido"
-	            ),
-	            _react2.default.createElement("input", { type: "text",
-	              className: "form-control",
-	              id: "apellido",
-	              name: "apellido",
-	              placeholder: "Apellido...",
-	              value: this.state.apellido,
-	              onChange: this.handleOnChange
-	            })
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            { className: "col-12 form-group text-center pt-2" },
-	            _react2.default.createElement(
-	              "label",
-	              null,
-	              "Email"
-	            ),
-	            _react2.default.createElement("input", { type: "text",
-	              className: "form-control",
-	              id: "email",
-	              name: "email",
-	              placeholder: "Email...",
-	              value: this.state.email,
-	              onChange: this.handleOnChange
-	            })
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            { className: "col-12 form-group text-center pt-2" },
-	            _react2.default.createElement(
-	              "label",
-	              null,
-	              "Tel\xE9fono"
-	            ),
-	            _react2.default.createElement("input", { type: "text",
-	              className: "form-control",
-	              id: "telefono",
-	              name: "telefono",
-	              placeholder: "Tel\xE9fono...",
-	              value: this.state.telefono,
-	              onChange: this.handleOnChange
-	            })
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            { className: "col-12 form-group text-center pt-2 boton-guardar" },
-	            _react2.default.createElement(
-	              "button",
-	              {
-	                type: "button",
-	                className: "btn btn-success",
-	                onClick: function onClick() {
-	                  return _this2.onSave();
-	                }
-	              },
-	              "Guardar"
-	            )
-	          )
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return ContactosEditar;
-	}(_react2.default.Component);
-	
-	exports.default = ContactosEditar;
 
 /***/ }
 /******/ ]);
