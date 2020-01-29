@@ -47238,9 +47238,15 @@
 	      fecha: "",
 	      detalle: [],
 	      precioTotal: "",
-	      estado: ""
+	      errorPrecio: false,
+	      estado: "",
+	      nombreProducto: "",
+	      errorNombreProducto: false,
+	      talleProducto: "",
+	      cantidadProducto: ""
 	    };
 	    _this.handleOnChange = _this.handleOnChange.bind(_this);
+	    _this.agregarProducto = _this.agregarProducto.bind(_this);
 	    return _this;
 	  }
 	
@@ -47261,18 +47267,49 @@
 	    key: "handleOnChange",
 	    value: function handleOnChange(event) {
 	      this.setState(_defineProperty({}, event.target.name, event.target.value));
+	      //Limpio el error del precio
+	      if (event.target.name === "precioTotal" && this.state.errorPrecio == true) {
+	        this.setState({
+	          errorPrecio: false
+	        });
+	      }
+	      //Limpio el error del nombre del producto
+	      if (event.target.name === "nombreProducto" && this.state.errorNombreProducto == true) {
+	        this.setState({
+	          errorNombreProducto: false
+	        });
+	      }
+	    }
+	  }, {
+	    key: "agregarProducto",
+	    value: function agregarProducto() {
+	      var productos = this.state.detalle;
+	      productos.push({
+	        nombre: this.state.nombreProducto,
+	        talle: this.state.talleProducto,
+	        cantidad: this.state.cantidadProducto
+	      });
+	      this.setState({
+	        detalle: productos
+	      });
 	    }
 	  }, {
 	    key: "onSave",
 	    value: function onSave() {
-	      this.props.onSave({
-	        _id: this.state._id,
-	        fecha: this.state.fecha,
-	        detalle: this.state.detalle,
-	        precioTotal: this.state.precioTotal,
-	        estado: this.state.estado
-	      }, "pedidos");
-	      this.props.onClose();
+	      if (this.state.precioTotal > 0) {
+	        this.props.onSave({
+	          _id: this.state._id,
+	          fecha: this.state.fecha ? this.state.fecha : new Date(),
+	          detalle: this.state.detalle,
+	          precioTotal: this.state.precioTotal,
+	          estado: this.state.estado
+	        }, "pedidos");
+	        this.props.onClose();
+	      } else {
+	        this.setState({
+	          errorPrecio: true
+	        });
+	      }
 	    }
 	  }, {
 	    key: "render",
@@ -47327,13 +47364,18 @@
 	              "Precio Total"
 	            ),
 	            _react2.default.createElement("input", { type: "number",
-	              className: "form-control",
+	              className: this.state.errorPrecio ? "form-control is-invalid" : "form-control",
 	              id: "precioTotal",
 	              name: "precioTotal",
 	              placeholder: "Precio Total...",
 	              value: this.state.precioTotal,
 	              onChange: this.handleOnChange
-	            })
+	            }),
+	            this.state.errorPrecio && _react2.default.createElement(
+	              "div",
+	              { className: "invalid-feedback" },
+	              "Se debe ingresar un precio"
+	            )
 	          ),
 	          _react2.default.createElement(
 	            "div",
@@ -47348,7 +47390,12 @@
 	              { className: "form-group" },
 	              _react2.default.createElement(
 	                "select",
-	                { className: "custom-select" },
+	                { className: "custom-select",
+	                  id: "estado",
+	                  name: "estado",
+	                  value: this.state.estado,
+	                  onChange: this.handleOnChange
+	                },
 	                _react2.default.createElement(
 	                  "option",
 	                  { value: "a pagar" },
@@ -47363,6 +47410,85 @@
 	                  "option",
 	                  { value: "pagado" },
 	                  "Pagado"
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Agregar productos al pedido"
+	            ),
+	            _react2.default.createElement(
+	              "div",
+	              { className: "contenedor-productos" },
+	              _react2.default.createElement(
+	                "label",
+	                null,
+	                "Nombre"
+	              ),
+	              _react2.default.createElement("input", { type: "text",
+	                className: this.state.errorNombreProducto ? "form-control is-invalid" : "form-control",
+	                id: "nombreProducto",
+	                name: "nombreProducto",
+	                placeholder: "Nombre del producto...",
+	                value: this.state.nombreProducto,
+	                onChange: this.handleOnChange
+	              }),
+	              _react2.default.createElement(
+	                "div",
+	                { className: "d-flex justify-content-between" },
+	                _react2.default.createElement(
+	                  "div",
+	                  { className: "text-center" },
+	                  _react2.default.createElement(
+	                    "label",
+	                    null,
+	                    "Talle"
+	                  ),
+	                  _react2.default.createElement("input", { type: "number",
+	                    className: "form-control",
+	                    id: "talleProducto",
+	                    name: "talleProducto",
+	                    placeholder: "Talle...",
+	                    value: this.state.talleProducto,
+	                    onChange: this.handleOnChange
+	                  })
+	                ),
+	                _react2.default.createElement(
+	                  "div",
+	                  { className: "text-center" },
+	                  _react2.default.createElement(
+	                    "label",
+	                    null,
+	                    "Cantidad"
+	                  ),
+	                  _react2.default.createElement("input", { type: "number",
+	                    className: "form-control",
+	                    id: "cantidadProducto",
+	                    name: "cantidadProducto",
+	                    placeholder: "Cantidad...",
+	                    value: this.state.cantidadProducto,
+	                    onChange: this.handleOnChange
+	                  })
+	                ),
+	                _react2.default.createElement(
+	                  "div",
+	                  { className: "text-center d-flex align-items-center" },
+	                  _react2.default.createElement(
+	                    "button",
+	                    {
+	                      type: "button",
+	                      className: "btn btn-outline-success",
+	                      onClick: function onClick() {
+	                        return _this2.agregarProducto();
+	                      }
+	                    },
+	                    "+"
+	                  )
 	                )
 	              )
 	            )

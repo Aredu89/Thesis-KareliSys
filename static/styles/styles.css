@@ -120,3 +120,8 @@
   border-right: solid 1px #DF691A;
   border-bottom: solid 1px #DF691A;
 }
+/* Editar pedidos Modal */
+.contactos-editar .contenedor-productos{
+  border: solid 1px #DF691A;
+  padding: 15px;
+}
