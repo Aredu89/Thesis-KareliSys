@@ -47284,14 +47284,21 @@
 	    key: "agregarProducto",
 	    value: function agregarProducto() {
 	      var productos = this.state.detalle;
-	      productos.push({
-	        nombre: this.state.nombreProducto,
-	        talle: this.state.talleProducto,
-	        cantidad: this.state.cantidadProducto
-	      });
-	      this.setState({
-	        detalle: productos
-	      });
+	      //controlar que el nombre tenga un valor
+	      if (this.state.nombreProducto) {
+	        productos.push({
+	          nombre: this.state.nombreProducto,
+	          talle: this.state.talleProducto,
+	          cantidad: this.state.cantidadProducto
+	        });
+	        this.setState({
+	          detalle: productos
+	        });
+	      } else {
+	        this.setState({
+	          errorNombreProducto: true
+	        });
+	      }
 	    }
 	  }, {
 	    key: "onSave",
@@ -47477,7 +47484,7 @@
 	                ),
 	                _react2.default.createElement(
 	                  "div",
-	                  { className: "text-center d-flex align-items-center" },
+	                  { className: "text-center d-flex align-items-end" },
 	                  _react2.default.createElement(
 	                    "button",
 	                    {
@@ -47491,7 +47498,37 @@
 	                  )
 	                )
 	              )
-	            )
+	            ),
+	            this.state.detalle.map(function (producto, i) {
+	              return _react2.default.createElement(
+	                "div",
+	                { className: "d-flex justify-content-between" },
+	                _react2.default.createElement(
+	                  "span",
+	                  null,
+	                  producto.nombre
+	                ),
+	                _react2.default.createElement(
+	                  "span",
+	                  null,
+	                  producto.talle
+	                ),
+	                _react2.default.createElement(
+	                  "span",
+	                  null,
+	                  producto.cantidad
+	                ),
+	                _react2.default.createElement(
+	                  "button",
+	                  {
+	                    type: "button",
+	                    className: "btn btn-outline-success"
+	                    // onClick={()=>this.agregarProducto()}
+	                  },
+	                  "X"
+	                )
+	              );
+	            })
 	          ),
 	          _react2.default.createElement(
 	            "div",

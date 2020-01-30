@@ -52,6 +52,7 @@ export default class ContactosEditar extends React.Component {
   agregarProducto(){
     let productos = this.state.detalle
     //controlar que el nombre tenga un valor
+    if(this.state.nombreProducto){
       productos.push({
         nombre: this.state.nombreProducto,
         talle: this.state.talleProducto,
@@ -60,6 +61,11 @@ export default class ContactosEditar extends React.Component {
       this.setState({
         detalle: productos
       })
+    } else {
+      this.setState({
+        errorNombreProducto: true
+      })
+    }
   }
 
   onSave(){
@@ -171,7 +177,7 @@ export default class ContactosEditar extends React.Component {
                     onChange={this.handleOnChange} 
                     />
                 </div>
-                <div className="text-center d-flex align-items-center">
+                <div className="text-center d-flex align-items-end">
                   <button 
                     type="button"
                     className="btn btn-outline-success"
@@ -180,6 +186,20 @@ export default class ContactosEditar extends React.Component {
                 </div>
               </div>
             </div>
+            {
+              this.state.detalle.map((producto, i)=>{
+                return <div className="d-flex justify-content-between">
+                  <span>{producto.nombre}</span>
+                  <span>{producto.talle}</span>
+                  <span>{producto.cantidad}</span>
+                  <button 
+                    type="button"
+                    className="btn btn-outline-success"
+                    // onClick={()=>this.agregarProducto()}
+                    >X</button>
+                </div>
+              })
+            }
           </div>
           {/* Boton de guardar */}
           <div className="col-12 form-group text-center pt-2 boton-guardar">
