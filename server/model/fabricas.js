@@ -15,15 +15,16 @@ const productosRef = new mongoose.Schema({
 
 const pagos = new mongoose.Schema({
   fecha: {type: Date, default: Date.now},
-  monto: Number
+  monto: Number,
+  formaPago: String,
+  observaciones: String
 })
 
 const pedidos = new mongoose.Schema({
-  numero: Number,
   fecha: {type: Date, default: Date.now},
   detalle: [productosRef],
   precioTotal: Number,
-  estado: {type: String, enum:["a pagar","pago parcial","pagado"], default: "a pagar"}
+  estado: {type: String, enum:["pendiente","entregado"], default: "pendiente"}
 })
 
 const fabricas = new mongoose.Schema({

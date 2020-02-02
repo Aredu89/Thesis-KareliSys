@@ -1,4 +1,16 @@
 import React from 'react'
+import funciones from '../common/javascriptFunctions.js'
+
+const estados = [
+  {
+    label: "Pendiente",
+    value: "pendiente"
+  },
+  {
+    label: "Entregado",
+    value: "entregado"
+  }
+]
 
 export default class ContactosEditar extends React.Component {
   constructor() {
@@ -9,7 +21,7 @@ export default class ContactosEditar extends React.Component {
       detalle: [],
       precioTotal: "",
       errorPrecio: false,
-      estado: "",
+      estado: estados[0].value,
       nombreProducto: "",
       errorNombreProducto: false,
       talleProducto: "",
@@ -17,13 +29,14 @@ export default class ContactosEditar extends React.Component {
     }
     this.handleOnChange = this.handleOnChange.bind(this)
     this.agregarProducto = this.agregarProducto.bind(this)
+    this.eliminarProducto = this.eliminarProducto.bind(this)
   }
 
   componentDidMount(){
     if(this.props.data){
       this.setState({
         _id: this.props.data._id,
-        fecha: this.props.data.fecha,
+        fecha: (this.props.data.fecha).toString(),
         detalle: this.props.data.detalle,
         precioTotal: this.props.data.precioTotal,
         estado: this.props.data.estado
@@ -68,6 +81,14 @@ export default class ContactosEditar extends React.Component {
     }
   }
 
+  eliminarProducto(i){
+    let detalle = this.state.detalle
+    detalle.splice(i,1)
+    this.setState({
+      detalle
+    })
+  }
+
   onSave(){
     if(this.state.precioTotal > 0){
       this.props.onSave({
@@ -105,7 +126,7 @@ export default class ContactosEditar extends React.Component {
           {
             this.state.fecha ?
               <div className="col-12 form-group text-center pt-2">
-                <label>{this.state.fecha}</label>
+                <label className="mb-0">{`Fecha: ${funciones.formatearDate(this.state.fecha)}`}</label>
               </div>
             : null
           }
@@ -135,9 +156,11 @@ export default class ContactosEditar extends React.Component {
                 value={this.state.estado}
                 onChange={this.handleOnChange}
               >
-                <option value="a pagar">A pagar</option>
-                <option value="pago parcial">Pago parcial</option>
-                <option value="pagado">Pagado</option>
+                {
+                  estados.map((estado, i)=>{
+                    return <option value={estado.value} key={i}>{estado.label}</option>
+                  })
+                }
               </select>
             </div>
           </div>
@@ -186,20 +209,35 @@ export default class ContactosEditar extends React.Component {
                 </div>
               </div>
             </div>
-            {
-              this.state.detalle.map((producto, i)=>{
-                return <div className="d-flex justify-content-between">
-                  <span>{producto.nombre}</span>
-                  <span>{producto.talle}</span>
-                  <span>{producto.cantidad}</span>
-                  <button 
-                    type="button"
-                    className="btn btn-outline-success"
-                    // onClick={()=>this.agregarProducto()}
-                    >X</button>
-                </div>
-              })
-            }
+            {/* Productos agregados */}
+            <table className="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Talle</th>
+                  <th scope="col">Cantidad</th>
+                  <th scope="col">Quitar</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  this.state.detalle.map((producto, i)=>{
+                    return <tr className="table-default" key={i}>
+                      <td>{producto.nombre}</td>
+                      <td>{producto.talle}</td>
+                      <td>{producto.cantidad}</td>
+                      <td>
+                        <button 
+                          type="button"
+                          className="btn btn-outline-success"
+                          onClick={()=>this.eliminarProducto(i)}
+                          >X</button>
+                      </td>
+                    </tr>
+                  })
+                }
+              </tbody>
+            </table>
           </div>
           {/* Boton de guardar */}
           <div className="col-12 form-group text-center pt-2 boton-guardar">

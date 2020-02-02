@@ -1,5 +1,6 @@
 import React from 'react'
 import TablaFlexible from '../common/TablaFlexible.jsx'
+import funciones from '../common/javascriptFunctions.js'
 import Swal from 'sweetalert2'
 
 export default class FabricasLista extends React.Component {
@@ -27,10 +28,16 @@ export default class FabricasLista extends React.Component {
         if(res.ok) {
           res.json()
           .then(data => {
-            console.log("Get List: ", data)
+            //Calculo las deudas a cada Fabrica
+            let auxData = data.map(dato=>{
+              const deuda = funciones.getDeuda(dato)
+              dato.deuda = deuda
+              return dato
+            })
+            console.log("Lista Fabricas: ",auxData)
             this.setState({
               cargando: false,
-              fabricas: data,
+              fabricas: auxData,
               error: ""
             })
           })
@@ -125,7 +132,8 @@ export default class FabricasLista extends React.Component {
     const columns = [
       ["Nombre","nombre","String"],
       ["Ciudad","ciudad","String"],
-      ["Dirección","direccion","String"]
+      ["Dirección","direccion","String"],
+      ["Pedidos pendientes","pedidos","Largo pendiente"]
     ]
     return (
       <div className="fabricas-lista">

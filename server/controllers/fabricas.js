@@ -88,7 +88,14 @@ module.exports.modificarFabrica = (req,res) => {
             telefono: contacto.telefono
           }
         })
-        fabrica.pedidos = auxFabrica.pedidos
+        fabrica.pedidos = auxFabrica.pedidos.map(pedido=>{
+          return {
+            fecha: pedido.fecha,
+            detalle: pedido.detalle,
+            precioTotal: pedido.precioTotal,
+            estado: pedido.estado
+          }
+        })
         fabrica.save((err, fabrica) => {
           if (err) {
             res.status(404).json(err)

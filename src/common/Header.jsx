@@ -31,27 +31,11 @@ export default class Header extends React.Component {
               <li className="nav-item active">
                 <Link className="nav-link" to="/">Home <span className="sr-only">(current)</span></Link>
               </li>
-              <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" 
-                  data-toggle="dropdown" 
-                  href="#" role="button" 
-                  aria-haspopup="true" 
-                  aria-expanded="false">Fábricas</a>
-                <div className="dropdown-menu">
-                  <Link className="dropdown-item" to="/fabricas">Gestión de Fábricas</Link>
-                  <Link className="dropdown-item" to="#">Gestión de Pagos</Link>
-                </div>
+              <li className="nav-item">
+                <Link className="nav-link" to="/fabricas">Fábricas</Link>
               </li>
-              <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" 
-                  data-toggle="dropdown" 
-                  href="#" role="button" 
-                  aria-haspopup="true" 
-                  aria-expanded="false">Clientes</a>
-                <div className="dropdown-menu">
-                  <a className="dropdown-item" href="#">Gestión de Clientes</a>
-                  <a className="dropdown-item" href="#">Gestión de Cobros</a>
-                </div>
+              <li className="nav-item">
+                <Link className="nav-link" to="/">Clientes</Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link" to="/stock">Stock</Link>

@@ -27746,56 +27746,20 @@
 	              ),
 	              _react2.default.createElement(
 	                'li',
-	                { className: 'nav-item dropdown' },
+	                { className: 'nav-item' },
 	                _react2.default.createElement(
-	                  'a',
-	                  { className: 'nav-link dropdown-toggle',
-	                    'data-toggle': 'dropdown',
-	                    href: '#', role: 'button',
-	                    'aria-haspopup': 'true',
-	                    'aria-expanded': 'false' },
+	                  _reactRouter.Link,
+	                  { className: 'nav-link', to: '/fabricas' },
 	                  'F\xE1bricas'
-	                ),
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'dropdown-menu' },
-	                  _react2.default.createElement(
-	                    _reactRouter.Link,
-	                    { className: 'dropdown-item', to: '/fabricas' },
-	                    'Gesti\xF3n de F\xE1bricas'
-	                  ),
-	                  _react2.default.createElement(
-	                    _reactRouter.Link,
-	                    { className: 'dropdown-item', to: '#' },
-	                    'Gesti\xF3n de Pagos'
-	                  )
 	                )
 	              ),
 	              _react2.default.createElement(
 	                'li',
-	                { className: 'nav-item dropdown' },
+	                { className: 'nav-item' },
 	                _react2.default.createElement(
-	                  'a',
-	                  { className: 'nav-link dropdown-toggle',
-	                    'data-toggle': 'dropdown',
-	                    href: '#', role: 'button',
-	                    'aria-haspopup': 'true',
-	                    'aria-expanded': 'false' },
+	                  _reactRouter.Link,
+	                  { className: 'nav-link', to: '/' },
 	                  'Clientes'
-	                ),
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'dropdown-menu' },
-	                  _react2.default.createElement(
-	                    'a',
-	                    { className: 'dropdown-item', href: '#' },
-	                    'Gesti\xF3n de Clientes'
-	                  ),
-	                  _react2.default.createElement(
-	                    'a',
-	                    { className: 'dropdown-item', href: '#' },
-	                    'Gesti\xF3n de Cobros'
-	                  )
 	                )
 	              ),
 	              _react2.default.createElement(
@@ -28496,6 +28460,10 @@
 	
 	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
 	
+	var _javascriptFunctions = __webpack_require__(284);
+	
+	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
+	
 	var _sweetalert = __webpack_require__(254);
 	
 	var _sweetalert2 = _interopRequireDefault(_sweetalert);
@@ -28544,10 +28512,16 @@
 	      fetch('/api/fabricas').then(function (res) {
 	        if (res.ok) {
 	          res.json().then(function (data) {
-	            console.log("Get List: ", data);
+	            //Calculo las deudas a cada Fabrica
+	            var auxData = data.map(function (dato) {
+	              var deuda = _javascriptFunctions2.default.getDeuda(dato);
+	              dato.deuda = deuda;
+	              return dato;
+	            });
+	            console.log("Lista Fabricas: ", auxData);
 	            _this2.setState({
 	              cargando: false,
-	              fabricas: data,
+	              fabricas: auxData,
 	              error: ""
 	            });
 	          });
@@ -28634,7 +28608,7 @@
 	    value: function render() {
 	      var _this5 = this;
 	
-	      var columns = [["Nombre", "nombre", "String"], ["Ciudad", "ciudad", "String"], ["Dirección", "direccion", "String"]];
+	      var columns = [["Nombre", "nombre", "String"], ["Ciudad", "ciudad", "String"], ["Dirección", "direccion", "String"], ["Pedidos pendientes", "pedidos", "Largo pendiente"]];
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fabricas-lista' },
@@ -28733,6 +28707,10 @@
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
+	var _javascriptFunctions = __webpack_require__(284);
+	
+	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28755,7 +28733,8 @@
 	
 	    // Props:
 	    // columns: Array de arrays con la siguiente estructura
-	    // [ ["Titulo de la columna","clave del objeto data","tipo"] ] el tipo puede ser: "String, Numero, Precio, Fecha"
+	    // [ ["Titulo de la columna","clave del objeto data","tipo"] ] 
+	    // El tipo puede ser: "String, Largo, Largo pendiente, Fecha"
 	    // data: Array de objetos con los datos para completar la tabla
 	    // ---------- botones -------------
 	    // handleEditar: función para el botón editar. Parametro: _id
@@ -28771,6 +28750,17 @@
 	          });
 	        });
 	      });
+	    }
+	  }, {
+	    key: 'largoPendiente',
+	    value: function largoPendiente(data) {
+	      var count = 0;
+	      data.forEach(function (data) {
+	        if (data.estado === "pendiente") {
+	          count = count + 1;
+	        }
+	      });
+	      return count;
 	    }
 	  }, {
 	    key: 'render',
@@ -28818,6 +28808,18 @@
 	                      'td',
 	                      { key: i },
 	                      data[col[1]].length
+	                    );
+	                  } else if (col[2] === "Fecha") {
+	                    return _react2.default.createElement(
+	                      'td',
+	                      { key: i },
+	                      _javascriptFunctions2.default.formatearDate(data[col[1]])
+	                    );
+	                  } else if (col[2] === "Largo pendiente") {
+	                    return _react2.default.createElement(
+	                      'td',
+	                      { key: i },
+	                      _this2.largoPendiente(data[col[1]])
 	                    );
 	                  } else {
 	                    return _react2.default.createElement(
@@ -47203,7 +47205,7 @@
 /* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -47215,6 +47217,10 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _javascriptFunctions = __webpack_require__(284);
+	
+	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -47224,6 +47230,14 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var estados = [{
+	  label: "Pendiente",
+	  value: "pendiente"
+	}, {
+	  label: "Entregado",
+	  value: "entregado"
+	}];
 	
 	var ContactosEditar = function (_React$Component) {
 	  _inherits(ContactosEditar, _React$Component);
@@ -47239,7 +47253,7 @@
 	      detalle: [],
 	      precioTotal: "",
 	      errorPrecio: false,
-	      estado: "",
+	      estado: estados[0].value,
 	      nombreProducto: "",
 	      errorNombreProducto: false,
 	      talleProducto: "",
@@ -47247,16 +47261,17 @@
 	    };
 	    _this.handleOnChange = _this.handleOnChange.bind(_this);
 	    _this.agregarProducto = _this.agregarProducto.bind(_this);
+	    _this.eliminarProducto = _this.eliminarProducto.bind(_this);
 	    return _this;
 	  }
 	
 	  _createClass(ContactosEditar, [{
-	    key: "componentDidMount",
+	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      if (this.props.data) {
 	        this.setState({
 	          _id: this.props.data._id,
-	          fecha: this.props.data.fecha,
+	          fecha: this.props.data.fecha.toString(),
 	          detalle: this.props.data.detalle,
 	          precioTotal: this.props.data.precioTotal,
 	          estado: this.props.data.estado
@@ -47264,7 +47279,7 @@
 	      }
 	    }
 	  }, {
-	    key: "handleOnChange",
+	    key: 'handleOnChange',
 	    value: function handleOnChange(event) {
 	      this.setState(_defineProperty({}, event.target.name, event.target.value));
 	      //Limpio el error del precio
@@ -47281,7 +47296,7 @@
 	      }
 	    }
 	  }, {
-	    key: "agregarProducto",
+	    key: 'agregarProducto',
 	    value: function agregarProducto() {
 	      var productos = this.state.detalle;
 	      //controlar que el nombre tenga un valor
@@ -47301,7 +47316,16 @@
 	      }
 	    }
 	  }, {
-	    key: "onSave",
+	    key: 'eliminarProducto',
+	    value: function eliminarProducto(i) {
+	      var detalle = this.state.detalle;
+	      detalle.splice(i, 1);
+	      this.setState({
+	        detalle: detalle
+	      });
+	    }
+	  }, {
+	    key: 'onSave',
 	    value: function onSave() {
 	      if (this.state.precioTotal > 0) {
 	        this.props.onSave({
@@ -47319,230 +47343,264 @@
 	      }
 	    }
 	  }, {
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
 	      var _this2 = this;
 	
 	      return _react2.default.createElement(
-	        "div",
-	        { className: "contactos-editar" },
+	        'div',
+	        { className: 'contactos-editar' },
 	        _react2.default.createElement(
-	          "div",
-	          { className: "header d-flex justify-content-between align-items-center" },
+	          'div',
+	          { className: 'header d-flex justify-content-between align-items-center' },
 	          _react2.default.createElement(
-	            "span",
+	            'span',
 	            null,
 	            this.props.titulo
 	          ),
 	          _react2.default.createElement(
-	            "button",
+	            'button',
 	            {
-	              type: "button",
-	              className: "modal-cerrar d-flex align-items-center",
+	              type: 'button',
+	              className: 'modal-cerrar d-flex align-items-center',
 	              onClick: function onClick() {
 	                return _this2.props.onClose();
 	              }
 	            },
 	            _react2.default.createElement(
-	              "i",
-	              { className: "material-icons" },
-	              "clear"
+	              'i',
+	              { className: 'material-icons' },
+	              'clear'
 	            )
 	          )
 	        ),
 	        _react2.default.createElement(
-	          "div",
-	          { className: "formulario pt-2" },
+	          'div',
+	          { className: 'formulario pt-2' },
 	          this.state.fecha ? _react2.default.createElement(
-	            "div",
-	            { className: "col-12 form-group text-center pt-2" },
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
 	            _react2.default.createElement(
-	              "label",
-	              null,
-	              this.state.fecha
+	              'label',
+	              { className: 'mb-0' },
+	              'Fecha: ' + _javascriptFunctions2.default.formatearDate(this.state.fecha)
 	            )
 	          ) : null,
 	          _react2.default.createElement(
-	            "div",
-	            { className: "col-12 form-group text-center pt-2" },
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
 	            _react2.default.createElement(
-	              "label",
+	              'label',
 	              null,
-	              "Precio Total"
+	              'Precio Total'
 	            ),
-	            _react2.default.createElement("input", { type: "number",
+	            _react2.default.createElement('input', { type: 'number',
 	              className: this.state.errorPrecio ? "form-control is-invalid" : "form-control",
-	              id: "precioTotal",
-	              name: "precioTotal",
-	              placeholder: "Precio Total...",
+	              id: 'precioTotal',
+	              name: 'precioTotal',
+	              placeholder: 'Precio Total...',
 	              value: this.state.precioTotal,
 	              onChange: this.handleOnChange
 	            }),
 	            this.state.errorPrecio && _react2.default.createElement(
-	              "div",
-	              { className: "invalid-feedback" },
-	              "Se debe ingresar un precio"
+	              'div',
+	              { className: 'invalid-feedback' },
+	              'Se debe ingresar un precio'
 	            )
 	          ),
 	          _react2.default.createElement(
-	            "div",
-	            { className: "col-12 form-group text-center pt-2" },
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
 	            _react2.default.createElement(
-	              "label",
+	              'label',
 	              null,
-	              "Estado"
+	              'Estado'
 	            ),
 	            _react2.default.createElement(
-	              "div",
-	              { className: "form-group" },
+	              'div',
+	              { className: 'form-group' },
 	              _react2.default.createElement(
-	                "select",
-	                { className: "custom-select",
-	                  id: "estado",
-	                  name: "estado",
+	                'select',
+	                { className: 'custom-select',
+	                  id: 'estado',
+	                  name: 'estado',
 	                  value: this.state.estado,
 	                  onChange: this.handleOnChange
 	                },
-	                _react2.default.createElement(
-	                  "option",
-	                  { value: "a pagar" },
-	                  "A pagar"
-	                ),
-	                _react2.default.createElement(
-	                  "option",
-	                  { value: "pago parcial" },
-	                  "Pago parcial"
-	                ),
-	                _react2.default.createElement(
-	                  "option",
-	                  { value: "pagado" },
-	                  "Pagado"
-	                )
+	                estados.map(function (estado, i) {
+	                  return _react2.default.createElement(
+	                    'option',
+	                    { value: estado.value, key: i },
+	                    estado.label
+	                  );
+	                })
 	              )
 	            )
 	          ),
 	          _react2.default.createElement(
-	            "div",
-	            { className: "col-12 form-group text-center pt-2" },
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
 	            _react2.default.createElement(
-	              "label",
+	              'label',
 	              null,
-	              "Agregar productos al pedido"
+	              'Agregar productos al pedido'
 	            ),
 	            _react2.default.createElement(
-	              "div",
-	              { className: "contenedor-productos" },
+	              'div',
+	              { className: 'contenedor-productos' },
 	              _react2.default.createElement(
-	                "label",
+	                'label',
 	                null,
-	                "Nombre"
+	                'Nombre'
 	              ),
-	              _react2.default.createElement("input", { type: "text",
+	              _react2.default.createElement('input', { type: 'text',
 	                className: this.state.errorNombreProducto ? "form-control is-invalid" : "form-control",
-	                id: "nombreProducto",
-	                name: "nombreProducto",
-	                placeholder: "Nombre del producto...",
+	                id: 'nombreProducto',
+	                name: 'nombreProducto',
+	                placeholder: 'Nombre del producto...',
 	                value: this.state.nombreProducto,
 	                onChange: this.handleOnChange
 	              }),
 	              _react2.default.createElement(
-	                "div",
-	                { className: "d-flex justify-content-between" },
+	                'div',
+	                { className: 'd-flex justify-content-between' },
 	                _react2.default.createElement(
-	                  "div",
-	                  { className: "text-center" },
+	                  'div',
+	                  { className: 'text-center' },
 	                  _react2.default.createElement(
-	                    "label",
+	                    'label',
 	                    null,
-	                    "Talle"
+	                    'Talle'
 	                  ),
-	                  _react2.default.createElement("input", { type: "number",
-	                    className: "form-control",
-	                    id: "talleProducto",
-	                    name: "talleProducto",
-	                    placeholder: "Talle...",
+	                  _react2.default.createElement('input', { type: 'number',
+	                    className: 'form-control',
+	                    id: 'talleProducto',
+	                    name: 'talleProducto',
+	                    placeholder: 'Talle...',
 	                    value: this.state.talleProducto,
 	                    onChange: this.handleOnChange
 	                  })
 	                ),
 	                _react2.default.createElement(
-	                  "div",
-	                  { className: "text-center" },
+	                  'div',
+	                  { className: 'text-center' },
 	                  _react2.default.createElement(
-	                    "label",
+	                    'label',
 	                    null,
-	                    "Cantidad"
+	                    'Cantidad'
 	                  ),
-	                  _react2.default.createElement("input", { type: "number",
-	                    className: "form-control",
-	                    id: "cantidadProducto",
-	                    name: "cantidadProducto",
-	                    placeholder: "Cantidad...",
+	                  _react2.default.createElement('input', { type: 'number',
+	                    className: 'form-control',
+	                    id: 'cantidadProducto',
+	                    name: 'cantidadProducto',
+	                    placeholder: 'Cantidad...',
 	                    value: this.state.cantidadProducto,
 	                    onChange: this.handleOnChange
 	                  })
 	                ),
 	                _react2.default.createElement(
-	                  "div",
-	                  { className: "text-center d-flex align-items-end" },
+	                  'div',
+	                  { className: 'text-center d-flex align-items-end' },
 	                  _react2.default.createElement(
-	                    "button",
+	                    'button',
 	                    {
-	                      type: "button",
-	                      className: "btn btn-outline-success",
+	                      type: 'button',
+	                      className: 'btn btn-outline-success',
 	                      onClick: function onClick() {
 	                        return _this2.agregarProducto();
 	                      }
 	                    },
-	                    "+"
+	                    '+'
 	                  )
 	                )
 	              )
 	            ),
-	            this.state.detalle.map(function (producto, i) {
-	              return _react2.default.createElement(
-	                "div",
-	                { className: "d-flex justify-content-between" },
+	            _react2.default.createElement(
+	              'table',
+	              { className: 'table table-hover' },
+	              _react2.default.createElement(
+	                'thead',
+	                null,
 	                _react2.default.createElement(
-	                  "span",
+	                  'tr',
 	                  null,
-	                  producto.nombre
-	                ),
-	                _react2.default.createElement(
-	                  "span",
-	                  null,
-	                  producto.talle
-	                ),
-	                _react2.default.createElement(
-	                  "span",
-	                  null,
-	                  producto.cantidad
-	                ),
-	                _react2.default.createElement(
-	                  "button",
-	                  {
-	                    type: "button",
-	                    className: "btn btn-outline-success"
-	                    // onClick={()=>this.agregarProducto()}
-	                  },
-	                  "X"
+	                  _react2.default.createElement(
+	                    'th',
+	                    { scope: 'col' },
+	                    'Nombre'
+	                  ),
+	                  _react2.default.createElement(
+	                    'th',
+	                    { scope: 'col' },
+	                    'Talle'
+	                  ),
+	                  _react2.default.createElement(
+	                    'th',
+	                    { scope: 'col' },
+	                    'Cantidad'
+	                  ),
+	                  _react2.default.createElement(
+	                    'th',
+	                    { scope: 'col' },
+	                    'Quitar'
+	                  )
 	                )
-	              );
-	            })
+	              ),
+	              _react2.default.createElement(
+	                'tbody',
+	                null,
+	                this.state.detalle.map(function (producto, i) {
+	                  return _react2.default.createElement(
+	                    'tr',
+	                    { className: 'table-default', key: i },
+	                    _react2.default.createElement(
+	                      'td',
+	                      null,
+	                      producto.nombre
+	                    ),
+	                    _react2.default.createElement(
+	                      'td',
+	                      null,
+	                      producto.talle
+	                    ),
+	                    _react2.default.createElement(
+	                      'td',
+	                      null,
+	                      producto.cantidad
+	                    ),
+	                    _react2.default.createElement(
+	                      'td',
+	                      null,
+	                      _react2.default.createElement(
+	                        'button',
+	                        {
+	                          type: 'button',
+	                          className: 'btn btn-outline-success',
+	                          onClick: function onClick() {
+	                            return _this2.eliminarProducto(i);
+	                          }
+	                        },
+	                        'X'
+	                      )
+	                    )
+	                  );
+	                })
+	              )
+	            )
 	          ),
 	          _react2.default.createElement(
-	            "div",
-	            { className: "col-12 form-group text-center pt-2 boton-guardar" },
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2 boton-guardar' },
 	            _react2.default.createElement(
-	              "button",
+	              'button',
 	              {
-	                type: "button",
-	                className: "btn btn-success",
+	                type: 'button',
+	                className: 'btn btn-success',
 	                onClick: function onClick() {
 	                  return _this2.onSave();
 	                }
 	              },
-	              "Guardar"
+	              'Guardar'
 	            )
 	          )
 	        )
@@ -48208,6 +48266,34 @@
 	}(_react2.default.Component);
 	
 	exports.default = FabricasEditar;
+
+/***/ },
+/* 284 */
+/***/ function(module, exports) {
+
+	module.exports.formatearDate = date => {
+	  const fecha = new Date(date)
+	  const dd = fecha.getDate()
+	  const mm = fecha.getMonth()+1
+	  const yyyy = fecha.getFullYear()
+	  return dd+"/"+mm+"/"+yyyy
+	}
+	
+	module.exports.getDeuda = data => {
+	  let deudaFinal = 0
+	  let deudas = 0
+	  let pagado = 0
+	  data.pedidos.forEach(pedido => {
+	    deudas = deudas + pedido.precioTotal
+	  })
+	  data.pagos.forEach(pago=>{
+	    pagado = pagado + pago.monto
+	  })
+	  if((deudas - pagado) > 0){
+	    deudaFinal = deudas - pagado
+	  }
+	  return deudaFinal
+	}
 
 /***/ }
 /******/ ]);

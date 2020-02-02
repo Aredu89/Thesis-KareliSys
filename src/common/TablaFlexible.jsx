@@ -1,10 +1,12 @@
 import React from 'react'
 import $ from 'jquery'
+import funciones from './javascriptFunctions.js'
 
 export default class TablaFlexible extends React.Component {
   // Props:
   // columns: Array de arrays con la siguiente estructura
-  // [ ["Titulo de la columna","clave del objeto data","tipo"] ] el tipo puede ser: "String, Numero, Precio, Fecha"
+  // [ ["Titulo de la columna","clave del objeto data","tipo"] ] 
+  // El tipo puede ser: "String, Largo, Largo pendiente, Fecha"
   // data: Array de objetos con los datos para completar la tabla
   // ---------- botones -------------
   // handleEditar: función para el botón editar. Parametro: _id
@@ -20,6 +22,15 @@ export default class TablaFlexible extends React.Component {
         });
       });
     });
+  }
+  largoPendiente(data){
+    let count = 0
+    data.forEach(data=>{
+      if(data.estado === "pendiente"){
+        count = count + 1
+      }
+    })
+    return count
   }
   render() {
     return (
@@ -45,7 +56,11 @@ export default class TablaFlexible extends React.Component {
                     this.props.columns.map((col,i)=>{
                       if(col[2] === "Largo"){
                         return <td key={i}>{data[col[1]].length}</td>
-                      } else {
+                      } else if (col[2] === "Fecha"){
+                        return <td key={i}>{funciones.formatearDate(data[col[1]])}</td>
+                      } else if (col[2] === "Largo pendiente"){
+                        return <td key={i}>{this.largoPendiente(data[col[1]])}</td>
+                      }else {
                         return <td key={i}>{data[col[1]]}</td>
                       }
                     })
