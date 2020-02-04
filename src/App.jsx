@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom'
 import { Router, Route, browserHistory, Redirect, withRouter } from 'react-router'
 
 import Header from './common/Header.jsx'
-import Home from './Home.jsx'
+import Home from './common/Home.jsx'
 import FabricasLista from './fabricas/FabricasLista.jsx'
 import FabricasEditar from './fabricas/FabricasEditar.jsx'
+import FabricasPagos from './fabricas/FabricasPagos.jsx'
 import StockLista from './stock/StockLista.jsx'
 import StockEditar from './stock/StockEditar.jsx'
 
@@ -20,6 +21,7 @@ const RoutedApp = () => (
       <Route path="fabricas" component={FabricasLista} />
       <Route path="fabricas/editar" component={FabricasEditar} />
       <Route path="fabricas/editar/:id" component={FabricasEditar} />
+      <Route path="fabricas/pagos/:id" component={FabricasPagos} />
       <Route path="stock" component={StockLista} />
       <Route path="stock/editar" component={StockEditar} />
       <Route path="stock/editar/:id" component={StockEditar} />
