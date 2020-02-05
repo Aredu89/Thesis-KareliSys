@@ -60,7 +60,7 @@
 	
 	var _Header2 = _interopRequireDefault(_Header);
 	
-	var _Home = __webpack_require__(285);
+	var _Home = __webpack_require__(250);
 	
 	var _Home2 = _interopRequireDefault(_Home);
 	
@@ -72,15 +72,15 @@
 	
 	var _FabricasEditar2 = _interopRequireDefault(_FabricasEditar);
 	
-	var _FabricasPagos = __webpack_require__(286);
+	var _FabricasPagos = __webpack_require__(283);
 	
 	var _FabricasPagos2 = _interopRequireDefault(_FabricasPagos);
 	
-	var _StockLista = __webpack_require__(283);
+	var _StockLista = __webpack_require__(284);
 	
 	var _StockLista2 = _interopRequireDefault(_StockLista);
 	
-	var _StockEditar = __webpack_require__(284);
+	var _StockEditar = __webpack_require__(285);
 	
 	var _StockEditar2 = _interopRequireDefault(_StockEditar);
 	
@@ -28283,7 +28283,169 @@
 
 
 /***/ },
-/* 250 */,
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Home = function (_React$Component) {
+	  _inherits(Home, _React$Component);
+	
+	  function Home() {
+	    _classCallCheck(this, Home);
+	
+	    var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this));
+	
+	    _this.state = {};
+	    return _this;
+	  }
+	
+	  _createClass(Home, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "home" },
+	        _react2.default.createElement(
+	          "div",
+	          { className: "row" },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-6 col-12" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "col-12 card border-primary mb-3" },
+	              _react2.default.createElement(
+	                "div",
+	                { className: "card-header" },
+	                "Resultado del mes"
+	              ),
+	              _react2.default.createElement(
+	                "div",
+	                { className: "card-body" },
+	                _react2.default.createElement(
+	                  "h4",
+	                  { className: "card-title" },
+	                  "Ganancias de:"
+	                ),
+	                _react2.default.createElement(
+	                  "p",
+	                  { className: "card-text" },
+	                  "$40.000"
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-6 col-12" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "col-12 card border-primary mb-3" },
+	              _react2.default.createElement(
+	                "div",
+	                { className: "card-header" },
+	                "Movimientos de stock del mes"
+	              ),
+	              _react2.default.createElement(
+	                "div",
+	                { className: "card-body" },
+	                _react2.default.createElement(
+	                  "p",
+	                  { className: "card-text" },
+	                  "Productos que ingresaron: 200"
+	                ),
+	                _react2.default.createElement(
+	                  "p",
+	                  { className: "card-text" },
+	                  "Productos que egresaron: 160"
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-6 col-12" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "col-12 card border-success mb-3" },
+	              _react2.default.createElement(
+	                "div",
+	                { className: "card-header" },
+	                "Ingresos del mes"
+	              ),
+	              _react2.default.createElement(
+	                "div",
+	                { className: "card-body" },
+	                _react2.default.createElement(
+	                  "h4",
+	                  { className: "card-title" },
+	                  "Total Cobrado:"
+	                ),
+	                _react2.default.createElement(
+	                  "p",
+	                  { className: "card-text" },
+	                  "$140.000"
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-md-6 col-12" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "col-12 card border-danger mb-3" },
+	              _react2.default.createElement(
+	                "div",
+	                { className: "card-header" },
+	                "Egresos del mes"
+	              ),
+	              _react2.default.createElement(
+	                "div",
+	                { className: "card-body" },
+	                _react2.default.createElement(
+	                  "h4",
+	                  { className: "card-title" },
+	                  "Total Pagado:"
+	                ),
+	                _react2.default.createElement(
+	                  "p",
+	                  { className: "card-text" },
+	                  "$100.000"
+	                )
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Home;
+	}(_react2.default.Component);
+	
+	exports.default = Home;
+
+/***/ },
 /* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -28336,6 +28498,7 @@
 	    _this.handleEditar = _this.handleEditar.bind(_this);
 	    _this.handleEliminar = _this.handleEliminar.bind(_this);
 	    _this.actualizarLista = _this.actualizarLista.bind(_this);
+	    _this.goToPagos = _this.goToPagos.bind(_this);
 	    return _this;
 	  }
 	
@@ -28394,6 +28557,11 @@
 	    key: 'handleEditar',
 	    value: function handleEditar(id) {
 	      this.props.history.push('/fabricas/editar/' + id);
+	    }
+	  }, {
+	    key: 'goToPagos',
+	    value: function goToPagos(id) {
+	      this.props.history.push('/fabricas/pagos/' + id);
 	    }
 	  }, {
 	    key: 'handleEliminar',
@@ -28490,7 +28658,8 @@
 	              columns: columns,
 	              data: this.state.fabricas,
 	              handleEditar: this.handleEditar,
-	              handleEliminar: this.handleEliminar
+	              handleEliminar: this.handleEliminar,
+	              goToPagos: this.goToPagos
 	            }) : this.state.error ?
 	            //Mensaje de error
 	            _react2.default.createElement(
@@ -28688,6 +28857,21 @@
 	                      'i',
 	                      { className: 'material-icons' },
 	                      'create'
+	                    )
+	                  ) : null,
+	                  _this2.props.goToPagos ? _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-outline-primary',
+	                      title: 'Pagos',
+	                      onClick: function onClick() {
+	                        return _this2.props.goToPagos(data._id);
+	                      }
+	                    },
+	                    _react2.default.createElement(
+	                      'i',
+	                      { className: 'material-icons' },
+	                      'attach_money'
 	                    )
 	                  ) : null,
 	                  _this2.props.handleEliminar ? _react2.default.createElement(
@@ -39327,6 +39511,7 @@
 /* 254 */
 /***/ function(module, exports) {
 
+	// Formatear una fecha
 	module.exports.formatearDate = date => {
 	  const fecha = new Date(date)
 	  const dd = fecha.getDate()
@@ -39335,16 +39520,28 @@
 	  return dd+"/"+mm+"/"+yyyy
 	}
 	
+	// Formatear dinero
+	module.exports.moneyFormatter = number => {
+	  const formatter = new Intl.NumberFormat()
+	  return `$${formatter.format(number)}`
+	}
+	
+	// Obtener la deuda de una fábrica o un cliente
+	// Parámetro: objeto - fábrica o cliente
 	module.exports.getDeuda = data => {
 	  let deudaFinal = 0
 	  let deudas = 0
 	  let pagado = 0
-	  data.pedidos.forEach(pedido => {
-	    deudas = deudas + pedido.precioTotal
-	  })
-	  data.pagos.forEach(pago=>{
-	    pagado = pagado + pago.monto
-	  })
+	  if(data.pedidos){
+	    data.pedidos.forEach(pedido => {
+	      deudas = deudas + pedido.precioTotal
+	    })
+	  }
+	  if(data.pagos){
+	    data.pagos.forEach(pago=>{
+	      pagado = pagado + pago.monto
+	    })
+	  }
 	  if((deudas - pagado) > 0){
 	    deudaFinal = deudas - pagado
 	  }
@@ -42670,6 +42867,11 @@
 	        }
 	      });
 	    }
+	  }, {
+	    key: 'goToPagos',
+	    value: function goToPagos() {
+	      this.props.history.push('/fabricas/pagos/' + this.props.params.id);
+	    }
 	
 	    //Modal
 	
@@ -42732,14 +42934,28 @@
 	                this.state.nombre
 	              ),
 	              _react2.default.createElement(
-	                'button',
-	                { type: 'button',
-	                  className: 'btn btn-success',
-	                  onClick: function onClick() {
-	                    return _this9.onClickGuardar();
-	                  }
-	                },
-	                '+ Guardar'
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                  'button',
+	                  { type: 'button',
+	                    className: 'btn btn-success',
+	                    onClick: function onClick() {
+	                      return _this9.onClickGuardar();
+	                    }
+	                  },
+	                  '+ Guardar'
+	                ),
+	                !this.state.nuevo ? _react2.default.createElement(
+	                  'button',
+	                  { type: 'button',
+	                    className: 'btn btn-secondary ml-2',
+	                    onClick: function onClick() {
+	                      return _this9.goToPagos();
+	                    }
+	                  },
+	                  'Ir a Pagos $'
+	                ) : null
 	              )
 	            )
 	          ),
@@ -47508,6 +47724,216 @@
 	
 	var _sweetalert2 = _interopRequireDefault(_sweetalert);
 	
+	var _javascriptFunctions = __webpack_require__(254);
+	
+	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //https://github.com/sweetalert2/sweetalert2
+	
+	
+	var FabricasPagos = function (_React$Component) {
+	  _inherits(FabricasPagos, _React$Component);
+	
+	  function FabricasPagos() {
+	    _classCallCheck(this, FabricasPagos);
+	
+	    var _this = _possibleConstructorReturn(this, (FabricasPagos.__proto__ || Object.getPrototypeOf(FabricasPagos)).call(this));
+	
+	    _this.state = {
+	      fabrica: {},
+	      cargando: true,
+	      error: ""
+	    };
+	    _this.cargarFabrica = _this.cargarFabrica.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(FabricasPagos, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.cargarFabrica();
+	    }
+	  }, {
+	    key: 'cargarFabrica',
+	    value: function cargarFabrica() {
+	      var _this2 = this;
+	
+	      if (this.props.params.id) {
+	        // Obtengo los pagos de la fábrica
+	        fetch('/api/fabricas/' + this.props.params.id).then(function (res) {
+	          if (res.ok) {
+	            res.json().then(function (data) {
+	              console.log("Fabrica: ", data);
+	              _this2.setState({
+	                cargando: false,
+	                error: "",
+	                fabrica: data
+	              });
+	            });
+	          } else {
+	            res.json().then(function (error) {
+	              console.log("Error al obtener fabrica - ", error.message);
+	              _this2.setState({
+	                cargando: false,
+	                error: error.message
+	              });
+	            });
+	          }
+	        }).catch(function (error) {
+	          console.log("Error en el fetch. ", error.message);
+	          _this2.setState({
+	            cargando: false,
+	            error: error.message
+	          });
+	        });
+	      } else {
+	        this.setState({
+	          cargando: false,
+	          error: "No se puede cargar esta pantalla sin el id de la Fábrica"
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'onSave',
+	    value: function onSave() {
+	      var _this3 = this;
+	
+	      fetch('/api/fabricas/' + this.props.params.id, {
+	        method: 'PUT',
+	        headers: { 'Content-Type': 'application/json' },
+	        body: JSON.stringify(this.state.fabrica)
+	      }).then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            _sweetalert2.default.fire("Cambios Guardados!", "", "success").then(function () {
+	              _this3.props.history.push("/fabricas");
+	            });
+	          });
+	        } else {
+	          res.json().then(function (err) {
+	            console.log("Error al modificar fabrica: ", err.message);
+	            _sweetalert2.default.fire("Error al modificar la fábrica", "", "error");
+	          });
+	        }
+	      }).catch(function (err) {
+	        console.log("Error al modificar: ", err.message);
+	        _sweetalert2.default.fire("Error del servidor", "", "error");
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this4 = this;
+	
+	      var deuda = _javascriptFunctions2.default.getDeuda(this.state.fabrica);
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'fabricas-pagos text-center' },
+	        !this.state.cargando ? _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 d-flex justify-content-between' },
+	              _react2.default.createElement(
+	                'h3',
+	                null,
+	                'Gesti\xF3n de Pagos'
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                { type: 'button',
+	                  className: 'btn btn-success',
+	                  onClick: function onClick() {
+	                    return _this4.onClickGuardar();
+	                  }
+	                },
+	                '+ Guardar Cambios'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'mensaje-deuda' },
+	              _react2.default.createElement(
+	                'h4',
+	                null,
+	                'La deuda a "',
+	                this.state.fabrica.nombre,
+	                '" es de: ',
+	                _javascriptFunctions2.default.moneyFormatter(deuda)
+	              )
+	            )
+	          )
+	        ) : this.state.error ?
+	        //Mensaje de error
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'alert alert-dismissible alert-danger' },
+	          _react2.default.createElement(
+	            'button',
+	            { type: 'button', className: 'close', 'data-dismiss': 'alert' },
+	            '\xD7'
+	          ),
+	          _react2.default.createElement(
+	            'strong',
+	            null,
+	            'Error!'
+	          ),
+	          ' ',
+	          this.state.error
+	        ) :
+	        // Spinner
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'spinner-border text-light', role: 'status' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'sr-only' },
+	            'Loading...'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return FabricasPagos;
+	}(_react2.default.Component);
+	
+	exports.default = FabricasPagos;
+
+/***/ },
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _TablaFlexible = __webpack_require__(252);
+	
+	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
+	
+	var _sweetalert = __webpack_require__(255);
+	
+	var _sweetalert2 = _interopRequireDefault(_sweetalert);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -47722,7 +48148,7 @@
 	exports.default = StockLista;
 
 /***/ },
-/* 284 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48137,367 +48563,6 @@
 	}(_react2.default.Component);
 	
 	exports.default = FabricasEditar;
-
-/***/ },
-/* 285 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Home = function (_React$Component) {
-	  _inherits(Home, _React$Component);
-	
-	  function Home() {
-	    _classCallCheck(this, Home);
-	
-	    var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this));
-	
-	    _this.state = {};
-	    return _this;
-	  }
-	
-	  _createClass(Home, [{
-	    key: "render",
-	    value: function render() {
-	      return _react2.default.createElement(
-	        "div",
-	        { className: "home" },
-	        _react2.default.createElement(
-	          "div",
-	          { className: "row" },
-	          _react2.default.createElement(
-	            "div",
-	            { className: "col-md-6 col-12" },
-	            _react2.default.createElement(
-	              "div",
-	              { className: "col-12 card border-primary mb-3" },
-	              _react2.default.createElement(
-	                "div",
-	                { className: "card-header" },
-	                "Resultado del mes"
-	              ),
-	              _react2.default.createElement(
-	                "div",
-	                { className: "card-body" },
-	                _react2.default.createElement(
-	                  "h4",
-	                  { className: "card-title" },
-	                  "Ganancias de:"
-	                ),
-	                _react2.default.createElement(
-	                  "p",
-	                  { className: "card-text" },
-	                  "$40.000"
-	                )
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            { className: "col-md-6 col-12" },
-	            _react2.default.createElement(
-	              "div",
-	              { className: "col-12 card border-primary mb-3" },
-	              _react2.default.createElement(
-	                "div",
-	                { className: "card-header" },
-	                "Movimientos de stock del mes"
-	              ),
-	              _react2.default.createElement(
-	                "div",
-	                { className: "card-body" },
-	                _react2.default.createElement(
-	                  "p",
-	                  { className: "card-text" },
-	                  "Productos que ingresaron: 200"
-	                ),
-	                _react2.default.createElement(
-	                  "p",
-	                  { className: "card-text" },
-	                  "Productos que egresaron: 160"
-	                )
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            { className: "col-md-6 col-12" },
-	            _react2.default.createElement(
-	              "div",
-	              { className: "col-12 card border-success mb-3" },
-	              _react2.default.createElement(
-	                "div",
-	                { className: "card-header" },
-	                "Ingresos del mes"
-	              ),
-	              _react2.default.createElement(
-	                "div",
-	                { className: "card-body" },
-	                _react2.default.createElement(
-	                  "h4",
-	                  { className: "card-title" },
-	                  "Total Cobrado:"
-	                ),
-	                _react2.default.createElement(
-	                  "p",
-	                  { className: "card-text" },
-	                  "$140.000"
-	                )
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            { className: "col-md-6 col-12" },
-	            _react2.default.createElement(
-	              "div",
-	              { className: "col-12 card border-danger mb-3" },
-	              _react2.default.createElement(
-	                "div",
-	                { className: "card-header" },
-	                "Egresos del mes"
-	              ),
-	              _react2.default.createElement(
-	                "div",
-	                { className: "card-body" },
-	                _react2.default.createElement(
-	                  "h4",
-	                  { className: "card-title" },
-	                  "Total Pagado:"
-	                ),
-	                _react2.default.createElement(
-	                  "p",
-	                  { className: "card-text" },
-	                  "$100.000"
-	                )
-	              )
-	            )
-	          )
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return Home;
-	}(_react2.default.Component);
-	
-	exports.default = Home;
-
-/***/ },
-/* 286 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _TablaFlexible = __webpack_require__(252);
-	
-	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
-	
-	var _sweetalert = __webpack_require__(255);
-	
-	var _sweetalert2 = _interopRequireDefault(_sweetalert);
-	
-	var _javascriptFunctions = __webpack_require__(254);
-	
-	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //https://github.com/sweetalert2/sweetalert2
-	
-	
-	var FabricasPagos = function (_React$Component) {
-	  _inherits(FabricasPagos, _React$Component);
-	
-	  function FabricasPagos() {
-	    _classCallCheck(this, FabricasPagos);
-	
-	    var _this = _possibleConstructorReturn(this, (FabricasPagos.__proto__ || Object.getPrototypeOf(FabricasPagos)).call(this));
-	
-	    _this.state = {
-	      fabrica: {},
-	      cargando: true,
-	      error: ""
-	    };
-	    _this.cargarFabrica = _this.cargarFabrica.bind(_this);
-	    return _this;
-	  }
-	
-	  _createClass(FabricasPagos, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      this.cargarFabrica();
-	    }
-	  }, {
-	    key: 'cargarFabrica',
-	    value: function cargarFabrica() {
-	      var _this2 = this;
-	
-	      if (this.props.params.id) {
-	        // Obtengo los pagos de la fábrica
-	        fetch('/api/fabricas/' + this.props.params.id).then(function (res) {
-	          if (res.ok) {
-	            res.json().then(function (data) {
-	              console.log("Fabrica: ", data);
-	              _this2.setState({
-	                cargando: false,
-	                error: "",
-	                fabrica: data
-	              });
-	            });
-	          } else {
-	            res.json().then(function (error) {
-	              console.log("Error al obtener fabrica - ", error.message);
-	              _this2.setState({
-	                cargando: false,
-	                error: error.message
-	              });
-	            });
-	          }
-	        }).catch(function (error) {
-	          console.log("Error en el fetch. ", error.message);
-	          _this2.setState({
-	            cargando: false,
-	            error: error.message
-	          });
-	        });
-	      } else {
-	        this.setState({
-	          cargando: false,
-	          error: "No se puede cargar esta pantalla sin el id de la Fábrica"
-	        });
-	      }
-	    }
-	  }, {
-	    key: 'onSave',
-	    value: function onSave() {
-	      var _this3 = this;
-	
-	      fetch('/api/fabricas/' + this.props.params.id, {
-	        method: 'PUT',
-	        headers: { 'Content-Type': 'application/json' },
-	        body: JSON.stringify(this.state.fabrica)
-	      }).then(function (res) {
-	        if (res.ok) {
-	          res.json().then(function (data) {
-	            _sweetalert2.default.fire("Cambios Guardados!", "", "success").then(function () {
-	              _this3.props.history.push("/fabricas");
-	            });
-	          });
-	        } else {
-	          res.json().then(function (err) {
-	            console.log("Error al modificar fabrica: ", err.message);
-	            _sweetalert2.default.fire("Error al modificar la fábrica", "", "error");
-	          });
-	        }
-	      }).catch(function (err) {
-	        console.log("Error al modificar: ", err.message);
-	        _sweetalert2.default.fire("Error del servidor", "", "error");
-	      });
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this4 = this;
-	
-	      var deuda = _javascriptFunctions2.default.getDeuda(this.state.fabrica);
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'fabricas-pagos text-center' },
-	        !this.state.cargando ? _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-12 d-flex justify-content-between' },
-	              _react2.default.createElement(
-	                'h3',
-	                null,
-	                'Gesti\xF3n de Pagos'
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                { type: 'button',
-	                  className: 'btn btn-success',
-	                  onClick: function onClick() {
-	                    return _this4.onClickGuardar();
-	                  }
-	                },
-	                '+ Guardar Cambios'
-	              )
-	            )
-	          )
-	        ) : this.state.error ?
-	        //Mensaje de error
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'alert alert-dismissible alert-danger' },
-	          _react2.default.createElement(
-	            'button',
-	            { type: 'button', className: 'close', 'data-dismiss': 'alert' },
-	            '\xD7'
-	          ),
-	          _react2.default.createElement(
-	            'strong',
-	            null,
-	            'Error!'
-	          ),
-	          ' ',
-	          this.state.error
-	        ) :
-	        // Spinner
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'spinner-border text-light', role: 'status' },
-	          _react2.default.createElement(
-	            'span',
-	            { className: 'sr-only' },
-	            'Loading...'
-	          )
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return FabricasPagos;
-	}(_react2.default.Component);
-	
-	exports.default = FabricasPagos;
 
 /***/ }
 /******/ ]);

@@ -47,7 +47,7 @@
 .tabla-flexible .table-secondary td {
   border: none;
 }
-.tabla-flexible .btn-outline-primary {
+.tabla-flexible .btn-outline-primary{
   height: 38px;
   width: 48px;
 }
@@ -124,4 +124,13 @@
 .contactos-editar .contenedor-productos{
   border: solid 1px #DF691A;
   padding: 15px;
+}
+/* Fabricas Pagos */
+.fabricas-pagos .mensaje-deuda{
+  border: solid 1px #DF691A;
+  padding: 12px;
+  margin: 15px;
+  width: 100%;
+  text-align-last: left;
+  padding-top: 18px;
 }

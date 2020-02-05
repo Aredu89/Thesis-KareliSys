@@ -77,6 +77,15 @@ export default class TablaFlexible extends React.Component {
                       : null
                     }
                     {
+                      this.props.goToPagos ?
+                        <button type="button" 
+                          className="btn btn-outline-primary"
+                          title="Pagos"
+                          onClick={() => this.props.goToPagos(data._id)}
+                          ><i className="material-icons">attach_money</i></button>
+                      : null
+                    }
+                    {
                       this.props.handleEliminar ?
                         <button type="button" 
                           className="btn btn-outline-danger"

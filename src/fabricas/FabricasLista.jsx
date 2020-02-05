@@ -15,6 +15,7 @@ export default class FabricasLista extends React.Component {
     this.handleEditar = this.handleEditar.bind(this)
     this.handleEliminar = this.handleEliminar.bind(this)
     this.actualizarLista = this.actualizarLista.bind(this)
+    this.goToPagos = this.goToPagos.bind(this)
   }
 
   componentDidMount(){
@@ -67,6 +68,10 @@ export default class FabricasLista extends React.Component {
 
   handleEditar(id){
     this.props.history.push(`/fabricas/editar/${id}`)
+  }
+
+  goToPagos(id){
+    this.props.history.push(`/fabricas/pagos/${id}`)
   }
 
   handleEliminar(id){
@@ -158,6 +163,7 @@ export default class FabricasLista extends React.Component {
                   data={this.state.fabricas}
                   handleEditar={this.handleEditar}
                   handleEliminar={this.handleEliminar}
+                  goToPagos={this.goToPagos}
                 />
               :
                 this.state.error ?

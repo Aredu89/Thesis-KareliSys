@@ -114,9 +114,11 @@ export default class FabricasPagos extends React.Component {
                   onClick={() => this.onClickGuardar()}
                   >+ Guardar Cambios</button>
               </div>
+              {/* Deuda */}
+              <div className="mensaje-deuda">
+                <h4>La deuda a "{this.state.fabrica.nombre}" es de: {Funciones.moneyFormatter(deuda)}</h4>
+              </div>
             </div>
-            {/* Deuda */}
-
           </div>
           :
             this.state.error ?

@@ -269,6 +269,10 @@ export default class FabricasEditar extends React.Component {
     })
   }
 
+  goToPagos(){
+    this.props.history.push(`/fabricas/pagos/${this.props.params.id}`)
+  }
+
   //Modal
   onOpenModal(cual){
     this.setState({
@@ -326,10 +330,20 @@ export default class FabricasEditar extends React.Component {
                   <h3>Modificar Fábrica: {this.state.nombre}</h3>
               }
               {/* Boton para guardar cambios */}
-              <button type="button" 
-                className="btn btn-success"
-                onClick={() => this.onClickGuardar()}
-                >+ Guardar</button>
+              <div>
+                <button type="button" 
+                  className="btn btn-success"
+                  onClick={() => this.onClickGuardar()}
+                  >+ Guardar</button>
+                {
+                  !this.state.nuevo ?
+                    <button type="button" 
+                      className="btn btn-secondary ml-2"
+                      onClick={() => this.goToPagos()}
+                      >Ir a Pagos $</button>
+                  : null
+                }
+              </div>
             </div>
           </div>
           {/* Formulario */}
