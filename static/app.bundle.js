@@ -28746,7 +28746,7 @@
 	    // Props:
 	    // columns: Array de arrays con la siguiente estructura
 	    // [ ["Titulo de la columna","clave del objeto data","tipo"] ] 
-	    // El tipo puede ser: "String, Largo, Largo pendiente, Fecha"
+	    // El tipo puede ser: "String, Largo, Largo pendiente, Fecha, Money"
 	    // data: Array de objetos con los datos para completar la tabla
 	    // ---------- botones -------------
 	    // handleEditar: función para el botón editar. Parametro: _id
@@ -28832,6 +28832,12 @@
 	                      'td',
 	                      { key: i },
 	                      _this2.largoPendiente(data[col[1]])
+	                    );
+	                  } else if (col[2] === "Money") {
+	                    return _react2.default.createElement(
+	                      'td',
+	                      { key: i },
+	                      _javascriptFunctions2.default.moneyFormatter(data[col[1]])
 	                    );
 	                  } else {
 	                    return _react2.default.createElement(
@@ -47728,7 +47734,17 @@
 	
 	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
 	
+	var _reactResponsiveModal = __webpack_require__(257);
+	
+	var _reactResponsiveModal2 = _interopRequireDefault(_reactResponsiveModal);
+	
+	var _PagosEditar = __webpack_require__(286);
+	
+	var _PagosEditar2 = _interopRequireDefault(_PagosEditar);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -47748,9 +47764,16 @@
 	    _this.state = {
 	      fabrica: {},
 	      cargando: true,
-	      error: ""
+	      error: "",
+	      modalPagos: false,
+	      modalPagosEditar: null
 	    };
 	    _this.cargarFabrica = _this.cargarFabrica.bind(_this);
+	    _this.onOpenModal = _this.onOpenModal.bind(_this);
+	    _this.onCloseModal = _this.onCloseModal.bind(_this);
+	    _this.onSaveModal = _this.onSaveModal.bind(_this);
+	    _this.handleEditarPago = _this.handleEditarPago.bind(_this);
+	    _this.handleEliminarPago = _this.handleEliminarPago.bind(_this);
 	    return _this;
 	  }
 	
@@ -47800,38 +47823,118 @@
 	      }
 	    }
 	  }, {
-	    key: 'onSave',
-	    value: function onSave() {
+	    key: 'onClickGuardar',
+	    value: function onClickGuardar(fabrica) {
 	      var _this3 = this;
 	
 	      fetch('/api/fabricas/' + this.props.params.id, {
 	        method: 'PUT',
 	        headers: { 'Content-Type': 'application/json' },
-	        body: JSON.stringify(this.state.fabrica)
+	        body: JSON.stringify(fabrica)
 	      }).then(function (res) {
 	        if (res.ok) {
 	          res.json().then(function (data) {
-	            _sweetalert2.default.fire("Cambios Guardados!", "", "success").then(function () {
-	              _this3.props.history.push("/fabricas");
+	            _this3.setState({
+	              fabrica: data
 	            });
+	            _sweetalert2.default.fire("Cambios Guardados!", "", "success");
 	          });
 	        } else {
 	          res.json().then(function (err) {
-	            console.log("Error al modificar fabrica: ", err.message);
-	            _sweetalert2.default.fire("Error al modificar la fábrica", "", "error");
+	            console.log("Error al insertar o modificar pago: ", err.message);
+	            _sweetalert2.default.fire("Error al insertar o modificar pago", "", "error");
 	          });
 	        }
 	      }).catch(function (err) {
-	        console.log("Error al modificar: ", err.message);
+	        console.log("Error del servidor: ", err.message);
 	        _sweetalert2.default.fire("Error del servidor", "", "error");
+	      });
+	    }
+	
+	    //Modal
+	
+	  }, {
+	    key: 'onOpenModal',
+	    value: function onOpenModal(cual) {
+	      this.setState(_defineProperty({}, cual, true));
+	    }
+	  }, {
+	    key: 'onCloseModal',
+	    value: function onCloseModal(cual) {
+	      var _setState2;
+	
+	      this.setState((_setState2 = {}, _defineProperty(_setState2, cual, false), _defineProperty(_setState2, cual + "Editar", null), _setState2));
+	    }
+	  }, {
+	    key: 'onSaveModal',
+	    value: function onSaveModal(pago) {
+	      var fabrica = this.state.fabrica;
+	      var pagos = fabrica.pagos;
+	      if (pago._id) {
+	        pagos.forEach(function (p, i) {
+	          if (p._id === pago._id) {
+	            pagos.splice(i, 1, pago);
+	          }
+	        });
+	      } else {
+	        pagos.push(pago);
+	      }
+	      fabrica.pagos = pagos;
+	      this.onClickGuardar(fabrica);
+	    }
+	  }, {
+	    key: 'handleEditarPago',
+	    value: function handleEditarPago(id) {
+	      var pago = {};
+	      this.state.fabrica.pagos.forEach(function (p) {
+	        if (id === p._id) {
+	          pago = p;
+	        }
+	      });
+	      this.setState({
+	        modalPagosEditar: pago,
+	        modalPagos: true
+	      });
+	    }
+	  }, {
+	    key: 'handleEliminarPago',
+	    value: function handleEliminarPago(id) {
+	      var _this4 = this;
+	
+	      var fabrica = this.state.fabrica;
+	      var pagos = fabrica.pagos;
+	      //Primero pido confirmación
+	      _sweetalert2.default.fire({
+	        title: "¿Seguro que desea eliminar?",
+	        text: "Esta acción no se puede revertir",
+	        icon: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#3085d6",
+	        cancelButtonColor: "#d33",
+	        confirmButtonText: "Si, eliminar"
+	      }).then(function (result) {
+	        if (result.value) {
+	          // Elimino el pago
+	          pagos.forEach(function (p, i) {
+	            if (id === p._id) {
+	              pagos.splice(i, 1);
+	            }
+	          });
+	          fabrica.pagos = pagos;
+	          _this4.onClickGuardar(fabrica);
+	        }
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this4 = this;
+	      var _this5 = this;
 	
 	      var deuda = _javascriptFunctions2.default.getDeuda(this.state.fabrica);
+	      var columnsPagos = [["Fecha", "fecha", "Fecha"], ["Monto", "monto", "Money"], ["Forma de Pago", "formaPago", "String"]];
+	      var columnsPedidos = [["Fecha", "fecha", "Fecha"], ["Productos", "detalle", "Largo"], ["Precio", "precioTotal", "String"], ["Estado", "estado", "String"]];
+	      var pagosLength = this.state.fabrica.pagos ? this.state.fabrica.pagos.length : 0;
+	      var pedidosLength = this.state.fabrica.pedidos ? this.state.fabrica.pedidos.length : 0;
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fabricas-pagos text-center' },
@@ -47847,17 +47950,8 @@
 	              _react2.default.createElement(
 	                'h3',
 	                null,
-	                'Gesti\xF3n de Pagos'
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                { type: 'button',
-	                  className: 'btn btn-success',
-	                  onClick: function onClick() {
-	                    return _this4.onClickGuardar();
-	                  }
-	                },
-	                '+ Guardar Cambios'
+	                'Gesti\xF3n de Pagos - ',
+	                this.state.fabrica.nombre
 	              )
 	            ),
 	            _react2.default.createElement(
@@ -47866,12 +47960,138 @@
 	              _react2.default.createElement(
 	                'h4',
 	                null,
-	                'La deuda a "',
-	                this.state.fabrica.nombre,
-	                '" es de: ',
+	                'La deuda es de: ',
 	                _javascriptFunctions2.default.moneyFormatter(deuda)
 	              )
 	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'mt-3' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'card border-primary', id: 'card' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-header d-flex justify-content-between', id: 'headingOne' },
+	                _react2.default.createElement(
+	                  'button',
+	                  { type: 'button',
+	                    className: 'btn btn-link collapsed col-sm-8 col-6',
+	                    'data-toggle': 'collapse',
+	                    'data-target': '#collapseOne',
+	                    'aria-expanded': 'false',
+	                    'aria-controls': 'collapseOne' },
+	                  _react2.default.createElement(
+	                    'h5',
+	                    { className: 'd-flex align-items-center mb-0' },
+	                    'Pagos: ',
+	                    pagosLength,
+	                    _react2.default.createElement(
+	                      'i',
+	                      { className: 'material-icons ml-3' },
+	                      'keyboard_arrow_down'
+	                    )
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'button',
+	                  { type: 'button',
+	                    className: 'btn btn-outline-success',
+	                    onClick: function onClick() {
+	                      return _this5.onOpenModal("modalPagos");
+	                    }
+	                  },
+	                  '+ Agregar Pago'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { id: 'collapseOne',
+	                  className: 'collapse',
+	                  'aria-labelledby': 'headingOne',
+	                  'data-parent': '#card' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'card-body contenedor-tabla' },
+	                  _react2.default.createElement(_TablaFlexible2.default, {
+	                    lista: "pagos",
+	                    columns: columnsPagos,
+	                    data: this.state.fabrica.pagos ? this.state.fabrica.pagos : [],
+	                    handleEditar: this.handleEditarPago,
+	                    handleEliminar: this.handleEliminarPago
+	                  })
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'mt-3' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'card border-primary', id: 'card' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-header d-flex justify-content-between', id: 'headingOne' },
+	                _react2.default.createElement(
+	                  'button',
+	                  { type: 'button',
+	                    className: 'btn btn-link collapsed col-sm-8 col-6',
+	                    'data-toggle': 'collapse',
+	                    'data-target': '#collapseTwo',
+	                    'aria-expanded': 'false',
+	                    'aria-controls': 'collapseTwo' },
+	                  _react2.default.createElement(
+	                    'h5',
+	                    { className: 'd-flex align-items-center mb-0' },
+	                    'Pedidos: ',
+	                    pedidosLength,
+	                    _react2.default.createElement(
+	                      'i',
+	                      { className: 'material-icons ml-3' },
+	                      'keyboard_arrow_down'
+	                    )
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { id: 'collapseTwo',
+	                  className: 'collapse',
+	                  'aria-labelledby': 'headingOne',
+	                  'data-parent': '#card' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'card-body contenedor-tabla' },
+	                  _react2.default.createElement(_TablaFlexible2.default, {
+	                    lista: "pedidos",
+	                    columns: columnsPedidos,
+	                    data: this.state.fabrica.pedidos ? this.state.fabrica.pedidos : []
+	                  })
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            _reactResponsiveModal2.default,
+	            {
+	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
+	              onClose: function onClose() {
+	                return _this5.onCloseModal("modalPagos");
+	              },
+	              showCloseIcon: false,
+	              open: this.state.modalPagos,
+	              center: true
+	            },
+	            _react2.default.createElement(_PagosEditar2.default, {
+	              data: this.state.modalPagosEditar,
+	              onSave: this.onSaveModal,
+	              onClose: function onClose() {
+	                return _this5.onCloseModal("modalPagos");
+	              },
+	              titulo: this.state.modalPedidosEditar ? "EDITAR PAGO" : "CARGAR PAGO"
+	            })
 	          )
 	        ) : this.state.error ?
 	        //Mensaje de error
@@ -48563,6 +48783,228 @@
 	}(_react2.default.Component);
 	
 	exports.default = FabricasEditar;
+
+/***/ },
+/* 286 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _javascriptFunctions = __webpack_require__(254);
+	
+	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var PagosEditar = function (_React$Component) {
+	  _inherits(PagosEditar, _React$Component);
+	
+	  function PagosEditar() {
+	    _classCallCheck(this, PagosEditar);
+	
+	    var _this = _possibleConstructorReturn(this, (PagosEditar.__proto__ || Object.getPrototypeOf(PagosEditar)).call(this));
+	
+	    _this.state = {
+	      _id: "",
+	      fecha: "",
+	      errorMonto: false,
+	      monto: "",
+	      formaPago: "",
+	      observaciones: ""
+	    };
+	    _this.handleOnChange = _this.handleOnChange.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(PagosEditar, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      if (this.props.data) {
+	        this.setState({
+	          _id: this.props.data._id,
+	          fecha: this.props.data.fecha,
+	          monto: this.props.data.monto,
+	          formaPago: this.props.data.formaPago,
+	          observaciones: this.props.data.observaciones
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'handleOnChange',
+	    value: function handleOnChange(event) {
+	      this.setState(_defineProperty({}, event.target.name, event.target.value));
+	      if (event.target.name === "monto") {
+	        this.setState({
+	          errorMonto: false
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'onSave',
+	    value: function onSave() {
+	      if (this.state.monto > 0) {
+	        this.props.onSave({
+	          _id: this.state._id,
+	          fecha: this.state.fecha ? this.state.fecha : new Date(),
+	          monto: this.state.monto,
+	          formaPago: this.state.formaPago,
+	          observaciones: this.state.observaciones
+	        }, "pagos");
+	        this.props.onClose();
+	      } else {
+	        this.setState({
+	          errorMonto: true
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'contactos-editar' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'header d-flex justify-content-between align-items-center' },
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            this.props.titulo
+	          ),
+	          _react2.default.createElement(
+	            'button',
+	            {
+	              type: 'button',
+	              className: 'modal-cerrar d-flex align-items-center',
+	              onClick: function onClick() {
+	                return _this2.props.onClose();
+	              }
+	            },
+	            _react2.default.createElement(
+	              'i',
+	              { className: 'material-icons' },
+	              'clear'
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'formulario pt-2' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              { className: 'd-block' },
+	              'Fecha'
+	            ),
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              _javascriptFunctions2.default.formatearDate(this.state.fecha ? this.state.fecha : new Date())
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Monto'
+	            ),
+	            _react2.default.createElement('input', { type: 'number',
+	              className: this.state.errorMonto ? "form-control is-invalid" : "form-control",
+	              id: 'monto',
+	              name: 'monto',
+	              placeholder: 'Monto...',
+	              value: this.state.monto,
+	              onChange: this.handleOnChange
+	            }),
+	            this.state.errorMonto ? _react2.default.createElement(
+	              'div',
+	              { className: 'invalid-feedback' },
+	              'El monto debe ser mayor a cero'
+	            ) : null
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Forma de Pago'
+	            ),
+	            _react2.default.createElement('input', { type: 'text',
+	              className: 'form-control',
+	              id: 'formaPago',
+	              name: 'formaPago',
+	              placeholder: 'Forma de Pago...',
+	              value: this.state.formaPago,
+	              onChange: this.handleOnChange
+	            })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Observaciones'
+	            ),
+	            _react2.default.createElement('textarea', {
+	              className: 'form-control',
+	              rows: '3',
+	              id: 'observaciones',
+	              name: 'observaciones',
+	              placeholder: 'Observaciones...',
+	              value: this.state.observaciones,
+	              onChange: this.handleOnChange
+	            })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2 boton-guardar' },
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                type: 'button',
+	                className: 'btn btn-success',
+	                onClick: function onClick() {
+	                  return _this2.onSave();
+	                }
+	              },
+	              'Guardar'
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return PagosEditar;
+	}(_react2.default.Component);
+	
+	exports.default = PagosEditar;
 
 /***/ }
 /******/ ]);

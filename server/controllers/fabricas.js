@@ -96,6 +96,14 @@ module.exports.modificarFabrica = (req,res) => {
             estado: pedido.estado
           }
         })
+        fabrica.pagos = auxFabrica.pagos.map(pago=>{
+          return {
+            fecha: pago.fecha,
+            monto: pago.monto,
+            formaPago: pago.formaPago,
+            observaciones: pago.observaciones
+          }
+        })
         fabrica.save((err, fabrica) => {
           if (err) {
             res.status(404).json(err)
