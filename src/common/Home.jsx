@@ -1,10 +1,16 @@
 import React from'react'
+import funciones from './javascriptFunctions.js'
 
 export default class Home extends React.Component {
   constructor() {
     super()
     this.state = {
-
+      cargando: true,
+      error: "",
+      ingresos: 0,
+      egresos: 0,
+      stock: 0,
+      stockPendiente: 0
     }
   }
 

@@ -7,6 +7,9 @@ import Home from './common/Home.jsx'
 import FabricasLista from './fabricas/FabricasLista.jsx'
 import FabricasEditar from './fabricas/FabricasEditar.jsx'
 import FabricasPagos from './fabricas/FabricasPagos.jsx'
+import ClientesLista from './clientes/ClientesLista.jsx'
+import ClientesEditar from './clientes/ClientesEditar.jsx'
+import ClientesPagos from './clientes/ClientesPagos.jsx'
 import StockLista from './stock/StockLista.jsx'
 import StockEditar from './stock/StockEditar.jsx'
 
@@ -22,6 +25,10 @@ const RoutedApp = () => (
       <Route path="fabricas/editar" component={FabricasEditar} />
       <Route path="fabricas/editar/:id" component={FabricasEditar} />
       <Route path="fabricas/pagos/:id" component={FabricasPagos} />
+      <Route path="clientes" component={ClientesLista} />
+      <Route path="clientes/editar" component={ClientesEditar} />
+      <Route path="clientes/editar/:id" component={ClientesEditar} />
+      <Route path="clientes/pagos/:id" component={ClientesPagos} />
       <Route path="stock" component={StockLista} />
       <Route path="stock/editar" component={StockEditar} />
       <Route path="stock/editar/:id" component={StockEditar} />

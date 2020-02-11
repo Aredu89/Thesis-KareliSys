@@ -76,11 +76,23 @@
 	
 	var _FabricasPagos2 = _interopRequireDefault(_FabricasPagos);
 	
-	var _StockLista = __webpack_require__(284);
+	var _ClientesLista = __webpack_require__(287);
+	
+	var _ClientesLista2 = _interopRequireDefault(_ClientesLista);
+	
+	var _ClientesEditar = __webpack_require__(288);
+	
+	var _ClientesEditar2 = _interopRequireDefault(_ClientesEditar);
+	
+	var _ClientesPagos = __webpack_require__(291);
+	
+	var _ClientesPagos2 = _interopRequireDefault(_ClientesPagos);
+	
+	var _StockLista = __webpack_require__(285);
 	
 	var _StockLista2 = _interopRequireDefault(_StockLista);
 	
-	var _StockEditar = __webpack_require__(285);
+	var _StockEditar = __webpack_require__(286);
 	
 	var _StockEditar2 = _interopRequireDefault(_StockEditar);
 	
@@ -108,6 +120,10 @@
 	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas/editar', component: _FabricasEditar2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas/editar/:id', component: _FabricasEditar2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas/pagos/:id', component: _FabricasPagos2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes', component: _ClientesLista2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes/editar', component: _ClientesEditar2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes/editar/:id', component: _ClientesEditar2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes/pagos/:id', component: _ClientesPagos2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'stock', component: _StockLista2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'stock/editar', component: _StockEditar2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'stock/editar/:id', component: _StockEditar2.default }),
@@ -27763,7 +27779,7 @@
 	                { className: 'nav-item' },
 	                _react2.default.createElement(
 	                  _reactRouter.Link,
-	                  { className: 'nav-link', to: '/' },
+	                  { className: 'nav-link', to: '/clientes' },
 	                  'Clientes'
 	                )
 	              ),
@@ -28286,7 +28302,7 @@
 /* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -28297,6 +28313,10 @@
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _javascriptFunctions = __webpack_require__(254);
+	
+	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -28314,123 +28334,130 @@
 	
 	    var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this));
 	
-	    _this.state = {};
+	    _this.state = {
+	      cargando: true,
+	      error: "",
+	      ingresos: 0,
+	      egresos: 0,
+	      stock: 0,
+	      stockPendiente: 0
+	    };
 	    return _this;
 	  }
 	
 	  _createClass(Home, [{
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
-	        "div",
-	        { className: "home" },
+	        'div',
+	        { className: 'home' },
 	        _react2.default.createElement(
-	          "div",
-	          { className: "row" },
+	          'div',
+	          { className: 'row' },
 	          _react2.default.createElement(
-	            "div",
-	            { className: "col-md-6 col-12" },
+	            'div',
+	            { className: 'col-md-6 col-12' },
 	            _react2.default.createElement(
-	              "div",
-	              { className: "col-12 card border-primary mb-3" },
+	              'div',
+	              { className: 'col-12 card border-primary mb-3' },
 	              _react2.default.createElement(
-	                "div",
-	                { className: "card-header" },
-	                "Resultado del mes"
+	                'div',
+	                { className: 'card-header' },
+	                'Resultado del mes'
 	              ),
 	              _react2.default.createElement(
-	                "div",
-	                { className: "card-body" },
+	                'div',
+	                { className: 'card-body' },
 	                _react2.default.createElement(
-	                  "h4",
-	                  { className: "card-title" },
-	                  "Ganancias de:"
+	                  'h4',
+	                  { className: 'card-title' },
+	                  'Ganancias de:'
 	                ),
 	                _react2.default.createElement(
-	                  "p",
-	                  { className: "card-text" },
-	                  "$40.000"
+	                  'p',
+	                  { className: 'card-text' },
+	                  '$40.000'
 	                )
 	              )
 	            )
 	          ),
 	          _react2.default.createElement(
-	            "div",
-	            { className: "col-md-6 col-12" },
+	            'div',
+	            { className: 'col-md-6 col-12' },
 	            _react2.default.createElement(
-	              "div",
-	              { className: "col-12 card border-primary mb-3" },
+	              'div',
+	              { className: 'col-12 card border-primary mb-3' },
 	              _react2.default.createElement(
-	                "div",
-	                { className: "card-header" },
-	                "Movimientos de stock del mes"
+	                'div',
+	                { className: 'card-header' },
+	                'Movimientos de stock del mes'
 	              ),
 	              _react2.default.createElement(
-	                "div",
-	                { className: "card-body" },
+	                'div',
+	                { className: 'card-body' },
 	                _react2.default.createElement(
-	                  "p",
-	                  { className: "card-text" },
-	                  "Productos que ingresaron: 200"
+	                  'p',
+	                  { className: 'card-text' },
+	                  'Productos que ingresaron: 200'
 	                ),
 	                _react2.default.createElement(
-	                  "p",
-	                  { className: "card-text" },
-	                  "Productos que egresaron: 160"
+	                  'p',
+	                  { className: 'card-text' },
+	                  'Productos que egresaron: 160'
 	                )
 	              )
 	            )
 	          ),
 	          _react2.default.createElement(
-	            "div",
-	            { className: "col-md-6 col-12" },
+	            'div',
+	            { className: 'col-md-6 col-12' },
 	            _react2.default.createElement(
-	              "div",
-	              { className: "col-12 card border-success mb-3" },
+	              'div',
+	              { className: 'col-12 card border-success mb-3' },
 	              _react2.default.createElement(
-	                "div",
-	                { className: "card-header" },
-	                "Ingresos del mes"
+	                'div',
+	                { className: 'card-header' },
+	                'Ingresos del mes'
 	              ),
 	              _react2.default.createElement(
-	                "div",
-	                { className: "card-body" },
+	                'div',
+	                { className: 'card-body' },
 	                _react2.default.createElement(
-	                  "h4",
-	                  { className: "card-title" },
-	                  "Total Cobrado:"
+	                  'h4',
+	                  { className: 'card-title' },
+	                  'Total Cobrado:'
 	                ),
 	                _react2.default.createElement(
-	                  "p",
-	                  { className: "card-text" },
-	                  "$140.000"
+	                  'p',
+	                  { className: 'card-text' },
+	                  '$140.000'
 	                )
 	              )
 	            )
 	          ),
 	          _react2.default.createElement(
-	            "div",
-	            { className: "col-md-6 col-12" },
+	            'div',
+	            { className: 'col-md-6 col-12' },
 	            _react2.default.createElement(
-	              "div",
-	              { className: "col-12 card border-danger mb-3" },
+	              'div',
+	              { className: 'col-12 card border-danger mb-3' },
 	              _react2.default.createElement(
-	                "div",
-	                { className: "card-header" },
-	                "Egresos del mes"
+	                'div',
+	                { className: 'card-header' },
+	                'Egresos del mes'
 	              ),
 	              _react2.default.createElement(
-	                "div",
-	                { className: "card-body" },
+	                'div',
+	                { className: 'card-body' },
 	                _react2.default.createElement(
-	                  "h4",
-	                  { className: "card-title" },
-	                  "Total Pagado:"
+	                  'h4',
+	                  { className: 'card-title' },
+	                  'Total Pagado:'
 	                ),
 	                _react2.default.createElement(
-	                  "p",
-	                  { className: "card-text" },
-	                  "$100.000"
+	                  'p',
+	                  { className: 'card-text' },
+	                  '$100.000'
 	                )
 	              )
 	            )
@@ -47738,7 +47765,7 @@
 	
 	var _reactResponsiveModal2 = _interopRequireDefault(_reactResponsiveModal);
 	
-	var _PagosEditar = __webpack_require__(286);
+	var _PagosEditar = __webpack_require__(284);
 	
 	var _PagosEditar2 = _interopRequireDefault(_PagosEditar);
 	
@@ -48146,6 +48173,228 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _javascriptFunctions = __webpack_require__(254);
+	
+	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var PagosEditar = function (_React$Component) {
+	  _inherits(PagosEditar, _React$Component);
+	
+	  function PagosEditar() {
+	    _classCallCheck(this, PagosEditar);
+	
+	    var _this = _possibleConstructorReturn(this, (PagosEditar.__proto__ || Object.getPrototypeOf(PagosEditar)).call(this));
+	
+	    _this.state = {
+	      _id: "",
+	      fecha: "",
+	      errorMonto: false,
+	      monto: "",
+	      formaPago: "",
+	      observaciones: ""
+	    };
+	    _this.handleOnChange = _this.handleOnChange.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(PagosEditar, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      if (this.props.data) {
+	        this.setState({
+	          _id: this.props.data._id,
+	          fecha: this.props.data.fecha,
+	          monto: this.props.data.monto,
+	          formaPago: this.props.data.formaPago,
+	          observaciones: this.props.data.observaciones
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'handleOnChange',
+	    value: function handleOnChange(event) {
+	      this.setState(_defineProperty({}, event.target.name, event.target.value));
+	      if (event.target.name === "monto") {
+	        this.setState({
+	          errorMonto: false
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'onSave',
+	    value: function onSave() {
+	      if (this.state.monto > 0) {
+	        this.props.onSave({
+	          _id: this.state._id,
+	          fecha: this.state.fecha ? this.state.fecha : new Date(),
+	          monto: this.state.monto,
+	          formaPago: this.state.formaPago,
+	          observaciones: this.state.observaciones
+	        }, "pagos");
+	        this.props.onClose();
+	      } else {
+	        this.setState({
+	          errorMonto: true
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'contactos-editar' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'header d-flex justify-content-between align-items-center' },
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            this.props.titulo
+	          ),
+	          _react2.default.createElement(
+	            'button',
+	            {
+	              type: 'button',
+	              className: 'modal-cerrar d-flex align-items-center',
+	              onClick: function onClick() {
+	                return _this2.props.onClose();
+	              }
+	            },
+	            _react2.default.createElement(
+	              'i',
+	              { className: 'material-icons' },
+	              'clear'
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'formulario pt-2' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              { className: 'd-block' },
+	              'Fecha'
+	            ),
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              _javascriptFunctions2.default.formatearDate(this.state.fecha ? this.state.fecha : new Date())
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Monto'
+	            ),
+	            _react2.default.createElement('input', { type: 'number',
+	              className: this.state.errorMonto ? "form-control is-invalid" : "form-control",
+	              id: 'monto',
+	              name: 'monto',
+	              placeholder: 'Monto...',
+	              value: this.state.monto,
+	              onChange: this.handleOnChange
+	            }),
+	            this.state.errorMonto ? _react2.default.createElement(
+	              'div',
+	              { className: 'invalid-feedback' },
+	              'El monto debe ser mayor a cero'
+	            ) : null
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Forma de Pago'
+	            ),
+	            _react2.default.createElement('input', { type: 'text',
+	              className: 'form-control',
+	              id: 'formaPago',
+	              name: 'formaPago',
+	              placeholder: 'Forma de Pago...',
+	              value: this.state.formaPago,
+	              onChange: this.handleOnChange
+	            })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Observaciones'
+	            ),
+	            _react2.default.createElement('textarea', {
+	              className: 'form-control',
+	              rows: '3',
+	              id: 'observaciones',
+	              name: 'observaciones',
+	              placeholder: 'Observaciones...',
+	              value: this.state.observaciones,
+	              onChange: this.handleOnChange
+	            })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2 boton-guardar' },
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                type: 'button',
+	                className: 'btn btn-success',
+	                onClick: function onClick() {
+	                  return _this2.onSave();
+	                }
+	              },
+	              'Guardar'
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return PagosEditar;
+	}(_react2.default.Component);
+	
+	exports.default = PagosEditar;
+
+/***/ },
+/* 285 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
 	var _TablaFlexible = __webpack_require__(252);
 	
 	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
@@ -48368,7 +48617,7 @@
 	exports.default = StockLista;
 
 /***/ },
-/* 285 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -48785,7 +49034,1988 @@
 	exports.default = FabricasEditar;
 
 /***/ },
-/* 286 */
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _TablaFlexible = __webpack_require__(252);
+	
+	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
+	
+	var _javascriptFunctions = __webpack_require__(254);
+	
+	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
+	
+	var _sweetalert = __webpack_require__(255);
+	
+	var _sweetalert2 = _interopRequireDefault(_sweetalert);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ClientesLista = function (_React$Component) {
+	  _inherits(ClientesLista, _React$Component);
+	
+	  function ClientesLista() {
+	    _classCallCheck(this, ClientesLista);
+	
+	    var _this = _possibleConstructorReturn(this, (ClientesLista.__proto__ || Object.getPrototypeOf(ClientesLista)).call(this));
+	
+	    _this.state = {
+	      clientes: [],
+	      cargando: true,
+	      error: ""
+	    };
+	    _this.cargarLista = _this.cargarLista.bind(_this);
+	    _this.handleEditar = _this.handleEditar.bind(_this);
+	    _this.handleEliminar = _this.handleEliminar.bind(_this);
+	    _this.actualizarLista = _this.actualizarLista.bind(_this);
+	    _this.goToPagos = _this.goToPagos.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(ClientesLista, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.cargarLista();
+	    }
+	
+	    //Obtener lista de fábricas
+	
+	  }, {
+	    key: 'cargarLista',
+	    value: function cargarLista() {
+	      var _this2 = this;
+	
+	      fetch('/api/clientes').then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            //Calculo las deudas a cada Cliente
+	            var auxData = data.map(function (dato) {
+	              var deuda = _javascriptFunctions2.default.getDeuda(dato);
+	              dato.deuda = deuda;
+	              return dato;
+	            });
+	            console.log("Lista Clientes: ", auxData);
+	            _this2.setState({
+	              cargando: false,
+	              clientes: auxData,
+	              error: ""
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener la lista. ", error.message);
+	            _this2.setState({
+	              cargando: false,
+	              error: error.message
+	            });
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.log("Error: ", error.message);
+	        _this2.setState({
+	          cargando: false,
+	          error: error.message
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'onClickAgregar',
+	    value: function onClickAgregar() {
+	      this.props.history.push("/clientes/editar/");
+	    }
+	  }, {
+	    key: 'handleEditar',
+	    value: function handleEditar(id) {
+	      this.props.history.push('/clientes/editar/' + id);
+	    }
+	  }, {
+	    key: 'goToPagos',
+	    value: function goToPagos(id) {
+	      this.props.history.push('/clientes/pagos/' + id);
+	    }
+	  }, {
+	    key: 'handleEliminar',
+	    value: function handleEliminar(id) {
+	      var _this3 = this;
+	
+	      //Primero pido confirmación
+	      _sweetalert2.default.fire({
+	        title: "¿Seguro que desea eliminar?",
+	        text: "Esta acción no se puede revertir",
+	        icon: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#3085d6",
+	        cancelButtonColor: "#d33",
+	        confirmButtonText: "Si, eliminar"
+	      }).then(function (result) {
+	        if (result.value) {
+	          //Elimino
+	          fetch('/api/clientes/' + id, {
+	            method: 'DELETE',
+	            headers: { 'Content-Type': 'application/json' }
+	          }).then(function (res) {
+	            if (res.ok) {
+	              _sweetalert2.default.fire("Cliente Eliminado", "", "success").then(function () {
+	                _this3.actualizarLista(id);
+	              });
+	            } else {
+	              _sweetalert2.default.fire("Error al eliminar", "", "error");
+	            }
+	          }).catch(function (err) {
+	            _sweetalert2.default.fire("Error del servidor", err.message, "error");
+	          });
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'actualizarLista',
+	    value: function actualizarLista(id) {
+	      var _this4 = this;
+	
+	      var auxClientes = this.state.clientes;
+	      // Quito el cliente eliminado de la lista del state
+	      auxClientes.forEach(function (cliente, i) {
+	        if (id === cliente._id) {
+	          auxClientes.splice(i, 1);
+	          _this4.setState({
+	            clientes: auxClientes
+	          });
+	          return;
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this5 = this;
+	
+	      var columns = [["Nombre", "nombre", "String"], ["Ciudad", "ciudad", "String"], ["Dirección", "direccion", "String"], ["Pedidos pendientes", "pedidos", "Largo pendiente"]];
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'fabricas-lista' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 d-flex justify-content-between' },
+	            _react2.default.createElement(
+	              'h3',
+	              null,
+	              'Clientes'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { type: 'button',
+	                className: 'btn btn-success',
+	                onClick: function onClick() {
+	                  return _this5.onClickAgregar();
+	                }
+	              },
+	              '+ Agregar Cliente'
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 contenedor-tabla text-center' },
+	            !this.state.cargando ?
+	            // Tabla
+	            _react2.default.createElement(_TablaFlexible2.default, {
+	              columns: columns,
+	              data: this.state.clientes,
+	              handleEditar: this.handleEditar,
+	              handleEliminar: this.handleEliminar,
+	              goToPagos: this.goToPagos
+	            }) : this.state.error ?
+	            //Mensaje de error
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'alert alert-dismissible alert-danger' },
+	              _react2.default.createElement(
+	                'button',
+	                { type: 'button', className: 'close', 'data-dismiss': 'alert' },
+	                '\xD7'
+	              ),
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Error!'
+	              ),
+	              ' ',
+	              this.state.error
+	            ) :
+	            // Spinner
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'spinner-border text-light', role: 'status' },
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'sr-only' },
+	                'Loading...'
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return ClientesLista;
+	}(_react2.default.Component);
+	
+	exports.default = ClientesLista;
+
+/***/ },
+/* 288 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _sweetalert = __webpack_require__(255);
+	
+	var _sweetalert2 = _interopRequireDefault(_sweetalert);
+	
+	var _TablaFlexible = __webpack_require__(252);
+	
+	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
+	
+	var _reactResponsiveModal = __webpack_require__(257);
+	
+	var _reactResponsiveModal2 = _interopRequireDefault(_reactResponsiveModal);
+	
+	var _ContactosEditar = __webpack_require__(289);
+	
+	var _ContactosEditar2 = _interopRequireDefault(_ContactosEditar);
+	
+	var _PedidosEditar = __webpack_require__(290);
+	
+	var _PedidosEditar2 = _interopRequireDefault(_PedidosEditar);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //https://github.com/sweetalert2/sweetalert2
+	
+	
+	var ClientesEditar = function (_React$Component) {
+	  _inherits(ClientesEditar, _React$Component);
+	
+	  function ClientesEditar() {
+	    _classCallCheck(this, ClientesEditar);
+	
+	    var _this = _possibleConstructorReturn(this, (ClientesEditar.__proto__ || Object.getPrototypeOf(ClientesEditar)).call(this));
+	
+	    _this.state = {
+	      nuevo: true,
+	      cargando: true,
+	      error: "",
+	      _id: "",
+	      // Campos del formulario
+	      nombre: "",
+	      direccion: "",
+	      ciudad: "",
+	      telefono: "",
+	      contactos: [],
+	      pedidos: [],
+	      creada: new Date(),
+	      errorNombre: false,
+	      modalContactos: false,
+	      modalContactosEditar: null,
+	      modalPedidos: false,
+	      modalPedidosEditar: null
+	    };
+	    _this.handleOnChange = _this.handleOnChange.bind(_this);
+	    _this.obtenerCliente = _this.obtenerCliente.bind(_this);
+	    _this.onOpenModal = _this.onOpenModal.bind(_this);
+	    _this.onCloseModal = _this.onCloseModal.bind(_this);
+	    _this.handleEditarContacto = _this.handleEditarContacto.bind(_this);
+	    _this.onSaveModal = _this.onSaveModal.bind(_this);
+	    _this.handleEliminarContacto = _this.handleEliminarContacto.bind(_this);
+	    _this.handleEditarPedido = _this.handleEditarPedido.bind(_this);
+	    _this.handleEliminarPedido = _this.handleEliminarPedido.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(ClientesEditar, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      if (this.props.params.id) {
+	        this.obtenerCliente();
+	      } else {
+	        this.setState({
+	          cargando: false
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'obtenerCliente',
+	    value: function obtenerCliente() {
+	      var _this2 = this;
+	
+	      fetch('/api/clientes/' + this.props.params.id).then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            console.log("Cliente: ", data);
+	            _this2.setState({
+	              _id: data._id,
+	              nuevo: false,
+	              cargando: false,
+	              nombre: data.nombre,
+	              direccion: data.direccion,
+	              ciudad: data.ciudad,
+	              telefono: data.telefono,
+	              contactos: data.contactos,
+	              pedidos: data.pedidos,
+	              creada: data.creada
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener cliente - ", error.message);
+	            _this2.setState({
+	              cargando: false,
+	              error: error.message
+	            });
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.log("Error en el fetch. ", error.message);
+	        _this2.setState({
+	          cargando: false,
+	          error: error.message
+	        });
+	      });
+	    }
+	
+	    //Manejo de cambios en el formulario
+	
+	  }, {
+	    key: 'handleOnChange',
+	    value: function handleOnChange(event) {
+	      this.setState(_defineProperty({}, event.target.name, event.target.value));
+	      //Quito el error del campo obligatorio
+	      if (event.target.name === "nombre") {
+	        this.setState({
+	          errorNombre: false
+	        });
+	      }
+	    }
+	
+	    //Función para crear una nueva fábrica
+	
+	  }, {
+	    key: 'crearCliente',
+	    value: function crearCliente(nuevoCliente) {
+	      var _this3 = this;
+	
+	      fetch('/api/clientes', {
+	        method: 'POST',
+	        headers: { 'Content-Type': 'application/json' },
+	        body: JSON.stringify(nuevoCliente)
+	      }).then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            console.log("Cliente creado: ", data);
+	            _sweetalert2.default.fire("Cliente creado!", "", "success").then(function () {
+	              _this3.props.history.push("/clientes");
+	            });
+	          });
+	        } else {
+	          res.json().then(function (err) {
+	            console.log("Error al crear cliente: ", err.message);
+	            _sweetalert2.default.fire("Error al crear el cliente", "", "error");
+	          });
+	        }
+	      }).catch(function (err) {
+	        console.log("Error al crear: ", err.message);
+	        _sweetalert2.default.fire("Error del servidor", "", "error");
+	      });
+	    }
+	
+	    //Función para modificar una fábrica
+	
+	  }, {
+	    key: 'modificarCliente',
+	    value: function modificarCliente(nuevoCliente, id) {
+	      var _this4 = this;
+	
+	      fetch('/api/clientes/' + id, {
+	        method: 'PUT',
+	        headers: { 'Content-Type': 'application/json' },
+	        body: JSON.stringify(nuevoCliente)
+	      }).then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            console.log("Cliente modificado: ", data);
+	            _sweetalert2.default.fire("Cliente modificado!", "", "success").then(function () {
+	              _this4.props.history.push("/clientes");
+	            });
+	          });
+	        } else {
+	          res.json().then(function (err) {
+	            console.log("Error al modificar cliente: ", err.message);
+	            _sweetalert2.default.fire("Error al modificar el cliente", "", "error");
+	          });
+	        }
+	      }).catch(function (err) {
+	        console.log("Error al modificar: ", err.message);
+	        _sweetalert2.default.fire("Error del servidor", "", "error");
+	      });
+	    }
+	  }, {
+	    key: 'onClickGuardar',
+	    value: function onClickGuardar() {
+	      if (this.state.nombre) {
+	        if (this.state.nuevo) {
+	          //Creo un registro
+	          this.crearCliente({
+	            nombre: this.state.nombre,
+	            direccion: this.state.direccion,
+	            ciudad: this.state.ciudad,
+	            telefono: this.state.telefono,
+	            contactos: this.state.contactos,
+	            pedidos: this.state.pedidos,
+	            creada: this.state.creada
+	          });
+	        } else {
+	          //Modifico un registro
+	          this.modificarCliente({
+	            nombre: this.state.nombre,
+	            direccion: this.state.direccion,
+	            ciudad: this.state.ciudad,
+	            telefono: this.state.telefono,
+	            contactos: this.state.contactos,
+	            pedidos: this.state.pedidos,
+	            creada: this.state.creada
+	          }, this.state._id);
+	        }
+	      } else {
+	        this.setState({
+	          errorNombre: true
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'handleEditarContacto',
+	    value: function handleEditarContacto(id) {
+	      var _this5 = this;
+	
+	      //Busco el id
+	      this.state.contactos.forEach(function (contacto) {
+	        if (contacto._id === id) {
+	          _this5.setState({
+	            modalContactosEditar: contacto
+	          }, _this5.onOpenModal("modalContactos"));
+	          return;
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'handleEliminarContacto',
+	    value: function handleEliminarContacto(id) {
+	      var _this6 = this;
+	
+	      var auxContactos = this.state.contactos;
+	      //Elimino el contacto del state
+	      auxContactos.forEach(function (contacto, i) {
+	        if (contacto._id === id) {
+	          auxContactos.splice(i, 1);
+	          _this6.setState({
+	            contactos: auxContactos
+	          });
+	          return;
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'handleEditarPedido',
+	    value: function handleEditarPedido(id) {
+	      var _this7 = this;
+	
+	      //Busco el id
+	      this.state.pedidos.forEach(function (pedido) {
+	        if (pedido._id === id) {
+	          _this7.setState({
+	            modalPedidosEditar: pedido
+	          }, _this7.onOpenModal("modalPedidos"));
+	          return;
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'handleEliminarPedido',
+	    value: function handleEliminarPedido(id) {
+	      var _this8 = this;
+	
+	      var auxPedidos = this.state.pedidos;
+	      //Elimino el contacto del state
+	      auxPedidos.forEach(function (pedido, i) {
+	        if (pedido._id === id) {
+	          auxPedidos.splice(i, 1);
+	          _this8.setState({
+	            pedidos: auxPedidos
+	          });
+	          return;
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'goToPagos',
+	    value: function goToPagos() {
+	      this.props.history.push('/clientes/pagos/' + this.props.params.id);
+	    }
+	
+	    //Modal
+	
+	  }, {
+	    key: 'onOpenModal',
+	    value: function onOpenModal(cual) {
+	      this.setState(_defineProperty({}, cual, true));
+	    }
+	  }, {
+	    key: 'onCloseModal',
+	    value: function onCloseModal(cual) {
+	      var _setState3;
+	
+	      this.setState((_setState3 = {}, _defineProperty(_setState3, cual, false), _defineProperty(_setState3, cual + "Editar", null), _setState3));
+	    }
+	  }, {
+	    key: 'onSaveModal',
+	    value: function onSaveModal(obj, array) {
+	      var auxArray = this.state[array];
+	      if (!obj._id) {
+	        //Inserto un nuevo registro
+	        auxArray.push(obj);
+	      } else {
+	        //reemplazo el registro
+	        auxArray.forEach(function (elemento, i) {
+	          if (obj._id === elemento._id) {
+	            auxArray.splice(i, 1, obj);
+	          }
+	        });
+	      }
+	      this.setState(_defineProperty({}, array, auxArray));
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this9 = this;
+	
+	      var columnsContactos = [["Nombre", "nombre", "String"], ["Apellido", "apellido", "String"], ["Email", "email", "String"], ["Teléfono", "telefono", "String"]];
+	      var columnsPedidos = [["Fecha", "fecha", "Fecha"], ["Productos", "detalle", "Largo"], ["Precio", "precioTotal", "String"], ["Estado", "estado", "String"]];
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'fabricas-editar text-center' },
+	        !this.state.cargando ? _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 d-flex justify-content-between' },
+	              this.state.nuevo ? _react2.default.createElement(
+	                'h3',
+	                null,
+	                'Crear Cliente'
+	              ) : _react2.default.createElement(
+	                'h3',
+	                null,
+	                'Modificar F\xE1brica: ',
+	                this.state.nombre
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                  'button',
+	                  { type: 'button',
+	                    className: 'btn btn-success',
+	                    onClick: function onClick() {
+	                      return _this9.onClickGuardar();
+	                    }
+	                  },
+	                  '+ Guardar'
+	                ),
+	                !this.state.nuevo ? _react2.default.createElement(
+	                  'button',
+	                  { type: 'button',
+	                    className: 'btn btn-secondary ml-2',
+	                    onClick: function onClick() {
+	                      return _this9.goToPagos();
+	                    }
+	                  },
+	                  'Ir a Pagos $'
+	                ) : null
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row contenedor-formulario text-center' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Nombre'
+	              ),
+	              _react2.default.createElement('input', { type: 'text',
+	                className: this.state.errorNombre ? "form-control is-invalid" : "form-control",
+	                id: 'nombre',
+	                name: 'nombre',
+	                placeholder: 'Nombre...',
+	                value: this.state.nombre,
+	                onChange: this.handleOnChange }),
+	              this.state.errorNombre ? _react2.default.createElement(
+	                'div',
+	                { className: 'invalid-feedback' },
+	                'El nombre es requerido'
+	              ) : null
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Direcci\xF3n'
+	              ),
+	              _react2.default.createElement('input', { type: 'text',
+	                className: 'form-control',
+	                id: 'direccion',
+	                name: 'direccion',
+	                placeholder: 'Direcci\xF3n...',
+	                value: this.state.direccion,
+	                onChange: this.handleOnChange })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Ciudad'
+	              ),
+	              _react2.default.createElement('input', { type: 'text',
+	                className: 'form-control',
+	                id: 'ciudad',
+	                name: 'ciudad',
+	                placeholder: 'Ciudad...',
+	                value: this.state.ciudad,
+	                onChange: this.handleOnChange })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Tel\xE9fono'
+	              ),
+	              _react2.default.createElement('input', { type: 'number',
+	                className: 'form-control',
+	                id: 'telefono',
+	                name: 'telefono',
+	                placeholder: 'Tel\xE9fono...',
+	                value: this.state.telefono,
+	                onChange: this.handleOnChange })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 mt-3' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card border-primary', id: 'card' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'card-header d-flex justify-content-between', id: 'headingOne' },
+	                  _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-link collapsed col-sm-8 col-6',
+	                      'data-toggle': 'collapse',
+	                      'data-target': '#collapseOne',
+	                      'aria-expanded': 'false',
+	                      'aria-controls': 'collapseOne' },
+	                    _react2.default.createElement(
+	                      'h5',
+	                      { className: 'd-flex align-items-center mb-0' },
+	                      'Contactos: ',
+	                      this.state.contactos.length,
+	                      _react2.default.createElement(
+	                        'i',
+	                        { className: 'material-icons ml-3' },
+	                        'keyboard_arrow_down'
+	                      )
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-outline-success',
+	                      onClick: function onClick() {
+	                        return _this9.onOpenModal("modalContactos");
+	                      }
+	                    },
+	                    '+ Agregar Contacto'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { id: 'collapseOne',
+	                    className: 'collapse',
+	                    'aria-labelledby': 'headingOne',
+	                    'data-parent': '#card' },
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'card-body contenedor-tabla' },
+	                    _react2.default.createElement(_TablaFlexible2.default, {
+	                      lista: "contactos",
+	                      columns: columnsContactos,
+	                      data: this.state.contactos,
+	                      handleEditar: this.handleEditarContacto,
+	                      handleEliminar: this.handleEliminarContacto
+	                    })
+	                  )
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 mt-3' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card border-primary', id: 'card' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'card-header d-flex justify-content-between', id: 'headingOne' },
+	                  _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-link collapsed col-sm-8 col-6',
+	                      'data-toggle': 'collapse',
+	                      'data-target': '#collapseTwo',
+	                      'aria-expanded': 'false',
+	                      'aria-controls': 'collapseTwo' },
+	                    _react2.default.createElement(
+	                      'h5',
+	                      { className: 'd-flex align-items-center mb-0' },
+	                      'Pedidos: ',
+	                      this.state.pedidos.length,
+	                      _react2.default.createElement(
+	                        'i',
+	                        { className: 'material-icons ml-3' },
+	                        'keyboard_arrow_down'
+	                      )
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-outline-success',
+	                      onClick: function onClick() {
+	                        return _this9.onOpenModal("modalPedidos");
+	                      }
+	                    },
+	                    '+ Agregar Pedido'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { id: 'collapseTwo',
+	                    className: 'collapse',
+	                    'aria-labelledby': 'headingTwo',
+	                    'data-parent': '#card' },
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'card-body contenedor-tabla' },
+	                    _react2.default.createElement(_TablaFlexible2.default, {
+	                      lista: "pedidos",
+	                      columns: columnsPedidos,
+	                      data: this.state.pedidos,
+	                      handleEditar: this.handleEditarPedido,
+	                      handleEliminar: this.handleEliminarPedido
+	                    })
+	                  )
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            _reactResponsiveModal2.default,
+	            {
+	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
+	              onClose: function onClose() {
+	                return _this9.onCloseModal("modalContactos");
+	              },
+	              showCloseIcon: false,
+	              open: this.state.modalContactos,
+	              center: true
+	            },
+	            _react2.default.createElement(_ContactosEditar2.default, {
+	              data: this.state.modalContactosEditar,
+	              onSave: this.onSaveModal,
+	              onClose: function onClose() {
+	                return _this9.onCloseModal("modalContactos");
+	              },
+	              titulo: this.state.modalContactosEditar ? "EDITAR CONTACTO" : "CREAR CONTACTO"
+	            })
+	          ),
+	          _react2.default.createElement(
+	            _reactResponsiveModal2.default,
+	            {
+	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
+	              onClose: function onClose() {
+	                return _this9.onCloseModal("modalPedidos");
+	              },
+	              showCloseIcon: false,
+	              open: this.state.modalPedidos,
+	              center: true
+	            },
+	            _react2.default.createElement(_PedidosEditar2.default, {
+	              data: this.state.modalPedidosEditar,
+	              onSave: this.onSaveModal,
+	              onClose: function onClose() {
+	                return _this9.onCloseModal("modalPedidos");
+	              },
+	              titulo: this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"
+	            })
+	          )
+	        ) : this.state.error ?
+	        //Mensaje de error
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'alert alert-dismissible alert-danger' },
+	          _react2.default.createElement(
+	            'button',
+	            { type: 'button', className: 'close', 'data-dismiss': 'alert' },
+	            '\xD7'
+	          ),
+	          _react2.default.createElement(
+	            'strong',
+	            null,
+	            'Error!'
+	          ),
+	          ' ',
+	          this.state.error
+	        ) :
+	        // Spinner
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'spinner-border text-light', role: 'status' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'sr-only' },
+	            'Loading...'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return ClientesEditar;
+	}(_react2.default.Component);
+	
+	exports.default = ClientesEditar;
+
+/***/ },
+/* 289 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ContactosEditar = function (_React$Component) {
+	  _inherits(ContactosEditar, _React$Component);
+	
+	  function ContactosEditar() {
+	    _classCallCheck(this, ContactosEditar);
+	
+	    var _this = _possibleConstructorReturn(this, (ContactosEditar.__proto__ || Object.getPrototypeOf(ContactosEditar)).call(this));
+	
+	    _this.state = {
+	      _id: "",
+	      nombre: "",
+	      errorNombre: false,
+	      apellido: "",
+	      email: "",
+	      telefono: ""
+	    };
+	    _this.handleOnChange = _this.handleOnChange.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(ContactosEditar, [{
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      if (this.props.data) {
+	        this.setState({
+	          _id: this.props.data._id,
+	          nombre: this.props.data.nombre,
+	          apellido: this.props.data.apellido,
+	          email: this.props.data.email,
+	          telefono: this.props.data.telefono
+	        });
+	      }
+	    }
+	  }, {
+	    key: "handleOnChange",
+	    value: function handleOnChange(event) {
+	      this.setState(_defineProperty({}, event.target.name, event.target.value));
+	      if (event.target.name === "nombre") {
+	        this.setState({
+	          errorNombre: false
+	        });
+	      }
+	    }
+	  }, {
+	    key: "onSave",
+	    value: function onSave() {
+	      if (!this.state.nombre) {
+	        this.setState({
+	          errorNombre: true
+	        });
+	      } else {
+	        this.props.onSave({
+	          _id: this.state._id,
+	          nombre: this.state.nombre,
+	          apellido: this.state.apellido,
+	          email: this.state.email,
+	          telefono: this.state.telefono
+	        }, "contactos");
+	        this.props.onClose();
+	      }
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      var _this2 = this;
+	
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "contactos-editar" },
+	        _react2.default.createElement(
+	          "div",
+	          { className: "header d-flex justify-content-between align-items-center" },
+	          _react2.default.createElement(
+	            "span",
+	            null,
+	            this.props.titulo
+	          ),
+	          _react2.default.createElement(
+	            "button",
+	            {
+	              type: "button",
+	              className: "modal-cerrar d-flex align-items-center",
+	              onClick: function onClick() {
+	                return _this2.props.onClose();
+	              }
+	            },
+	            _react2.default.createElement(
+	              "i",
+	              { className: "material-icons" },
+	              "clear"
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "formulario pt-2" },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Nombre"
+	            ),
+	            _react2.default.createElement("input", { type: "text",
+	              className: this.state.errorNombre ? "form-control is-invalid" : "form-control",
+	              id: "nombre",
+	              name: "nombre",
+	              placeholder: "Nombre...",
+	              value: this.state.nombre,
+	              onChange: this.handleOnChange
+	            }),
+	            this.state.errorNombre ? _react2.default.createElement(
+	              "div",
+	              { className: "invalid-feedback" },
+	              "El nombre es requerido"
+	            ) : null
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Apellido"
+	            ),
+	            _react2.default.createElement("input", { type: "text",
+	              className: "form-control",
+	              id: "apellido",
+	              name: "apellido",
+	              placeholder: "Apellido...",
+	              value: this.state.apellido,
+	              onChange: this.handleOnChange
+	            })
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Email"
+	            ),
+	            _react2.default.createElement("input", { type: "text",
+	              className: "form-control",
+	              id: "email",
+	              name: "email",
+	              placeholder: "Email...",
+	              value: this.state.email,
+	              onChange: this.handleOnChange
+	            })
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Tel\xE9fono"
+	            ),
+	            _react2.default.createElement("input", { type: "text",
+	              className: "form-control",
+	              id: "telefono",
+	              name: "telefono",
+	              placeholder: "Tel\xE9fono...",
+	              value: this.state.telefono,
+	              onChange: this.handleOnChange
+	            })
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2 boton-guardar" },
+	            _react2.default.createElement(
+	              "button",
+	              {
+	                type: "button",
+	                className: "btn btn-success",
+	                onClick: function onClick() {
+	                  return _this2.onSave();
+	                }
+	              },
+	              "Guardar"
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return ContactosEditar;
+	}(_react2.default.Component);
+	
+	exports.default = ContactosEditar;
+
+/***/ },
+/* 290 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _javascriptFunctions = __webpack_require__(254);
+	
+	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var estados = [{
+	  label: "Pendiente",
+	  value: "pendiente"
+	}, {
+	  label: "Entregado",
+	  value: "entregado"
+	}];
+	
+	var ContactosEditar = function (_React$Component) {
+	  _inherits(ContactosEditar, _React$Component);
+	
+	  function ContactosEditar() {
+	    _classCallCheck(this, ContactosEditar);
+	
+	    var _this = _possibleConstructorReturn(this, (ContactosEditar.__proto__ || Object.getPrototypeOf(ContactosEditar)).call(this));
+	
+	    _this.state = {
+	      _id: "",
+	      fecha: "",
+	      detalle: [],
+	      precioTotal: "",
+	      errorPrecio: false,
+	      estado: estados[0].value,
+	      nombreProducto: "",
+	      errorNombreProducto: false,
+	      talleProducto: "",
+	      cantidadProducto: ""
+	    };
+	    _this.handleOnChange = _this.handleOnChange.bind(_this);
+	    _this.agregarProducto = _this.agregarProducto.bind(_this);
+	    _this.eliminarProducto = _this.eliminarProducto.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(ContactosEditar, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      if (this.props.data) {
+	        this.setState({
+	          _id: this.props.data._id,
+	          fecha: this.props.data.fecha.toString(),
+	          detalle: this.props.data.detalle,
+	          precioTotal: this.props.data.precioTotal,
+	          estado: this.props.data.estado
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'handleOnChange',
+	    value: function handleOnChange(event) {
+	      this.setState(_defineProperty({}, event.target.name, event.target.value));
+	      //Limpio el error del precio
+	      if (event.target.name === "precioTotal" && this.state.errorPrecio == true) {
+	        this.setState({
+	          errorPrecio: false
+	        });
+	      }
+	      //Limpio el error del nombre del producto
+	      if (event.target.name === "nombreProducto" && this.state.errorNombreProducto == true) {
+	        this.setState({
+	          errorNombreProducto: false
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'agregarProducto',
+	    value: function agregarProducto() {
+	      var productos = this.state.detalle;
+	      //controlar que el nombre tenga un valor
+	      if (this.state.nombreProducto) {
+	        productos.push({
+	          nombre: this.state.nombreProducto,
+	          talle: this.state.talleProducto,
+	          cantidad: this.state.cantidadProducto
+	        });
+	        this.setState({
+	          detalle: productos
+	        });
+	      } else {
+	        this.setState({
+	          errorNombreProducto: true
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'eliminarProducto',
+	    value: function eliminarProducto(i) {
+	      var detalle = this.state.detalle;
+	      detalle.splice(i, 1);
+	      this.setState({
+	        detalle: detalle
+	      });
+	    }
+	  }, {
+	    key: 'onSave',
+	    value: function onSave() {
+	      if (this.state.precioTotal > 0) {
+	        this.props.onSave({
+	          _id: this.state._id,
+	          fecha: this.state.fecha ? this.state.fecha : new Date(),
+	          detalle: this.state.detalle,
+	          precioTotal: this.state.precioTotal,
+	          estado: this.state.estado
+	        }, "pedidos");
+	        this.props.onClose();
+	      } else {
+	        this.setState({
+	          errorPrecio: true
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'contactos-editar' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'header d-flex justify-content-between align-items-center' },
+	          _react2.default.createElement(
+	            'span',
+	            null,
+	            this.props.titulo
+	          ),
+	          _react2.default.createElement(
+	            'button',
+	            {
+	              type: 'button',
+	              className: 'modal-cerrar d-flex align-items-center',
+	              onClick: function onClick() {
+	                return _this2.props.onClose();
+	              }
+	            },
+	            _react2.default.createElement(
+	              'i',
+	              { className: 'material-icons' },
+	              'clear'
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'formulario pt-2' },
+	          this.state.fecha ? _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              { className: 'mb-0' },
+	              'Fecha: ' + _javascriptFunctions2.default.formatearDate(this.state.fecha)
+	            )
+	          ) : null,
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Precio Total'
+	            ),
+	            _react2.default.createElement('input', { type: 'number',
+	              className: this.state.errorPrecio ? "form-control is-invalid" : "form-control",
+	              id: 'precioTotal',
+	              name: 'precioTotal',
+	              placeholder: 'Precio Total...',
+	              value: this.state.precioTotal,
+	              onChange: this.handleOnChange
+	            }),
+	            this.state.errorPrecio && _react2.default.createElement(
+	              'div',
+	              { className: 'invalid-feedback' },
+	              'Se debe ingresar un precio'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Estado'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'select',
+	                { className: 'custom-select',
+	                  id: 'estado',
+	                  name: 'estado',
+	                  value: this.state.estado,
+	                  onChange: this.handleOnChange
+	                },
+	                estados.map(function (estado, i) {
+	                  return _react2.default.createElement(
+	                    'option',
+	                    { value: estado.value, key: i },
+	                    estado.label
+	                  );
+	                })
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Agregar productos al pedido'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'contenedor-productos' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Nombre'
+	              ),
+	              _react2.default.createElement('input', { type: 'text',
+	                className: this.state.errorNombreProducto ? "form-control is-invalid" : "form-control",
+	                id: 'nombreProducto',
+	                name: 'nombreProducto',
+	                placeholder: 'Nombre del producto...',
+	                value: this.state.nombreProducto,
+	                onChange: this.handleOnChange
+	              }),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'd-flex justify-content-between' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'text-center' },
+	                  _react2.default.createElement(
+	                    'label',
+	                    null,
+	                    'Talle'
+	                  ),
+	                  _react2.default.createElement('input', { type: 'number',
+	                    className: 'form-control',
+	                    id: 'talleProducto',
+	                    name: 'talleProducto',
+	                    placeholder: 'Talle...',
+	                    value: this.state.talleProducto,
+	                    onChange: this.handleOnChange
+	                  })
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'text-center' },
+	                  _react2.default.createElement(
+	                    'label',
+	                    null,
+	                    'Cantidad'
+	                  ),
+	                  _react2.default.createElement('input', { type: 'number',
+	                    className: 'form-control',
+	                    id: 'cantidadProducto',
+	                    name: 'cantidadProducto',
+	                    placeholder: 'Cantidad...',
+	                    value: this.state.cantidadProducto,
+	                    onChange: this.handleOnChange
+	                  })
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'text-center d-flex align-items-end' },
+	                  _react2.default.createElement(
+	                    'button',
+	                    {
+	                      type: 'button',
+	                      className: 'btn btn-outline-success',
+	                      onClick: function onClick() {
+	                        return _this2.agregarProducto();
+	                      }
+	                    },
+	                    '+'
+	                  )
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'table',
+	              { className: 'table table-hover' },
+	              _react2.default.createElement(
+	                'thead',
+	                null,
+	                _react2.default.createElement(
+	                  'tr',
+	                  null,
+	                  _react2.default.createElement(
+	                    'th',
+	                    { scope: 'col' },
+	                    'Nombre'
+	                  ),
+	                  _react2.default.createElement(
+	                    'th',
+	                    { scope: 'col' },
+	                    'Talle'
+	                  ),
+	                  _react2.default.createElement(
+	                    'th',
+	                    { scope: 'col' },
+	                    'Cantidad'
+	                  ),
+	                  _react2.default.createElement(
+	                    'th',
+	                    { scope: 'col' },
+	                    'Quitar'
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'tbody',
+	                null,
+	                this.state.detalle.map(function (producto, i) {
+	                  return _react2.default.createElement(
+	                    'tr',
+	                    { className: 'table-default', key: i },
+	                    _react2.default.createElement(
+	                      'td',
+	                      null,
+	                      producto.nombre
+	                    ),
+	                    _react2.default.createElement(
+	                      'td',
+	                      null,
+	                      producto.talle
+	                    ),
+	                    _react2.default.createElement(
+	                      'td',
+	                      null,
+	                      producto.cantidad
+	                    ),
+	                    _react2.default.createElement(
+	                      'td',
+	                      null,
+	                      _react2.default.createElement(
+	                        'button',
+	                        {
+	                          type: 'button',
+	                          className: 'btn btn-outline-success',
+	                          onClick: function onClick() {
+	                            return _this2.eliminarProducto(i);
+	                          }
+	                        },
+	                        'X'
+	                      )
+	                    )
+	                  );
+	                })
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2 boton-guardar' },
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                type: 'button',
+	                className: 'btn btn-success',
+	                onClick: function onClick() {
+	                  return _this2.onSave();
+	                }
+	              },
+	              'Guardar'
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return ContactosEditar;
+	}(_react2.default.Component);
+	
+	exports.default = ContactosEditar;
+
+/***/ },
+/* 291 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _TablaFlexible = __webpack_require__(252);
+	
+	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
+	
+	var _sweetalert = __webpack_require__(255);
+	
+	var _sweetalert2 = _interopRequireDefault(_sweetalert);
+	
+	var _javascriptFunctions = __webpack_require__(254);
+	
+	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
+	
+	var _reactResponsiveModal = __webpack_require__(257);
+	
+	var _reactResponsiveModal2 = _interopRequireDefault(_reactResponsiveModal);
+	
+	var _PagosEditar = __webpack_require__(292);
+	
+	var _PagosEditar2 = _interopRequireDefault(_PagosEditar);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //https://github.com/sweetalert2/sweetalert2
+	
+	
+	var ClientesPagos = function (_React$Component) {
+	  _inherits(ClientesPagos, _React$Component);
+	
+	  function ClientesPagos() {
+	    _classCallCheck(this, ClientesPagos);
+	
+	    var _this = _possibleConstructorReturn(this, (ClientesPagos.__proto__ || Object.getPrototypeOf(ClientesPagos)).call(this));
+	
+	    _this.state = {
+	      cliente: {},
+	      cargando: true,
+	      error: "",
+	      modalPagos: false,
+	      modalPagosEditar: null
+	    };
+	    _this.cargarCliente = _this.cargarCliente.bind(_this);
+	    _this.onOpenModal = _this.onOpenModal.bind(_this);
+	    _this.onCloseModal = _this.onCloseModal.bind(_this);
+	    _this.onSaveModal = _this.onSaveModal.bind(_this);
+	    _this.handleEditarPago = _this.handleEditarPago.bind(_this);
+	    _this.handleEliminarPago = _this.handleEliminarPago.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(ClientesPagos, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.cargarCliente();
+	    }
+	  }, {
+	    key: 'cargarCliente',
+	    value: function cargarCliente() {
+	      var _this2 = this;
+	
+	      if (this.props.params.id) {
+	        // Obtengo los pagos de la fábrica
+	        fetch('/api/clientes/' + this.props.params.id).then(function (res) {
+	          if (res.ok) {
+	            res.json().then(function (data) {
+	              console.log("Cliente: ", data);
+	              _this2.setState({
+	                cargando: false,
+	                error: "",
+	                cliente: data
+	              });
+	            });
+	          } else {
+	            res.json().then(function (error) {
+	              console.log("Error al obtener cliente - ", error.message);
+	              _this2.setState({
+	                cargando: false,
+	                error: error.message
+	              });
+	            });
+	          }
+	        }).catch(function (error) {
+	          console.log("Error en el fetch. ", error.message);
+	          _this2.setState({
+	            cargando: false,
+	            error: error.message
+	          });
+	        });
+	      } else {
+	        this.setState({
+	          cargando: false,
+	          error: "No se puede cargar esta pantalla sin el id de la Fábrica"
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'onClickGuardar',
+	    value: function onClickGuardar(cliente) {
+	      var _this3 = this;
+	
+	      fetch('/api/clientes/' + this.props.params.id, {
+	        method: 'PUT',
+	        headers: { 'Content-Type': 'application/json' },
+	        body: JSON.stringify(cliente)
+	      }).then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            _this3.setState({
+	              cliente: data
+	            });
+	            _sweetalert2.default.fire("Cambios Guardados!", "", "success");
+	          });
+	        } else {
+	          res.json().then(function (err) {
+	            console.log("Error al insertar o modificar pago: ", err.message);
+	            _sweetalert2.default.fire("Error al insertar o modificar pago", "", "error");
+	          });
+	        }
+	      }).catch(function (err) {
+	        console.log("Error del servidor: ", err.message);
+	        _sweetalert2.default.fire("Error del servidor", "", "error");
+	      });
+	    }
+	
+	    //Modal
+	
+	  }, {
+	    key: 'onOpenModal',
+	    value: function onOpenModal(cual) {
+	      this.setState(_defineProperty({}, cual, true));
+	    }
+	  }, {
+	    key: 'onCloseModal',
+	    value: function onCloseModal(cual) {
+	      var _setState2;
+	
+	      this.setState((_setState2 = {}, _defineProperty(_setState2, cual, false), _defineProperty(_setState2, cual + "Editar", null), _setState2));
+	    }
+	  }, {
+	    key: 'onSaveModal',
+	    value: function onSaveModal(pago) {
+	      var cliente = this.state.cliente;
+	      var pagos = cliente.pagos;
+	      if (pago._id) {
+	        pagos.forEach(function (p, i) {
+	          if (p._id === pago._id) {
+	            pagos.splice(i, 1, pago);
+	          }
+	        });
+	      } else {
+	        pagos.push(pago);
+	      }
+	      cliente.pagos = pagos;
+	      this.onClickGuardar(cliente);
+	    }
+	  }, {
+	    key: 'handleEditarPago',
+	    value: function handleEditarPago(id) {
+	      var pago = {};
+	      this.state.cliente.pagos.forEach(function (p) {
+	        if (id === p._id) {
+	          pago = p;
+	        }
+	      });
+	      this.setState({
+	        modalPagosEditar: pago,
+	        modalPagos: true
+	      });
+	    }
+	  }, {
+	    key: 'handleEliminarPago',
+	    value: function handleEliminarPago(id) {
+	      var _this4 = this;
+	
+	      var cliente = this.state.cliente;
+	      var pagos = cliente.pagos;
+	      //Primero pido confirmación
+	      _sweetalert2.default.fire({
+	        title: "¿Seguro que desea eliminar?",
+	        text: "Esta acción no se puede revertir",
+	        icon: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#3085d6",
+	        cancelButtonColor: "#d33",
+	        confirmButtonText: "Si, eliminar"
+	      }).then(function (result) {
+	        if (result.value) {
+	          // Elimino el pago
+	          pagos.forEach(function (p, i) {
+	            if (id === p._id) {
+	              pagos.splice(i, 1);
+	            }
+	          });
+	          cliente.pagos = pagos;
+	          _this4.onClickGuardar(cliente);
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this5 = this;
+	
+	      var deuda = _javascriptFunctions2.default.getDeuda(this.state.cliente);
+	      var columnsPagos = [["Fecha", "fecha", "Fecha"], ["Monto", "monto", "Money"], ["Forma de Pago", "formaPago", "String"]];
+	      var columnsPedidos = [["Fecha", "fecha", "Fecha"], ["Productos", "detalle", "Largo"], ["Precio", "precioTotal", "String"], ["Estado", "estado", "String"]];
+	      var pagosLength = this.state.cliente.pagos ? this.state.cliente.pagos.length : 0;
+	      var pedidosLength = this.state.cliente.pedidos ? this.state.cliente.pedidos.length : 0;
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'fabricas-pagos text-center' },
+	        !this.state.cargando ? _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 d-flex justify-content-between' },
+	              _react2.default.createElement(
+	                'h3',
+	                null,
+	                'Gesti\xF3n de Cobros - ',
+	                this.state.cliente.nombre
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'mensaje-deuda' },
+	              _react2.default.createElement(
+	                'h4',
+	                null,
+	                'La deuda a cobrar es de: ',
+	                _javascriptFunctions2.default.moneyFormatter(deuda)
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'mt-3' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'card border-primary', id: 'card' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-header d-flex justify-content-between', id: 'headingOne' },
+	                _react2.default.createElement(
+	                  'button',
+	                  { type: 'button',
+	                    className: 'btn btn-link collapsed col-sm-8 col-6',
+	                    'data-toggle': 'collapse',
+	                    'data-target': '#collapseOne',
+	                    'aria-expanded': 'false',
+	                    'aria-controls': 'collapseOne' },
+	                  _react2.default.createElement(
+	                    'h5',
+	                    { className: 'd-flex align-items-center mb-0' },
+	                    'Pagos: ',
+	                    pagosLength,
+	                    _react2.default.createElement(
+	                      'i',
+	                      { className: 'material-icons ml-3' },
+	                      'keyboard_arrow_down'
+	                    )
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'button',
+	                  { type: 'button',
+	                    className: 'btn btn-outline-success',
+	                    onClick: function onClick() {
+	                      return _this5.onOpenModal("modalPagos");
+	                    }
+	                  },
+	                  '+ Agregar Pago'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { id: 'collapseOne',
+	                  className: 'collapse',
+	                  'aria-labelledby': 'headingOne',
+	                  'data-parent': '#card' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'card-body contenedor-tabla' },
+	                  _react2.default.createElement(_TablaFlexible2.default, {
+	                    lista: "pagos",
+	                    columns: columnsPagos,
+	                    data: this.state.cliente.pagos ? this.state.cliente.pagos : [],
+	                    handleEditar: this.handleEditarPago,
+	                    handleEliminar: this.handleEliminarPago
+	                  })
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'mt-3' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'card border-primary', id: 'card' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-header d-flex justify-content-between', id: 'headingOne' },
+	                _react2.default.createElement(
+	                  'button',
+	                  { type: 'button',
+	                    className: 'btn btn-link collapsed col-sm-8 col-6',
+	                    'data-toggle': 'collapse',
+	                    'data-target': '#collapseTwo',
+	                    'aria-expanded': 'false',
+	                    'aria-controls': 'collapseTwo' },
+	                  _react2.default.createElement(
+	                    'h5',
+	                    { className: 'd-flex align-items-center mb-0' },
+	                    'Pedidos: ',
+	                    pedidosLength,
+	                    _react2.default.createElement(
+	                      'i',
+	                      { className: 'material-icons ml-3' },
+	                      'keyboard_arrow_down'
+	                    )
+	                  )
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { id: 'collapseTwo',
+	                  className: 'collapse',
+	                  'aria-labelledby': 'headingOne',
+	                  'data-parent': '#card' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'card-body contenedor-tabla' },
+	                  _react2.default.createElement(_TablaFlexible2.default, {
+	                    lista: "pedidos",
+	                    columns: columnsPedidos,
+	                    data: this.state.cliente.pedidos ? this.state.cliente.pedidos : []
+	                  })
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            _reactResponsiveModal2.default,
+	            {
+	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
+	              onClose: function onClose() {
+	                return _this5.onCloseModal("modalPagos");
+	              },
+	              showCloseIcon: false,
+	              open: this.state.modalPagos,
+	              center: true
+	            },
+	            _react2.default.createElement(_PagosEditar2.default, {
+	              data: this.state.modalPagosEditar,
+	              onSave: this.onSaveModal,
+	              onClose: function onClose() {
+	                return _this5.onCloseModal("modalPagos");
+	              },
+	              titulo: this.state.modalPedidosEditar ? "EDITAR PAGO" : "CARGAR PAGO"
+	            })
+	          )
+	        ) : this.state.error ?
+	        //Mensaje de error
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'alert alert-dismissible alert-danger' },
+	          _react2.default.createElement(
+	            'button',
+	            { type: 'button', className: 'close', 'data-dismiss': 'alert' },
+	            '\xD7'
+	          ),
+	          _react2.default.createElement(
+	            'strong',
+	            null,
+	            'Error!'
+	          ),
+	          ' ',
+	          this.state.error
+	        ) :
+	        // Spinner
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'spinner-border text-light', role: 'status' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'sr-only' },
+	            'Loading...'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return ClientesPagos;
+	}(_react2.default.Component);
+	
+	exports.default = ClientesPagos;
+
+/***/ },
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

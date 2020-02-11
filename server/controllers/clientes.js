@@ -1,16 +1,16 @@
 const mongoose = require('mongoose')
-const Fabricas = mongoose.model('Fabricas')
+const Clientes = mongoose.model('Clientes')
 
 //Obtengo el listado de fabricas
-module.exports.listaFabricas = (req, res) => {
+module.exports.listaClientes = (req, res) => {
   // Para filtrar por algun parametro
   const filter = {}
   // if (req.query.status) filter.status = req.query.status
-  Fabricas
+  Clientes
     .find(filter)
     .exec((err, results, status) => {
       if(!results || results.length < 1){
-        res.status(404).json({ message: "No se encontraron fabricas"})
+        res.status(404).json({ message: "No se encontraron clientes"})
       } else if (err) {
         res.status(404).json(err)
       } else {
@@ -20,21 +20,21 @@ module.exports.listaFabricas = (req, res) => {
 }
 
 //Obtengo una fabrica
-module.exports.getFabrica = (req, res) => {
+module.exports.getCliente = (req, res) => {
   //Controlamos que el id de la fabrica esté en el parámetro
   if (req.params && req.params.id) {
-    Fabricas
+    Clientes
       .findById(req.params.id)
-      .exec((err, fabrica) => {
+      .exec((err, cliente) => {
         //Si el id específico no existe en la BD
-        if (!fabrica) {
-          res.status(404).json({ message: "Id de fabrica no encontrado"})
+        if (!cliente) {
+          res.status(404).json({ message: "Id de cliente no encontrado"})
         //Si la BD devuelve un error
         } else if (err) {
           res.status(404).json(err)
         } else {
             //Se devuelve el documento encontrado
-            res.status(200).json(fabrica)
+            res.status(200).json(cliente)
         }
     })
   } else {
@@ -43,15 +43,15 @@ module.exports.getFabrica = (req, res) => {
 }
 
 //Crear una fabrica
-module.exports.crearFabrica = (req, res) => {
+module.exports.crearCliente = (req, res) => {
   const auxBody = req.body
-  let newFabrica = {}
-  newFabrica.creada = new Date()
-  newFabrica.nombre = auxBody.nombre
-  newFabrica.direccion = auxBody.direccion
-  newFabrica.ciudad = auxBody.ciudad
-  newFabrica.telefono = auxBody.telefono
-  newFabrica.contactos = auxBody.contactos ? auxBody.contactos.map(contacto=>{
+  let newCliente = {}
+  newCliente.creada = new Date()
+  newCliente.nombre = auxBody.nombre
+  newCliente.direccion = auxBody.direccion
+  newCliente.ciudad = auxBody.ciudad
+  newCliente.telefono = auxBody.telefono
+  newCliente.contactos = auxBody.contactos ? auxBody.contactos.map(contacto=>{
     return {
       nombre: contacto.nombre,
       apellido: contacto.apellido,
@@ -59,15 +59,15 @@ module.exports.crearFabrica = (req, res) => {
       telefono: contacto.telefono
     }
   }) : []
-  newFabrica.pedidos = auxBody.pedidos ? auxBody.pedidos.map(pedido=>{
+  newCliente.pedidos = auxBody.pedidos ? auxBody.pedidos.map(pedido=>{
     return {
       fecha: pedido.fecha,
       detalle: pedido.detalle,
       precioTotal: pedido.precioTotal,
       estado: pedido.estado
     }
-  }): []
-  newFabrica.pagos = auxBody.pagos ? auxBody.pagos.map(pago=>{
+  }) : []
+  newCliente.pagos = auxBody.pagos ? auxBody.pagos.map(pago=>{
     return {
       fecha: pago.fecha,
       monto: pago.monto,
@@ -75,41 +75,41 @@ module.exports.crearFabrica = (req, res) => {
       observaciones: pago.observaciones
     }
   }) : []
-  Fabricas
-    .create(newFabrica, (err, fabrica) => {
+  Clientes
+    .create(newCliente, (err, cliente) => {
       if(err) {
         res.status(400).json(err)
       } else {
-        res.status(201).json(fabrica)
+        res.status(201).json(cliente)
       }
     })
 }
 
 //Modificar una fabrica
-module.exports.modificarFabrica = (req,res) => {
+module.exports.modificarCliente = (req,res) => {
   if (!req.params.id) {
-    res.status(404).json({ message: "Se requiere el id de la fábrica"})
+    res.status(404).json({ message: "Se requiere el id del cliente"})
     return
   }
-  const auxFabrica = req.body
-  Fabricas
+  const auxCliente = req.body
+  Clientes
     .findById(req.params.id)
     .select('-creada')
     .exec(
-      (err,fabrica) => {
-        if (!fabrica) {
-          res.status(404).json({ message: "No se encontró el id de la fábrica"})
+      (err,cliente) => {
+        if (!cliente) {
+          res.status(404).json({ message: "No se encontró el id del cliente"})
           return
         } else if (err) {
           res.status(404).json(err)
           return
         }
         //Si no hay error, reemplazo con los datos del body
-        fabrica.nombre = auxFabrica.nombre
-        fabrica.direccion = auxFabrica.direccion
-        fabrica.ciudad = auxFabrica.ciudad
-        fabrica.telefono = auxFabrica.telefono
-        fabrica.contactos = auxFabrica.contactos ? auxFabrica.contactos.map(contacto=>{
+        cliente.nombre = auxCliente.nombre
+        cliente.direccion = auxCliente.direccion
+        cliente.ciudad = auxCliente.ciudad
+        cliente.telefono = auxCliente.telefono
+        cliente.contactos = auxCliente.contactos ? auxCliente.contactos.map(contacto=>{
           return {
             nombre: contacto.nombre,
             apellido: contacto.apellido,
@@ -117,15 +117,15 @@ module.exports.modificarFabrica = (req,res) => {
             telefono: contacto.telefono
           }
         }) : []
-        fabrica.pedidos = auxFabrica.pedidos ? auxFabrica.pedidos.map(pedido=>{
+        cliente.pedidos = auxCliente.pedidos ? auxCliente.pedidos.map(pedido=>{
           return {
             fecha: pedido.fecha,
             detalle: pedido.detalle,
             precioTotal: pedido.precioTotal,
             estado: pedido.estado
           }
-        }): []
-        fabrica.pagos = auxFabrica.pagos ? auxFabrica.pagos.map(pago=>{
+        }) : []
+        cliente.pagos = auxCliente.pagos ? auxCliente.pagos.map(pago=>{
           return {
             fecha: pago.fecha,
             monto: pago.monto,
@@ -133,11 +133,11 @@ module.exports.modificarFabrica = (req,res) => {
             observaciones: pago.observaciones
           }
         }) : []
-        fabrica.save((err, fabrica) => {
+        cliente.save((err, cliente) => {
           if (err) {
             res.status(404).json(err)
           } else {
-            res.status(201).json(fabrica)
+            res.status(201).json(cliente)
           }
         })
       }
@@ -145,15 +145,15 @@ module.exports.modificarFabrica = (req,res) => {
 }
 
 //Eliminar una fabrica
-module.exports.eliminarFabrica = (req,res) => {
+module.exports.eliminarCliente = (req,res) => {
   if (!req.params.id) {
-    res.status(404).json({ message: "Se requiere el id de la fábrica"})
+    res.status(404).json({ message: "Se requiere el id del cliente"})
     return
   }
-  Fabricas
+  Clientes
     .findByIdAndRemove(req.params.id)
     .exec(
-      (err, fabrica) => {
+      (err, cliente) => {
         if(err){
           res.status(404).json(err)
         } else {
