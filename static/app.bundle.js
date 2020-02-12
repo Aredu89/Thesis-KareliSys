@@ -64,7 +64,7 @@
 	
 	var _Home2 = _interopRequireDefault(_Home);
 	
-	var _FabricasLista = __webpack_require__(251);
+	var _FabricasLista = __webpack_require__(252);
 	
 	var _FabricasLista2 = _interopRequireDefault(_FabricasLista);
 	
@@ -76,23 +76,23 @@
 	
 	var _FabricasPagos2 = _interopRequireDefault(_FabricasPagos);
 	
-	var _ClientesLista = __webpack_require__(287);
+	var _ClientesLista = __webpack_require__(285);
 	
 	var _ClientesLista2 = _interopRequireDefault(_ClientesLista);
 	
-	var _ClientesEditar = __webpack_require__(288);
+	var _ClientesEditar = __webpack_require__(286);
 	
 	var _ClientesEditar2 = _interopRequireDefault(_ClientesEditar);
 	
-	var _ClientesPagos = __webpack_require__(291);
+	var _ClientesPagos = __webpack_require__(289);
 	
 	var _ClientesPagos2 = _interopRequireDefault(_ClientesPagos);
 	
-	var _StockLista = __webpack_require__(285);
+	var _StockLista = __webpack_require__(291);
 	
 	var _StockLista2 = _interopRequireDefault(_StockLista);
 	
-	var _StockEditar = __webpack_require__(286);
+	var _StockEditar = __webpack_require__(292);
 	
 	var _StockEditar2 = _interopRequireDefault(_StockEditar);
 	
@@ -28314,7 +28314,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _javascriptFunctions = __webpack_require__(254);
+	var _javascriptFunctions = __webpack_require__(251);
 	
 	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
 	
@@ -28335,17 +28335,58 @@
 	    var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this));
 	
 	    _this.state = {
-	      cargando: true,
-	      error: "",
 	      ingresos: 0,
+	      cargandoIngresos: true,
+	      errorIngresos: "",
 	      egresos: 0,
+	      cargandoEgresos: true,
+	      errorEgresos: "",
 	      stock: 0,
+	      cargandoStock: true,
+	      errorStock: "",
 	      stockPendiente: 0
 	    };
+	    _this.cargarEgresos = _this.cargarEgresos.bind(_this);
 	    return _this;
 	  }
 	
 	  _createClass(Home, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.cargarEgresos();
+	    }
+	  }, {
+	    key: 'cargarEgresos',
+	    value: function cargarEgresos() {
+	      var _this2 = this;
+	
+	      fetch('/api/egresos').then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            _this2.setState({
+	              cargandoEgresos: false,
+	              errorEgresos: "",
+	              egresos: data.egresosMes
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener egresos. ", error.message);
+	            _this2.setState({
+	              cargandoEgresos: false,
+	              errorEgresos: error.message
+	            });
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.log("Error: ", error.message);
+	        _this2.setState({
+	          cargandoEgresos: false,
+	          errorEgresos: error.message
+	        });
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
@@ -28368,15 +28409,37 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'card-body' },
+	                this.state.cargandoIngresos || this.state.cargandoEgresos ?
+	                // Spinner
 	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'spinner-border text-light', role: 'status' },
+	                  _react2.default.createElement(
+	                    'span',
+	                    { className: 'sr-only' },
+	                    'Loading...'
+	                  )
+	                ) : this.state.errorEgresos || this.state.errorIngresos ? _react2.default.createElement(
 	                  'h4',
 	                  { className: 'card-title' },
-	                  'Ganancias de:'
-	                ),
-	                _react2.default.createElement(
-	                  'p',
-	                  { className: 'card-text' },
-	                  '$40.000'
+	                  'Error al cargar los resultados del mes'
+	                ) : _react2.default.createElement(
+	                  'div',
+	                  null,
+	                  this.state.ingresos - this.state.egresos < 0 ? _react2.default.createElement(
+	                    'h4',
+	                    { className: 'card-title' },
+	                    'Perdidas de:'
+	                  ) : _react2.default.createElement(
+	                    'h4',
+	                    { className: 'card-title' },
+	                    'Ganancias de:'
+	                  ),
+	                  _react2.default.createElement(
+	                    'p',
+	                    { className: 'card-text' },
+	                    _javascriptFunctions2.default.moneyFormatter(this.state.ingresos - this.state.egresos)
+	                  )
 	                )
 	              )
 	            )
@@ -28390,20 +28453,34 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'card-header' },
-	                'Movimientos de stock del mes'
+	                'Estado del Stock'
 	              ),
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'card-body' },
+	                this.state.cargandoStock ?
+	                // Spinner
 	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'spinner-border text-light', role: 'status' },
+	                  _react2.default.createElement(
+	                    'span',
+	                    { className: 'sr-only' },
+	                    'Loading...'
+	                  )
+	                ) : this.state.errorStock ? _react2.default.createElement(
 	                  'p',
 	                  { className: 'card-text' },
-	                  'Productos que ingresaron: 200'
-	                ),
-	                _react2.default.createElement(
+	                  'Error al cargar el stock'
+	                ) : _react2.default.createElement(
 	                  'p',
 	                  { className: 'card-text' },
-	                  'Productos que egresaron: 160'
+	                  'Productos en stock: ',
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    this.state.stock
+	                  )
 	                )
 	              )
 	            )
@@ -28422,15 +28499,33 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'card-body' },
+	                this.state.cargandoIngresos ?
+	                // Spinner
 	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'spinner-border text-light', role: 'status' },
+	                  _react2.default.createElement(
+	                    'span',
+	                    { className: 'sr-only' },
+	                    'Loading...'
+	                  )
+	                ) : this.state.errorIngresos ? _react2.default.createElement(
 	                  'h4',
 	                  { className: 'card-title' },
-	                  'Total Cobrado:'
-	                ),
-	                _react2.default.createElement(
-	                  'p',
-	                  { className: 'card-text' },
-	                  '$140.000'
+	                  'Error al cargar los ingresos'
+	                ) : _react2.default.createElement(
+	                  'div',
+	                  null,
+	                  _react2.default.createElement(
+	                    'h4',
+	                    { className: 'card-title' },
+	                    'Total Cobrado:'
+	                  ),
+	                  _react2.default.createElement(
+	                    'p',
+	                    { className: 'card-text' },
+	                    this.state.ingresos
+	                  )
 	                )
 	              )
 	            )
@@ -28449,15 +28544,33 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'card-body' },
+	                this.state.cargandoEgresos ?
+	                // Spinner
 	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'spinner-border text-light', role: 'status' },
+	                  _react2.default.createElement(
+	                    'span',
+	                    { className: 'sr-only' },
+	                    'Loading...'
+	                  )
+	                ) : this.state.errorEgresos ? _react2.default.createElement(
 	                  'h4',
 	                  { className: 'card-title' },
-	                  'Total Pagado:'
-	                ),
-	                _react2.default.createElement(
-	                  'p',
-	                  { className: 'card-text' },
-	                  '$100.000'
+	                  'Error al cargar los ingresos'
+	                ) : _react2.default.createElement(
+	                  'div',
+	                  null,
+	                  _react2.default.createElement(
+	                    'h4',
+	                    { className: 'card-title' },
+	                    'Total Pagado:'
+	                  ),
+	                  _react2.default.createElement(
+	                    'p',
+	                    { className: 'card-text' },
+	                    this.state.egresos
+	                  )
 	                )
 	              )
 	            )
@@ -28474,6 +28587,47 @@
 
 /***/ },
 /* 251 */
+/***/ function(module, exports) {
+
+	// Formatear una fecha
+	module.exports.formatearDate = date => {
+	  const fecha = new Date(date)
+	  const dd = fecha.getDate()
+	  const mm = fecha.getMonth()+1
+	  const yyyy = fecha.getFullYear()
+	  return dd+"/"+mm+"/"+yyyy
+	}
+	
+	// Formatear dinero
+	module.exports.moneyFormatter = number => {
+	  const formatter = new Intl.NumberFormat()
+	  return `$${formatter.format(number)}`
+	}
+	
+	// Obtener la deuda de una fábrica o un cliente
+	// Parámetro: objeto - fábrica o cliente
+	module.exports.getDeuda = data => {
+	  let deudaFinal = 0
+	  let deudas = 0
+	  let pagado = 0
+	  if(data.pedidos){
+	    data.pedidos.forEach(pedido => {
+	      deudas = deudas + pedido.precioTotal
+	    })
+	  }
+	  if(data.pagos){
+	    data.pagos.forEach(pago=>{
+	      pagado = pagado + pago.monto
+	    })
+	  }
+	  if((deudas - pagado) > 0){
+	    deudaFinal = deudas - pagado
+	  }
+	  return deudaFinal
+	}
+
+/***/ },
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28488,11 +28642,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _TablaFlexible = __webpack_require__(252);
+	var _TablaFlexible = __webpack_require__(253);
 	
 	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
 	
-	var _javascriptFunctions = __webpack_require__(254);
+	var _javascriptFunctions = __webpack_require__(251);
 	
 	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
 	
@@ -28727,7 +28881,7 @@
 	exports.default = FabricasLista;
 
 /***/ },
-/* 252 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28742,11 +28896,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _jquery = __webpack_require__(253);
+	var _jquery = __webpack_require__(254);
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	var _javascriptFunctions = __webpack_require__(254);
+	var _javascriptFunctions = __webpack_require__(251);
 	
 	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
 	
@@ -28937,7 +29091,7 @@
 	exports.default = TablaFlexible;
 
 /***/ },
-/* 253 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -39541,47 +39695,6 @@
 
 
 /***/ },
-/* 254 */
-/***/ function(module, exports) {
-
-	// Formatear una fecha
-	module.exports.formatearDate = date => {
-	  const fecha = new Date(date)
-	  const dd = fecha.getDate()
-	  const mm = fecha.getMonth()+1
-	  const yyyy = fecha.getFullYear()
-	  return dd+"/"+mm+"/"+yyyy
-	}
-	
-	// Formatear dinero
-	module.exports.moneyFormatter = number => {
-	  const formatter = new Intl.NumberFormat()
-	  return `$${formatter.format(number)}`
-	}
-	
-	// Obtener la deuda de una fábrica o un cliente
-	// Parámetro: objeto - fábrica o cliente
-	module.exports.getDeuda = data => {
-	  let deudaFinal = 0
-	  let deudas = 0
-	  let pagado = 0
-	  if(data.pedidos){
-	    data.pedidos.forEach(pedido => {
-	      deudas = deudas + pedido.precioTotal
-	    })
-	  }
-	  if(data.pagos){
-	    data.pagos.forEach(pago=>{
-	      pagado = pagado + pago.monto
-	    })
-	  }
-	  if((deudas - pagado) > 0){
-	    deudaFinal = deudas - pagado
-	  }
-	  return deudaFinal
-	}
-
-/***/ },
 /* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -42611,7 +42724,7 @@
 	
 	var _sweetalert2 = _interopRequireDefault(_sweetalert);
 	
-	var _TablaFlexible = __webpack_require__(252);
+	var _TablaFlexible = __webpack_require__(253);
 	
 	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
 	
@@ -47337,7 +47450,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _javascriptFunctions = __webpack_require__(254);
+	var _javascriptFunctions = __webpack_require__(251);
 	
 	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
 	
@@ -47749,7 +47862,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _TablaFlexible = __webpack_require__(252);
+	var _TablaFlexible = __webpack_require__(253);
 	
 	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
 	
@@ -47757,7 +47870,7 @@
 	
 	var _sweetalert2 = _interopRequireDefault(_sweetalert);
 	
-	var _javascriptFunctions = __webpack_require__(254);
+	var _javascriptFunctions = __webpack_require__(251);
 	
 	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
 	
@@ -48173,7 +48286,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _javascriptFunctions = __webpack_require__(254);
+	var _javascriptFunctions = __webpack_require__(251);
 	
 	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
 	
@@ -48395,665 +48508,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _TablaFlexible = __webpack_require__(252);
+	var _TablaFlexible = __webpack_require__(253);
 	
 	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
 	
-	var _sweetalert = __webpack_require__(255);
-	
-	var _sweetalert2 = _interopRequireDefault(_sweetalert);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var StockLista = function (_React$Component) {
-	  _inherits(StockLista, _React$Component);
-	
-	  function StockLista() {
-	    _classCallCheck(this, StockLista);
-	
-	    var _this = _possibleConstructorReturn(this, (StockLista.__proto__ || Object.getPrototypeOf(StockLista)).call(this));
-	
-	    _this.state = {
-	      stock: [],
-	      cargando: true,
-	      error: ""
-	    };
-	    _this.cargarLista = _this.cargarLista.bind(_this);
-	    _this.handleEditar = _this.handleEditar.bind(_this);
-	    _this.handleEliminar = _this.handleEliminar.bind(_this);
-	    _this.actualizarLista = _this.actualizarLista.bind(_this);
-	    return _this;
-	  }
-	
-	  _createClass(StockLista, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      this.cargarLista();
-	    }
-	
-	    //Obtener lista de stock
-	
-	  }, {
-	    key: 'cargarLista',
-	    value: function cargarLista() {
-	      var _this2 = this;
-	
-	      fetch('/api/stock').then(function (res) {
-	        if (res.ok) {
-	          res.json().then(function (data) {
-	            console.log("Stock list: ", data);
-	            _this2.setState({
-	              cargando: false,
-	              stock: data,
-	              error: ""
-	            });
-	          });
-	        } else {
-	          res.json().then(function (error) {
-	            console.log("Error al obtener la lista. ", error.message);
-	            _this2.setState({
-	              cargando: false,
-	              error: error.message
-	            });
-	          });
-	        }
-	      }).catch(function (error) {
-	        console.log("Error: ", error.message);
-	        _this2.setState({
-	          cargando: false,
-	          error: error.message
-	        });
-	      });
-	    }
-	  }, {
-	    key: 'onClickAgregar',
-	    value: function onClickAgregar() {
-	      this.props.history.push("/stock/editar/");
-	    }
-	  }, {
-	    key: 'handleEditar',
-	    value: function handleEditar(id) {
-	      this.props.history.push('/stock/editar/' + id);
-	    }
-	  }, {
-	    key: 'handleEliminar',
-	    value: function handleEliminar(id) {
-	      var _this3 = this;
-	
-	      //Primero pido confirmación
-	      _sweetalert2.default.fire({
-	        title: "¿Seguro que desea eliminar?",
-	        text: "Esta acción no se puede revertir",
-	        icon: "warning",
-	        showCancelButton: true,
-	        confirmButtonColor: "#3085d6",
-	        cancelButtonColor: "#d33",
-	        confirmButtonText: "Si, eliminar"
-	      }).then(function (result) {
-	        if (result.value) {
-	          //Elimino
-	          fetch('/api/stock/' + id, {
-	            method: 'DELETE',
-	            headers: { 'Content-Type': 'application/json' }
-	          }).then(function (res) {
-	            if (res.ok) {
-	              _sweetalert2.default.fire("Stock Eliminado", "", "success").then(function () {
-	                _this3.actualizarLista(id);
-	              });
-	            } else {
-	              _sweetalert2.default.fire("Error al eliminar", "", "error");
-	            }
-	          }).catch(function (err) {
-	            _sweetalert2.default.fire("Error del servidor", err.message, "error");
-	          });
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'actualizarLista',
-	    value: function actualizarLista(id) {
-	      var _this4 = this;
-	
-	      var auxStock = this.state.stock;
-	      // Quito el stock eliminado de la lista del state
-	      auxStock.forEach(function (stock, i) {
-	        if (id === stock._id) {
-	          auxStock.splice(i, 1);
-	          _this4.setState({
-	            stock: auxStock
-	          });
-	          return;
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this5 = this;
-	
-	      var columns = [["Producto", "producto", "String"], ["Tipo", "tipo", "String"], ["Material", "material", "String"], ["Talle", "talle", "String"], ["Estilo", "estilo", "String"], ["Cantidad", "cantidad", "String"], ["Estante", "estante", "String"]];
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'fabricas-lista' },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'row' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'col-12 d-flex justify-content-between' },
-	            _react2.default.createElement(
-	              'h3',
-	              null,
-	              'Stock'
-	            ),
-	            _react2.default.createElement(
-	              'button',
-	              { type: 'button',
-	                className: 'btn btn-success',
-	                onClick: function onClick() {
-	                  return _this5.onClickAgregar();
-	                }
-	              },
-	              '+ Agregar Stock'
-	            )
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'row' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'col-12 contenedor-tabla text-center' },
-	            !this.state.cargando ?
-	            // Tabla
-	            _react2.default.createElement(_TablaFlexible2.default, {
-	              columns: columns,
-	              data: this.state.stock,
-	              handleEditar: this.handleEditar,
-	              handleEliminar: this.handleEliminar
-	            }) : this.state.error ?
-	            //Mensaje de error
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'alert alert-dismissible alert-danger' },
-	              _react2.default.createElement(
-	                'button',
-	                { type: 'button', className: 'close', 'data-dismiss': 'alert' },
-	                '\xD7'
-	              ),
-	              _react2.default.createElement(
-	                'strong',
-	                null,
-	                'Error!'
-	              ),
-	              ' ',
-	              this.state.error
-	            ) :
-	            // Spinner
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'spinner-border text-light', role: 'status' },
-	              _react2.default.createElement(
-	                'span',
-	                { className: 'sr-only' },
-	                'Loading...'
-	              )
-	            )
-	          )
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return StockLista;
-	}(_react2.default.Component);
-	
-	exports.default = StockLista;
-
-/***/ },
-/* 286 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _sweetalert = __webpack_require__(255);
-	
-	var _sweetalert2 = _interopRequireDefault(_sweetalert);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	//https://github.com/sweetalert2/sweetalert2
-	
-	var FabricasEditar = function (_React$Component) {
-	  _inherits(FabricasEditar, _React$Component);
-	
-	  function FabricasEditar() {
-	    _classCallCheck(this, FabricasEditar);
-	
-	    var _this = _possibleConstructorReturn(this, (FabricasEditar.__proto__ || Object.getPrototypeOf(FabricasEditar)).call(this));
-	
-	    _this.state = {
-	      nuevo: true,
-	      cargando: true,
-	      error: "",
-	      _id: "",
-	      // Campos del formulario
-	      producto: "",
-	      tipo: "",
-	      material: "",
-	      talle: "",
-	      estilo: "",
-	      cantidad: "",
-	      estante: "",
-	      errorProducto: false
-	    };
-	    _this.handleOnChange = _this.handleOnChange.bind(_this);
-	    _this.obtenerStock = _this.obtenerStock.bind(_this);
-	    return _this;
-	  }
-	
-	  _createClass(FabricasEditar, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      if (this.props.params.id) {
-	        this.obtenerStock();
-	      } else {
-	        this.setState({
-	          cargando: false
-	        });
-	      }
-	    }
-	  }, {
-	    key: 'obtenerStock',
-	    value: function obtenerStock() {
-	      var _this2 = this;
-	
-	      fetch('/api/stock/' + this.props.params.id).then(function (res) {
-	        if (res.ok) {
-	          res.json().then(function (data) {
-	            console.log("Stock: ", data);
-	            _this2.setState({
-	              _id: data._id,
-	              nuevo: false,
-	              cargando: false,
-	              producto: data.producto,
-	              tipo: data.tipo,
-	              material: data.material,
-	              talle: data.talle,
-	              estilo: data.estilo,
-	              cantidad: data.cantidad,
-	              estante: data.estante
-	            });
-	          });
-	        } else {
-	          res.json().then(function (error) {
-	            console.log("Error al obtener stock - ", error.message);
-	            _this2.setState({
-	              cargando: false,
-	              error: error.message
-	            });
-	          });
-	        }
-	      }).catch(function (error) {
-	        console.log("Error del servidor. ", error.message);
-	        _this2.setState({
-	          cargando: false,
-	          error: error.message
-	        });
-	      });
-	    }
-	
-	    //Manejo de cambios en el formulario
-	
-	  }, {
-	    key: 'handleOnChange',
-	    value: function handleOnChange(event) {
-	      this.setState(_defineProperty({}, event.target.name, event.target.value));
-	      //Quito el error del campo obligatorio
-	      if (event.target.name === "producto") {
-	        this.setState({
-	          errorProducto: false
-	        });
-	      }
-	    }
-	
-	    //Función para crear un nuevo stock
-	
-	  }, {
-	    key: 'crearStock',
-	    value: function crearStock(nuevoStock) {
-	      var _this3 = this;
-	
-	      fetch('/api/stock', {
-	        method: 'POST',
-	        headers: { 'Content-Type': 'application/json' },
-	        body: JSON.stringify(nuevoStock)
-	      }).then(function (res) {
-	        if (res.ok) {
-	          res.json().then(function (data) {
-	            console.log("Stock creado: ", data);
-	            _sweetalert2.default.fire("Stock creado!", "", "success").then(function () {
-	              _this3.props.history.push("/stock");
-	            });
-	          });
-	        } else {
-	          res.json().then(function (err) {
-	            console.log("Error al crear stock: ", err.message);
-	            _sweetalert2.default.fire("Error al crear el stock", "", "error");
-	          });
-	        }
-	      }).catch(function (err) {
-	        console.log("Error del servidor: ", err.message);
-	        _sweetalert2.default.fire("Error del servidor", "", "error");
-	      });
-	    }
-	
-	    //Función para modificar un stock
-	
-	  }, {
-	    key: 'modificarStock',
-	    value: function modificarStock(nuevoStock, id) {
-	      var _this4 = this;
-	
-	      fetch('/api/stock/' + id, {
-	        method: 'PUT',
-	        headers: { 'Content-Type': 'application/json' },
-	        body: JSON.stringify(nuevoStock)
-	      }).then(function (res) {
-	        if (res.ok) {
-	          res.json().then(function (data) {
-	            console.log("Stock modificado: ", data);
-	            _sweetalert2.default.fire("Stock modificado!", "", "success").then(function () {
-	              _this4.props.history.push("/stock");
-	            });
-	          });
-	        } else {
-	          res.json().then(function (err) {
-	            console.log("Error al modificar stock: ", err.message);
-	            _sweetalert2.default.fire("Error al modificar el stock", "", "error");
-	          });
-	        }
-	      }).catch(function (err) {
-	        console.log("Error del servidor: ", err.message);
-	        _sweetalert2.default.fire("Error del servidor", "", "error");
-	      });
-	    }
-	  }, {
-	    key: 'onClickGuardar',
-	    value: function onClickGuardar() {
-	      if (this.state.producto) {
-	        if (this.state.nuevo) {
-	          //Creo un registro
-	          this.crearStock({
-	            producto: this.state.producto,
-	            tipo: this.state.tipo,
-	            material: this.state.material,
-	            talle: this.state.talle,
-	            estilo: this.state.estilo,
-	            cantidad: this.state.cantidad,
-	            estante: this.state.estante
-	          });
-	        } else {
-	          //Modifico un registro
-	          this.modificarStock({
-	            _id: this.state._id,
-	            producto: this.state.producto,
-	            tipo: this.state.tipo,
-	            material: this.state.material,
-	            talle: this.state.talle,
-	            estilo: this.state.estilo,
-	            cantidad: this.state.cantidad,
-	            estante: this.state.estante
-	          }, this.state._id);
-	        }
-	      } else {
-	        this.setState({
-	          errorProducto: true
-	        });
-	      }
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this5 = this;
-	
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'fabricas-editar text-center' },
-	        !this.state.cargando ? _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'row' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-12 d-flex justify-content-between' },
-	              this.state.nuevo ? _react2.default.createElement(
-	                'h3',
-	                null,
-	                'Crear Stock'
-	              ) : _react2.default.createElement(
-	                'h3',
-	                null,
-	                'Modificar Stock: ',
-	                this.state.producto
-	              ),
-	              _react2.default.createElement(
-	                'button',
-	                { type: 'button',
-	                  className: 'btn btn-success',
-	                  onClick: function onClick() {
-	                    return _this5.onClickGuardar();
-	                  }
-	                },
-	                '+ Guardar'
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'row contenedor-formulario text-center' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-sm-6 col-12 form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                'Producto'
-	              ),
-	              _react2.default.createElement('input', { type: 'text',
-	                className: this.state.errorProducto ? "form-control is-invalid" : "form-control",
-	                id: 'producto',
-	                name: 'producto',
-	                placeholder: 'Producto...',
-	                value: this.state.producto,
-	                onChange: this.handleOnChange }),
-	              this.state.errorProducto ? _react2.default.createElement(
-	                'div',
-	                { className: 'invalid-feedback' },
-	                'El producto es requerido'
-	              ) : null
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-sm-6 col-12 form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                'Tipo'
-	              ),
-	              _react2.default.createElement('input', { type: 'text',
-	                className: 'form-control',
-	                id: 'tipo',
-	                name: 'tipo',
-	                placeholder: 'Tipo...',
-	                value: this.state.tipo,
-	                onChange: this.handleOnChange })
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-sm-6 col-12 form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                'Material'
-	              ),
-	              _react2.default.createElement('input', { type: 'text',
-	                className: 'form-control',
-	                id: 'material',
-	                name: 'material',
-	                placeholder: 'Material...',
-	                value: this.state.material,
-	                onChange: this.handleOnChange })
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-sm-6 col-12 form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                'Talle'
-	              ),
-	              _react2.default.createElement('input', { type: 'number',
-	                className: 'form-control',
-	                id: 'talle',
-	                name: 'talle',
-	                placeholder: 'Talle...',
-	                value: this.state.talle,
-	                onChange: this.handleOnChange })
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-sm-6 col-12 form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                'Estilo'
-	              ),
-	              _react2.default.createElement('input', { type: 'text',
-	                className: 'form-control',
-	                id: 'estilo',
-	                name: 'estilo',
-	                placeholder: 'Estilo...',
-	                value: this.state.estilo,
-	                onChange: this.handleOnChange })
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-sm-6 col-12 form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                'Cantidad'
-	              ),
-	              _react2.default.createElement('input', { type: 'number',
-	                className: 'form-control',
-	                id: 'cantidad',
-	                name: 'cantidad',
-	                placeholder: 'Cantidad...',
-	                value: this.state.cantidad,
-	                onChange: this.handleOnChange })
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-sm-6 col-12 form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                'Estante'
-	              ),
-	              _react2.default.createElement('input', { type: 'text',
-	                className: 'form-control',
-	                id: 'estante',
-	                name: 'estante',
-	                placeholder: 'Estante...',
-	                value: this.state.estante,
-	                onChange: this.handleOnChange })
-	            )
-	          )
-	        ) : this.state.error ?
-	        //Mensaje de error
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'alert alert-dismissible alert-danger' },
-	          _react2.default.createElement(
-	            'button',
-	            { type: 'button', className: 'close', 'data-dismiss': 'alert' },
-	            '\xD7'
-	          ),
-	          _react2.default.createElement(
-	            'strong',
-	            null,
-	            'Error!'
-	          ),
-	          ' ',
-	          this.state.error
-	        ) :
-	        // Spinner
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'spinner-border text-light', role: 'status' },
-	          _react2.default.createElement(
-	            'span',
-	            { className: 'sr-only' },
-	            'Loading...'
-	          )
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return FabricasEditar;
-	}(_react2.default.Component);
-	
-	exports.default = FabricasEditar;
-
-/***/ },
-/* 287 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _TablaFlexible = __webpack_require__(252);
-	
-	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
-	
-	var _javascriptFunctions = __webpack_require__(254);
+	var _javascriptFunctions = __webpack_require__(251);
 	
 	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
 	
@@ -49288,7 +48747,7 @@
 	exports.default = ClientesLista;
 
 /***/ },
-/* 288 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -49307,7 +48766,7 @@
 	
 	var _sweetalert2 = _interopRequireDefault(_sweetalert);
 	
-	var _TablaFlexible = __webpack_require__(252);
+	var _TablaFlexible = __webpack_require__(253);
 	
 	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
 	
@@ -49315,11 +48774,11 @@
 	
 	var _reactResponsiveModal2 = _interopRequireDefault(_reactResponsiveModal);
 	
-	var _ContactosEditar = __webpack_require__(289);
+	var _ContactosEditar = __webpack_require__(287);
 	
 	var _ContactosEditar2 = _interopRequireDefault(_ContactosEditar);
 	
-	var _PedidosEditar = __webpack_require__(290);
+	var _PedidosEditar = __webpack_require__(288);
 	
 	var _PedidosEditar2 = _interopRequireDefault(_PedidosEditar);
 	
@@ -49959,7 +49418,7 @@
 	exports.default = ClientesEditar;
 
 /***/ },
-/* 289 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -50179,7 +49638,7 @@
 	exports.default = ContactosEditar;
 
 /***/ },
-/* 290 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50194,7 +49653,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _javascriptFunctions = __webpack_require__(254);
+	var _javascriptFunctions = __webpack_require__(251);
 	
 	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
 	
@@ -50591,7 +50050,7 @@
 	exports.default = ContactosEditar;
 
 /***/ },
-/* 291 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -50606,7 +50065,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _TablaFlexible = __webpack_require__(252);
+	var _TablaFlexible = __webpack_require__(253);
 	
 	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
 	
@@ -50614,7 +50073,7 @@
 	
 	var _sweetalert2 = _interopRequireDefault(_sweetalert);
 	
-	var _javascriptFunctions = __webpack_require__(254);
+	var _javascriptFunctions = __webpack_require__(251);
 	
 	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
 	
@@ -50622,7 +50081,7 @@
 	
 	var _reactResponsiveModal2 = _interopRequireDefault(_reactResponsiveModal);
 	
-	var _PagosEditar = __webpack_require__(292);
+	var _PagosEditar = __webpack_require__(290);
 	
 	var _PagosEditar2 = _interopRequireDefault(_PagosEditar);
 	
@@ -51015,7 +50474,7 @@
 	exports.default = ClientesPagos;
 
 /***/ },
-/* 292 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51030,7 +50489,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _javascriptFunctions = __webpack_require__(254);
+	var _javascriptFunctions = __webpack_require__(251);
 	
 	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
 	
@@ -51235,6 +50694,660 @@
 	}(_react2.default.Component);
 	
 	exports.default = PagosEditar;
+
+/***/ },
+/* 291 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _TablaFlexible = __webpack_require__(253);
+	
+	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
+	
+	var _sweetalert = __webpack_require__(255);
+	
+	var _sweetalert2 = _interopRequireDefault(_sweetalert);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var StockLista = function (_React$Component) {
+	  _inherits(StockLista, _React$Component);
+	
+	  function StockLista() {
+	    _classCallCheck(this, StockLista);
+	
+	    var _this = _possibleConstructorReturn(this, (StockLista.__proto__ || Object.getPrototypeOf(StockLista)).call(this));
+	
+	    _this.state = {
+	      stock: [],
+	      cargando: true,
+	      error: ""
+	    };
+	    _this.cargarLista = _this.cargarLista.bind(_this);
+	    _this.handleEditar = _this.handleEditar.bind(_this);
+	    _this.handleEliminar = _this.handleEliminar.bind(_this);
+	    _this.actualizarLista = _this.actualizarLista.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(StockLista, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.cargarLista();
+	    }
+	
+	    //Obtener lista de stock
+	
+	  }, {
+	    key: 'cargarLista',
+	    value: function cargarLista() {
+	      var _this2 = this;
+	
+	      fetch('/api/stock').then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            console.log("Stock list: ", data);
+	            _this2.setState({
+	              cargando: false,
+	              stock: data,
+	              error: ""
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener la lista. ", error.message);
+	            _this2.setState({
+	              cargando: false,
+	              error: error.message
+	            });
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.log("Error: ", error.message);
+	        _this2.setState({
+	          cargando: false,
+	          error: error.message
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'onClickAgregar',
+	    value: function onClickAgregar() {
+	      this.props.history.push("/stock/editar/");
+	    }
+	  }, {
+	    key: 'handleEditar',
+	    value: function handleEditar(id) {
+	      this.props.history.push('/stock/editar/' + id);
+	    }
+	  }, {
+	    key: 'handleEliminar',
+	    value: function handleEliminar(id) {
+	      var _this3 = this;
+	
+	      //Primero pido confirmación
+	      _sweetalert2.default.fire({
+	        title: "¿Seguro que desea eliminar?",
+	        text: "Esta acción no se puede revertir",
+	        icon: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#3085d6",
+	        cancelButtonColor: "#d33",
+	        confirmButtonText: "Si, eliminar"
+	      }).then(function (result) {
+	        if (result.value) {
+	          //Elimino
+	          fetch('/api/stock/' + id, {
+	            method: 'DELETE',
+	            headers: { 'Content-Type': 'application/json' }
+	          }).then(function (res) {
+	            if (res.ok) {
+	              _sweetalert2.default.fire("Stock Eliminado", "", "success").then(function () {
+	                _this3.actualizarLista(id);
+	              });
+	            } else {
+	              _sweetalert2.default.fire("Error al eliminar", "", "error");
+	            }
+	          }).catch(function (err) {
+	            _sweetalert2.default.fire("Error del servidor", err.message, "error");
+	          });
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'actualizarLista',
+	    value: function actualizarLista(id) {
+	      var _this4 = this;
+	
+	      var auxStock = this.state.stock;
+	      // Quito el stock eliminado de la lista del state
+	      auxStock.forEach(function (stock, i) {
+	        if (id === stock._id) {
+	          auxStock.splice(i, 1);
+	          _this4.setState({
+	            stock: auxStock
+	          });
+	          return;
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this5 = this;
+	
+	      var columns = [["Producto", "producto", "String"], ["Tipo", "tipo", "String"], ["Material", "material", "String"], ["Talle", "talle", "String"], ["Estilo", "estilo", "String"], ["Cantidad", "cantidad", "String"], ["Estante", "estante", "String"]];
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'fabricas-lista' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 d-flex justify-content-between' },
+	            _react2.default.createElement(
+	              'h3',
+	              null,
+	              'Stock'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { type: 'button',
+	                className: 'btn btn-success',
+	                onClick: function onClick() {
+	                  return _this5.onClickAgregar();
+	                }
+	              },
+	              '+ Agregar Stock'
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 contenedor-tabla text-center' },
+	            !this.state.cargando ?
+	            // Tabla
+	            _react2.default.createElement(_TablaFlexible2.default, {
+	              columns: columns,
+	              data: this.state.stock,
+	              handleEditar: this.handleEditar,
+	              handleEliminar: this.handleEliminar
+	            }) : this.state.error ?
+	            //Mensaje de error
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'alert alert-dismissible alert-danger' },
+	              _react2.default.createElement(
+	                'button',
+	                { type: 'button', className: 'close', 'data-dismiss': 'alert' },
+	                '\xD7'
+	              ),
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Error!'
+	              ),
+	              ' ',
+	              this.state.error
+	            ) :
+	            // Spinner
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'spinner-border text-light', role: 'status' },
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'sr-only' },
+	                'Loading...'
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return StockLista;
+	}(_react2.default.Component);
+	
+	exports.default = StockLista;
+
+/***/ },
+/* 292 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _sweetalert = __webpack_require__(255);
+	
+	var _sweetalert2 = _interopRequireDefault(_sweetalert);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	//https://github.com/sweetalert2/sweetalert2
+	
+	var FabricasEditar = function (_React$Component) {
+	  _inherits(FabricasEditar, _React$Component);
+	
+	  function FabricasEditar() {
+	    _classCallCheck(this, FabricasEditar);
+	
+	    var _this = _possibleConstructorReturn(this, (FabricasEditar.__proto__ || Object.getPrototypeOf(FabricasEditar)).call(this));
+	
+	    _this.state = {
+	      nuevo: true,
+	      cargando: true,
+	      error: "",
+	      _id: "",
+	      // Campos del formulario
+	      producto: "",
+	      tipo: "",
+	      material: "",
+	      talle: "",
+	      estilo: "",
+	      cantidad: "",
+	      estante: "",
+	      errorProducto: false
+	    };
+	    _this.handleOnChange = _this.handleOnChange.bind(_this);
+	    _this.obtenerStock = _this.obtenerStock.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(FabricasEditar, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      if (this.props.params.id) {
+	        this.obtenerStock();
+	      } else {
+	        this.setState({
+	          cargando: false
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'obtenerStock',
+	    value: function obtenerStock() {
+	      var _this2 = this;
+	
+	      fetch('/api/stock/' + this.props.params.id).then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            console.log("Stock: ", data);
+	            _this2.setState({
+	              _id: data._id,
+	              nuevo: false,
+	              cargando: false,
+	              producto: data.producto,
+	              tipo: data.tipo,
+	              material: data.material,
+	              talle: data.talle,
+	              estilo: data.estilo,
+	              cantidad: data.cantidad,
+	              estante: data.estante
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener stock - ", error.message);
+	            _this2.setState({
+	              cargando: false,
+	              error: error.message
+	            });
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.log("Error del servidor. ", error.message);
+	        _this2.setState({
+	          cargando: false,
+	          error: error.message
+	        });
+	      });
+	    }
+	
+	    //Manejo de cambios en el formulario
+	
+	  }, {
+	    key: 'handleOnChange',
+	    value: function handleOnChange(event) {
+	      this.setState(_defineProperty({}, event.target.name, event.target.value));
+	      //Quito el error del campo obligatorio
+	      if (event.target.name === "producto") {
+	        this.setState({
+	          errorProducto: false
+	        });
+	      }
+	    }
+	
+	    //Función para crear un nuevo stock
+	
+	  }, {
+	    key: 'crearStock',
+	    value: function crearStock(nuevoStock) {
+	      var _this3 = this;
+	
+	      fetch('/api/stock', {
+	        method: 'POST',
+	        headers: { 'Content-Type': 'application/json' },
+	        body: JSON.stringify(nuevoStock)
+	      }).then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            console.log("Stock creado: ", data);
+	            _sweetalert2.default.fire("Stock creado!", "", "success").then(function () {
+	              _this3.props.history.push("/stock");
+	            });
+	          });
+	        } else {
+	          res.json().then(function (err) {
+	            console.log("Error al crear stock: ", err.message);
+	            _sweetalert2.default.fire("Error al crear el stock", "", "error");
+	          });
+	        }
+	      }).catch(function (err) {
+	        console.log("Error del servidor: ", err.message);
+	        _sweetalert2.default.fire("Error del servidor", "", "error");
+	      });
+	    }
+	
+	    //Función para modificar un stock
+	
+	  }, {
+	    key: 'modificarStock',
+	    value: function modificarStock(nuevoStock, id) {
+	      var _this4 = this;
+	
+	      fetch('/api/stock/' + id, {
+	        method: 'PUT',
+	        headers: { 'Content-Type': 'application/json' },
+	        body: JSON.stringify(nuevoStock)
+	      }).then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            console.log("Stock modificado: ", data);
+	            _sweetalert2.default.fire("Stock modificado!", "", "success").then(function () {
+	              _this4.props.history.push("/stock");
+	            });
+	          });
+	        } else {
+	          res.json().then(function (err) {
+	            console.log("Error al modificar stock: ", err.message);
+	            _sweetalert2.default.fire("Error al modificar el stock", "", "error");
+	          });
+	        }
+	      }).catch(function (err) {
+	        console.log("Error del servidor: ", err.message);
+	        _sweetalert2.default.fire("Error del servidor", "", "error");
+	      });
+	    }
+	  }, {
+	    key: 'onClickGuardar',
+	    value: function onClickGuardar() {
+	      if (this.state.producto) {
+	        if (this.state.nuevo) {
+	          //Creo un registro
+	          this.crearStock({
+	            producto: this.state.producto,
+	            tipo: this.state.tipo,
+	            material: this.state.material,
+	            talle: this.state.talle,
+	            estilo: this.state.estilo,
+	            cantidad: this.state.cantidad,
+	            estante: this.state.estante
+	          });
+	        } else {
+	          //Modifico un registro
+	          this.modificarStock({
+	            _id: this.state._id,
+	            producto: this.state.producto,
+	            tipo: this.state.tipo,
+	            material: this.state.material,
+	            talle: this.state.talle,
+	            estilo: this.state.estilo,
+	            cantidad: this.state.cantidad,
+	            estante: this.state.estante
+	          }, this.state._id);
+	        }
+	      } else {
+	        this.setState({
+	          errorProducto: true
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this5 = this;
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'fabricas-editar text-center' },
+	        !this.state.cargando ? _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 d-flex justify-content-between' },
+	              this.state.nuevo ? _react2.default.createElement(
+	                'h3',
+	                null,
+	                'Crear Stock'
+	              ) : _react2.default.createElement(
+	                'h3',
+	                null,
+	                'Modificar Stock: ',
+	                this.state.producto
+	              ),
+	              _react2.default.createElement(
+	                'button',
+	                { type: 'button',
+	                  className: 'btn btn-success',
+	                  onClick: function onClick() {
+	                    return _this5.onClickGuardar();
+	                  }
+	                },
+	                '+ Guardar'
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row contenedor-formulario text-center' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Producto'
+	              ),
+	              _react2.default.createElement('input', { type: 'text',
+	                className: this.state.errorProducto ? "form-control is-invalid" : "form-control",
+	                id: 'producto',
+	                name: 'producto',
+	                placeholder: 'Producto...',
+	                value: this.state.producto,
+	                onChange: this.handleOnChange }),
+	              this.state.errorProducto ? _react2.default.createElement(
+	                'div',
+	                { className: 'invalid-feedback' },
+	                'El producto es requerido'
+	              ) : null
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Tipo'
+	              ),
+	              _react2.default.createElement('input', { type: 'text',
+	                className: 'form-control',
+	                id: 'tipo',
+	                name: 'tipo',
+	                placeholder: 'Tipo...',
+	                value: this.state.tipo,
+	                onChange: this.handleOnChange })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Material'
+	              ),
+	              _react2.default.createElement('input', { type: 'text',
+	                className: 'form-control',
+	                id: 'material',
+	                name: 'material',
+	                placeholder: 'Material...',
+	                value: this.state.material,
+	                onChange: this.handleOnChange })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Talle'
+	              ),
+	              _react2.default.createElement('input', { type: 'number',
+	                className: 'form-control',
+	                id: 'talle',
+	                name: 'talle',
+	                placeholder: 'Talle...',
+	                value: this.state.talle,
+	                onChange: this.handleOnChange })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Estilo'
+	              ),
+	              _react2.default.createElement('input', { type: 'text',
+	                className: 'form-control',
+	                id: 'estilo',
+	                name: 'estilo',
+	                placeholder: 'Estilo...',
+	                value: this.state.estilo,
+	                onChange: this.handleOnChange })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Cantidad'
+	              ),
+	              _react2.default.createElement('input', { type: 'number',
+	                className: 'form-control',
+	                id: 'cantidad',
+	                name: 'cantidad',
+	                placeholder: 'Cantidad...',
+	                value: this.state.cantidad,
+	                onChange: this.handleOnChange })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Estante'
+	              ),
+	              _react2.default.createElement('input', { type: 'text',
+	                className: 'form-control',
+	                id: 'estante',
+	                name: 'estante',
+	                placeholder: 'Estante...',
+	                value: this.state.estante,
+	                onChange: this.handleOnChange })
+	            )
+	          )
+	        ) : this.state.error ?
+	        //Mensaje de error
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'alert alert-dismissible alert-danger' },
+	          _react2.default.createElement(
+	            'button',
+	            { type: 'button', className: 'close', 'data-dismiss': 'alert' },
+	            '\xD7'
+	          ),
+	          _react2.default.createElement(
+	            'strong',
+	            null,
+	            'Error!'
+	          ),
+	          ' ',
+	          this.state.error
+	        ) :
+	        // Spinner
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'spinner-border text-light', role: 'status' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'sr-only' },
+	            'Loading...'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return FabricasEditar;
+	}(_react2.default.Component);
+	
+	exports.default = FabricasEditar;
 
 /***/ }
 /******/ ]);

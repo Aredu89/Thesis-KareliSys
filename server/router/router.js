@@ -8,6 +8,7 @@ const stock = require('../controllers/stock.js')
 //fabricas
 router.get('/fabricas', fabricas.listaFabricas)
 router.get('/fabricas/:id', fabricas.getFabrica)
+router.get('/egresos', fabricas.getEgresosMes)
 router.put('/fabricas/:id', fabricas.modificarFabrica)
 router.post('/fabricas', fabricas.crearFabrica)
 router.delete('/fabricas/:id', fabricas.eliminarFabrica)

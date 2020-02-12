@@ -19,6 +19,38 @@ module.exports.listaFabricas = (req, res) => {
     })
 }
 
+//Obtengo los egresos del mes
+module.exports.getEgresosMes = (req, res) => {
+  // Para filtrar por algun parametro
+  const filter = {}
+  Fabricas
+    .find(filter)
+    .exec((err, results, status) => {
+      if(!results || results.length < 1){
+        res.status(404).json({ message: "No se encontraron fabricas"})
+      } else if (err) {
+        res.status(404).json(err)
+      } else {
+        //Obtengo el dia 1 del mes actual y del siguiente
+        const ahora = new Date()
+        const año = ahora.getFullYear()
+        const mes = ahora.getMonth()
+        const mesSiguiente = mes === 11 ? 0 : mes + 1
+        const desde = new Date(año, mes, 1)
+        const hasta = new Date(año, mesSiguiente, 1)
+        let egresos = 0
+        results.forEach(fabrica=>{
+          fabrica.pagos.forEach(pago=>{
+            if(pago.fecha > desde && pago.fecha < hasta){
+              egresos = egresos + pago.monto
+            }
+          })
+        })
+        res.status(200).json({ egresosMes: egresos })
+      }
+    })
+}
+
 //Obtengo una fabrica
 module.exports.getFabrica = (req, res) => {
   //Controlamos que el id de la fabrica esté en el parámetro
