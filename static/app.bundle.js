@@ -28343,10 +28343,11 @@
 	      errorEgresos: "",
 	      stock: 0,
 	      cargandoStock: true,
-	      errorStock: "",
-	      stockPendiente: 0
+	      errorStock: ""
 	    };
 	    _this.cargarEgresos = _this.cargarEgresos.bind(_this);
+	    _this.cargarIngresos = _this.cargarIngresos.bind(_this);
+	    _this.cargarStockCantidad = _this.cargarStockCantidad.bind(_this);
 	    return _this;
 	  }
 	
@@ -28354,6 +28355,8 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.cargarEgresos();
+	      this.cargarIngresos();
+	      this.cargarStockCantidad();
 	    }
 	  }, {
 	    key: 'cargarEgresos',
@@ -28383,6 +28386,68 @@
 	        _this2.setState({
 	          cargandoEgresos: false,
 	          errorEgresos: error.message
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'cargarIngresos',
+	    value: function cargarIngresos() {
+	      var _this3 = this;
+	
+	      fetch('/api/ingresos').then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            _this3.setState({
+	              cargandoIngresos: false,
+	              errorIngresos: "",
+	              ingresos: data.ingresosMes
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener ingresos. ", error.message);
+	            _this3.setState({
+	              cargandoIngresos: false,
+	              errorIngresos: error.message
+	            });
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.log("Error: ", error.message);
+	        _this3.setState({
+	          cargandoIngresos: false,
+	          errorIngresos: error.message
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'cargarStockCantidad',
+	    value: function cargarStockCantidad() {
+	      var _this4 = this;
+	
+	      fetch('/api/stock-cantidad').then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            _this4.setState({
+	              cargandoStock: false,
+	              errorStock: "",
+	              stock: data.cantidadStock
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener stock. ", error.message);
+	            _this4.setState({
+	              cargandoStock: false,
+	              errorStock: error.message
+	            });
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.log("Error: ", error.message);
+	        _this4.setState({
+	          cargandoStock: false,
+	          errorStock: error.message
 	        });
 	      });
 	    }

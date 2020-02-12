@@ -19,6 +19,39 @@ module.exports.listaClientes = (req, res) => {
     })
 }
 
+//Obtengo los ingresos del mes
+module.exports.getIngresosMes = (req, res) => {
+  // Para filtrar por algun parametro
+  const filter = {}
+  // if (req.query.status) filter.status = req.query.status
+  Clientes
+    .find(filter)
+    .exec((err, results, status) => {
+      if(!results || results.length < 1){
+        res.status(404).json({ message: "No se encontraron clientes"})
+      } else if (err) {
+        res.status(404).json(err)
+      } else {
+        //Obtengo el dia 1 del mes actual y del siguiente
+        const ahora = new Date()
+        const año = ahora.getFullYear()
+        const mes = ahora.getMonth()
+        const mesSiguiente = mes === 11 ? 0 : mes + 1
+        const desde = new Date(año, mes, 1)
+        const hasta = new Date(año, mesSiguiente, 1)
+        let ingresos = 0
+        results.forEach(cliente=>{
+          cliente.pagos.forEach(pago=>{
+            if(pago.fecha > desde && pago.fecha < hasta){
+              ingresos = ingresos + pago.monto
+            }
+          })
+        })
+        res.status(200).json({ ingresosMes: ingresos })
+      }
+    })
+}
+
 //Obtengo una fabrica
 module.exports.getCliente = (req, res) => {
   //Controlamos que el id de la fabrica esté en el parámetro

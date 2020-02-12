@@ -19,6 +19,28 @@ module.exports.listaStock = (req, res) => {
     })
 }
 
+//Obtengo el listado de stock
+module.exports.getCantidadStock = (req, res) => {
+  // Para filtrar por algun parametro
+  const filter = {}
+  // if (req.query.status) filter.status = req.query.status
+  Stock
+    .find(filter)
+    .exec((err, results, status) => {
+      if(!results || results.length < 1){
+        res.status(404).json({ message: "No se encontro stock"})
+      } else if (err) {
+        res.status(404).json(err)
+      } else {
+        let cantidad = 0
+        results.forEach(stock=>{
+          cantidad = cantidad + stock.cantidad
+        })
+        res.status(200).json({ cantidadStock: cantidad })
+      }
+    })
+}
+
 //Obtengo un stock
 module.exports.getStock = (req, res) => {
   //Controlamos que el id del stock esté en el parámetro

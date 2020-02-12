@@ -13,14 +13,17 @@ export default class Home extends React.Component {
       errorEgresos: "",
       stock: 0,
       cargandoStock: true,
-      errorStock: "",
-      stockPendiente: 0
+      errorStock: ""
     }
     this.cargarEgresos = this.cargarEgresos.bind(this)
+    this.cargarIngresos = this.cargarIngresos.bind(this)
+    this.cargarStockCantidad = this.cargarStockCantidad.bind(this)
   }
 
   componentDidMount(){
     this.cargarEgresos()
+    this.cargarIngresos()
+    this.cargarStockCantidad()
   }
 
   cargarEgresos(){
@@ -51,6 +54,70 @@ export default class Home extends React.Component {
         this.setState({
           cargandoEgresos: false,
           errorEgresos: error.message
+        })
+      })
+  }
+
+  cargarIngresos(){
+    fetch('/api/ingresos')
+      .then(res => {
+        if(res.ok) {
+          res.json()
+          .then(data=>{
+            this.setState({
+              cargandoIngresos: false,
+              errorIngresos: "",
+              ingresos: data.ingresosMes
+            })
+          })
+        } else {
+          res.json()
+          .then(error => {
+            console.log("Error al obtener ingresos. ", error.message)
+            this.setState({
+              cargandoIngresos: false,
+              errorIngresos: error.message
+            })
+          })
+        }
+      })
+      .catch(error => {
+        console.log("Error: ",error.message)
+        this.setState({
+          cargandoIngresos: false,
+          errorIngresos: error.message
+        })
+      })
+  }
+
+  cargarStockCantidad(){
+    fetch('/api/stock-cantidad')
+      .then(res => {
+        if(res.ok) {
+          res.json()
+          .then(data=>{
+            this.setState({
+              cargandoStock: false,
+              errorStock: "",
+              stock: data.cantidadStock
+            })
+          })
+        } else {
+          res.json()
+          .then(error => {
+            console.log("Error al obtener stock. ", error.message)
+            this.setState({
+              cargandoStock: false,
+              errorStock: error.message
+            })
+          })
+        }
+      })
+      .catch(error => {
+        console.log("Error: ",error.message)
+        this.setState({
+          cargandoStock: false,
+          errorStock: error.message
         })
       })
   }
