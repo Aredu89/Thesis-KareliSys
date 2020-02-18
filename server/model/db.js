@@ -58,3 +58,4 @@ mongoose.connection.on('disconnected', () => {
 require('./fabricas.js')
 require('./clientes.js')
 require('./stock.js')
+require('./users.js')

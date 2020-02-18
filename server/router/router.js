@@ -4,6 +4,7 @@ const router = express.Router()
 const fabricas = require('../controllers/fabricas.js')
 const clientes = require('../controllers/clientes.js')
 const stock = require('../controllers/stock.js')
+const usuarios = require('../controllers/users.js')
 
 //fabricas
 router.get('/fabricas', fabricas.listaFabricas)
@@ -28,5 +29,9 @@ router.get('/stock-cantidad', stock.getCantidadStock)
 router.put('/stock/:id', stock.modificarStock)
 router.post('/stock', stock.crearStock)
 router.delete('/stock/:id', stock.eliminarStock)
+
+//usuarios
+router.post('/registrar-usuario', usuarios.registrarUsuarios)
+router.post('/loguear-usuario', usuarios.loguearUsuarios)
 
 module.exports = router
