@@ -4,6 +4,7 @@ import { Router, Route, browserHistory, Redirect, withRouter } from 'react-route
 
 import Header from './common/Header.jsx'
 import Home from './common/Home.jsx'
+import Login from './common/Login.jsx'
 import FabricasLista from './fabricas/FabricasLista.jsx'
 import FabricasEditar from './fabricas/FabricasEditar.jsx'
 import FabricasPagos from './fabricas/FabricasPagos.jsx'
@@ -19,6 +20,7 @@ const noMatch = () => <p>Page Not Found</p>
 const RoutedApp = () => (
   <Router history={browserHistory} >
     <Redirect from="/" to="/home" />
+    <Route path="/login" component={Login} />
     <Route path="/" component={Header} >
       <Route path="home" component={withRouter(Home)} />
       <Route path="fabricas" component={FabricasLista} />
