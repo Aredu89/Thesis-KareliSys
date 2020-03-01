@@ -27,6 +27,7 @@
 }
 .header .dropdown .dropdown-menu .logout:hover{
   background-color: #FA6F6F;
+  cursor: pointer;
 }
 /* Estilos para Home */
 .home .card.col-12{

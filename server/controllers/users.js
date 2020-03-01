@@ -40,10 +40,10 @@ module.exports.registrarUsuarios = (req, res) => {
 }
 
 module.exports.loguearUsuarios = (req, res) => {
-  const { errors, isValid } = validateLoginInput(req.body);
+  const { error, isValid } = validateLoginInput(req.body);
   // Validar
   if (!isValid) {
-    return res.status(400).json(errors);
+    return res.status(400).json(error);
   }
   const email = req.body.email;
   const password = req.body.password;
@@ -51,7 +51,7 @@ module.exports.loguearUsuarios = (req, res) => {
   Usuarios.findOne({ email }).then(user => {
     // Chequear si el usuario existe
     if (!user) {
-      return res.status(404).json({ emailnotfound: "Email no encontrado" });
+      return res.status(404).json({ message: "Email no encontrado" });
     }
   // Validar password
     bcrypt.compare(password, user.password).then(isMatch => {
@@ -62,7 +62,7 @@ module.exports.loguearUsuarios = (req, res) => {
           id: user.id,
           name: user.name
         };
-    // Crear token
+        // Crear token
         jwt.sign(
           payload,
           keys.secretOrKey,
@@ -79,7 +79,7 @@ module.exports.loguearUsuarios = (req, res) => {
       } else {
         return res
           .status(400)
-          .json({ passwordincorrect: "Password incorrecto" });
+          .json({ message: "Password incorrecto" });
       }
     });
   });

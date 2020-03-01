@@ -1,5 +1,8 @@
 import React from'react'
 import { Link } from 'react-router'
+import axios from 'axios'
+import { setToken } from "./js/setAuthToken.js"
+import jwt_decode from "jwt-decode"
 
 export default class Login extends React.Component {
   constructor() {
@@ -9,6 +12,7 @@ export default class Login extends React.Component {
       password: "",
       errorEmail: false,
       errorPassword: false,
+      pending: false,
       error: ""
     }
     this.handleOnChange = this.handleOnChange.bind(this)
@@ -25,10 +29,62 @@ export default class Login extends React.Component {
         errorEmail: false
       })
     }
+    if(event.target.name === "password"){
+      this.setState({
+        errorPassword: false
+      })
+    }
   }
 
   onLogin(){
-    console.log("Login")
+    if(!this.state.email){
+      this.setState({
+        errorEmail: true
+      })
+    }
+    if(!this.state.password){
+      this.setState({
+        errorPassword: true
+      })
+    }
+    if(
+      this.state.email &&
+      this.state.password
+    ){
+      this.loguearUsuario()
+    }
+  }
+
+  loguearUsuario(){
+    const userData = {
+      email: this.state.email,
+      password: this.state.password
+    }
+    this.setState({
+      pending: true,
+      error: ""
+    })
+    axios
+      .post("/api/loguear-usuario", userData)
+      .then(res=>{
+        //Guardar el token en el localStorage
+        const { token } = res.data;
+        localStorage.setItem("jwtToken", token);
+        // Set token to Auth header
+        setToken(token);
+        // Decode token to get user data
+        const decoded = jwt_decode(token);
+        // Set current user
+        localStorage.setItem("currentUser", decoded);
+        // Voy al home
+        window.location.href = "./home"
+      })
+      .catch(err=>{
+        this.setState({
+          pending: false,
+          error: "Usuario o password incorrecto"//err.message
+        })
+      })
   }
 
   render() {
@@ -69,6 +125,26 @@ export default class Login extends React.Component {
                   onClick={()=>this.onLogin()}
                   >Iniciar Sesión</button>
               </div>
+              {/* Spinner */}
+              {
+                this.state.pending ? (
+                  <div className="col-12 form-group text-center mt-2 pt-2 boton-guardar">
+                    <div className="spinner-border text-light" role="status">
+                      <span className="sr-only">Loading...</span>
+                    </div>
+                  </div>
+                ) : (
+                  this.state.error ? (
+                    //Mensaje de error
+                    <div className="col-12 form-group text-center mt-2 pt-2 boton-guardar">
+                      <div className="alert alert-dismissible alert-danger">
+                        <button type="button" className="close" data-dismiss="alert">&times;</button>
+                        <strong>Error!</strong> {this.state.error}
+                      </div>
+                    </div>
+                  ) : (null)
+                )
+              }
             </div>
           </div>
         </div>

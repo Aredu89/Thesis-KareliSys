@@ -1,5 +1,6 @@
 import React from'react'
 import { Link } from 'react-router'
+import { setToken } from "./js/setAuthToken.js"
 import 'whatwg-fetch'
 
 export default class Header extends React.Component {
@@ -8,6 +9,17 @@ export default class Header extends React.Component {
     this.state = {
 
     }
+  }
+
+  logOut(){
+    // Remove token from local storage
+    localStorage.removeItem("jwtToken");
+    // Remove auth header for future requests
+    setToken(false);
+    // Set current user to empty object {} which will set isAuthenticated to false
+    localStorage.removeItem("currentUser");
+    // voy al login
+    this.props.history.push("/login")
   }
 
   render() {
@@ -54,7 +66,8 @@ export default class Header extends React.Component {
                 <div className="dropdown-menu">
                   <a className="dropdown-item" href="#">Opciones de Usuario</a>
                   <div className="dropdown-divider"></div>
-                  <a className="logout dropdown-item" href="#">Cerrar Sesión</a>
+                  <span className="logout dropdown-item" 
+                    onClick={()=>{this.logOut()}}>Cerrar Sesión</span>
                 </div>
               </div>
               <div className="profile-image"><span>A</span></div>
