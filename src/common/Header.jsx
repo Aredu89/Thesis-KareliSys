@@ -7,8 +7,14 @@ export default class Header extends React.Component {
   constructor() {
     super()
     this.state = {
-
+      userName: ""
     }
+  }
+
+  componentDidMount(){
+    this.setState({
+      userName: localStorage.getItem("userName")
+    })
   }
 
   logOut(){
@@ -53,7 +59,7 @@ export default class Header extends React.Component {
                 <Link className="nav-link" to="/stock">Stock</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/">Usuarios</Link>
+                <Link className="nav-link" to="/usuarios">Usuarios</Link>
               </li>
             </ul>
             <div className="form-inline my-2 my-lg-0">
@@ -62,7 +68,19 @@ export default class Header extends React.Component {
                   data-toggle="dropdown" 
                   href="#" role="button" 
                   aria-haspopup="true" 
-                  aria-expanded="false">Ariel Rosales</a>
+                  aria-expanded="false">
+                    {
+                      this.state.userName ?
+                        <span>
+                          {this.state.userName}
+                        </span>
+                      :
+                        // Spinner
+                        <div className="spinner-border text-light" role="status">
+                          <span className="sr-only">Loading...</span>
+                        </div>
+                    }
+                  </a>
                 <div className="dropdown-menu">
                   <a className="dropdown-item" href="#">Opciones de Usuario</a>
                   <div className="dropdown-divider"></div>

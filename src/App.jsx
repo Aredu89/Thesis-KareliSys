@@ -17,6 +17,7 @@ import ClientesEditar from './clientes/ClientesEditar.jsx'
 import ClientesPagos from './clientes/ClientesPagos.jsx'
 import StockLista from './stock/StockLista.jsx'
 import StockEditar from './stock/StockEditar.jsx'
+import UsuariosLista from './usuarios/UsuariosLista.jsx'
 
 const contentNode = document.getElementById('contents')
 const noMatch = () => <p>Page Not Found</p>
@@ -28,6 +29,7 @@ if (localStorage.jwtToken) {
   setToken(token);
   // Decode token and get user info and exp
   const decoded = jwt_decode(token);
+  console.log("user: ",decoded)
   // Set current user
   localStorage.setItem("currentUser", decoded);
 // Check for expired token
@@ -66,6 +68,7 @@ const RoutedApp = () => {
         <Route path="stock" component={StockLista} />
         <Route path="stock/editar" component={StockEditar} />
         <Route path="stock/editar/:id" component={StockEditar} />
+        <Route path="usuarios" component={UsuariosLista} />
         <Route path="*" component={noMatch} />
       </Route>
       ) : (

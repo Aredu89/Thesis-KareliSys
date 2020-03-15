@@ -76,6 +76,7 @@ export default class Login extends React.Component {
         const decoded = jwt_decode(token);
         // Set current user
         localStorage.setItem("currentUser", decoded);
+        localStorage.setItem("userName", res.data.user.name);
         // Voy al home
         window.location.href = "./home"
       })

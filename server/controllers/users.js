@@ -72,7 +72,8 @@ module.exports.loguearUsuarios = (req, res) => {
           (err, token) => {
             res.json({
               success: true,
-              token: "Bearer " + token
+              token: "Bearer " + token,
+              user: user
             });
           }
         );
