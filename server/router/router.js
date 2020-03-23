@@ -31,7 +31,10 @@ router.post('/stock', stock.crearStock)
 router.delete('/stock/:id', stock.eliminarStock)
 
 //usuarios
+router.get('/usuarios', usuarios.listaUsuarios)
+router.get('/usuarios/:id', usuarios.getUsuario)
 router.post('/registrar-usuario', usuarios.registrarUsuarios)
 router.post('/loguear-usuario', usuarios.loguearUsuarios)
+router.delete('/usuarios/:id', usuarios.eliminarUsuario)
 
 module.exports = router

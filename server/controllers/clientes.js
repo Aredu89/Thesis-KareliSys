@@ -52,7 +52,7 @@ module.exports.getIngresosMes = (req, res) => {
     })
 }
 
-//Obtengo una fabrica
+//Obtengo un cliente
 module.exports.getCliente = (req, res) => {
   //Controlamos que el id de la fabrica esté en el parámetro
   if (req.params && req.params.id) {
@@ -75,7 +75,7 @@ module.exports.getCliente = (req, res) => {
   }
 }
 
-//Crear una fabrica
+//Crear un cliente
 module.exports.crearCliente = (req, res) => {
   const auxBody = req.body
   let newCliente = {}
@@ -118,7 +118,7 @@ module.exports.crearCliente = (req, res) => {
     })
 }
 
-//Modificar una fabrica
+//Modificar un cliente
 module.exports.modificarCliente = (req,res) => {
   if (!req.params.id) {
     res.status(404).json({ message: "Se requiere el id del cliente"})
@@ -177,7 +177,7 @@ module.exports.modificarCliente = (req,res) => {
     )
 }
 
-//Eliminar una fabrica
+//Eliminar un cliente
 module.exports.eliminarCliente = (req,res) => {
   if (!req.params.id) {
     res.status(404).json({ message: "Se requiere el id del cliente"})

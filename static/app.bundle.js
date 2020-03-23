@@ -30547,6 +30547,12 @@
 	  return `$${formatter.format(number)}`
 	}
 	
+	//Devolver Si o No con Booleano
+	module.exports.booleanFormatter = bool => {
+	  const resultado = bool ? 'Si' : 'No'
+	  return resultado
+	}
+	
 	// Obtener la deuda de una fábrica o un cliente
 	// Parámetro: objeto - fábrica o cliente
 	module.exports.getDeuda = data => {
@@ -34419,7 +34425,7 @@
 	    // Props:
 	    // columns: Array de arrays con la siguiente estructura
 	    // [ ["Titulo de la columna","clave del objeto data","tipo"] ] 
-	    // El tipo puede ser: "String, Largo, Largo pendiente, Fecha, Money"
+	    // El tipo puede ser: "String, Largo, Largo pendiente, Fecha, Money, Boolean (Muetra si / no )"
 	    // data: Array de objetos con los datos para completar la tabla
 	    // ---------- botones -------------
 	    // handleEditar: función para el botón editar. Parametro: _id
@@ -34511,6 +34517,12 @@
 	                      'td',
 	                      { key: i },
 	                      _javascriptFunctions2.default.moneyFormatter(data[col[1]])
+	                    );
+	                  } else if (col[2] === "Boolean") {
+	                    return _react2.default.createElement(
+	                      'td',
+	                      { key: i },
+	                      _javascriptFunctions2.default.booleanFormatter(data[col[1]])
 	                    );
 	                  } else {
 	                    return _react2.default.createElement(
@@ -53880,17 +53892,178 @@
 	      cargando: true,
 	      error: ""
 	    };
-	
+	    _this.cargarUsuarios = _this.cargarUsuarios.bind(_this);
 	    return _this;
 	  }
 	
 	  _createClass(UsuariosLista, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.cargarUsuarios();
+	    }
+	  }, {
+	    key: 'cargarUsuarios',
+	    value: function cargarUsuarios() {
+	      var _this2 = this;
+	
+	      fetch('/api/usuarios').then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            console.log("Lista Usuarios: ", data);
+	            _this2.setState({
+	              cargando: false,
+	              usuarios: data,
+	              error: ""
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener la lista. ", error.message);
+	            _this2.setState({
+	              cargando: false,
+	              error: error.message
+	            });
+	          });
+	        }
+	      }).catch(function (error) {
+	        _this2.setState({
+	          cargando: false,
+	          error: error.message
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'onClickAgregar',
+	    value: function onClickAgregar() {}
+	  }, {
+	    key: 'handleEditar',
+	    value: function handleEditar() {}
+	  }, {
+	    key: 'handleEliminar',
+	    value: function handleEliminar() {
+	      var _this3 = this;
+	
+	      //Primero pido confirmación
+	      _sweetalert2.default.fire({
+	        title: "¿Seguro que desea eliminar?",
+	        text: "Esta acción no se puede revertir",
+	        icon: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#3085d6",
+	        cancelButtonColor: "#d33",
+	        confirmButtonText: "Si, eliminar"
+	      }).then(function (result) {
+	        if (result.value) {
+	          //Elimino
+	          fetch('/api/usuarios/' + id, {
+	            method: 'DELETE',
+	            headers: { 'Content-Type': 'application/json' }
+	          }).then(function (res) {
+	            if (res.ok) {
+	              _sweetalert2.default.fire("Usuario Eliminado", "", "success").then(function () {
+	                _this3.actualizarLista(id);
+	              });
+	            } else {
+	              _sweetalert2.default.fire("Error al eliminar", "", "error");
+	            }
+	          }).catch(function (err) {
+	            _sweetalert2.default.fire("Error del servidor", err.message, "error");
+	          });
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'actualizarLista',
+	    value: function actualizarLista(id) {
+	      var _this4 = this;
+	
+	      var auxUsuarios = this.state.usuarios;
+	      // Quito la fabricas eliminada de la lista del state
+	      auxUsuarios.forEach(function (usuario, i) {
+	        if (id === usuario._id) {
+	          auxUsuarios.splice(i, 1);
+	          _this4.setState({
+	            usuarios: auxUsuarios
+	          });
+	          return;
+	        }
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this5 = this;
+	
+	      var columns = [["Nombre de Usuario", "name", "String"], ["Email", "email", "String"], ["Permisos", "permits", "Boolean"]];
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'usuarios-lista' },
-	        'Lista de Usuarios'
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 d-flex justify-content-between' },
+	            _react2.default.createElement(
+	              'h3',
+	              null,
+	              'Usuarios'
+	            ),
+	            _react2.default.createElement(
+	              'button',
+	              { type: 'button',
+	                className: 'btn btn-success',
+	                onClick: function onClick() {
+	                  return _this5.onClickAgregar();
+	                }
+	              },
+	              '+ Agregar Usuario'
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 text-center pt-3' },
+	            !this.state.cargando ?
+	            // Tabla
+	            _react2.default.createElement(_TablaFlexible2.default, {
+	              columns: columns,
+	              data: this.state.usuarios,
+	              handleEditar: this.handleEditar,
+	              handleEliminar: this.handleEliminar
+	            }) : this.state.error ?
+	            //Mensaje de error
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'alert alert-dismissible alert-danger' },
+	              _react2.default.createElement(
+	                'button',
+	                { type: 'button', className: 'close', 'data-dismiss': 'alert' },
+	                '\xD7'
+	              ),
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Error!'
+	              ),
+	              ' ',
+	              this.state.error
+	            ) :
+	            // Spinner
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'spinner-border text-light', role: 'status' },
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'sr-only' },
+	                'Loading...'
+	              )
+	            )
+	          )
+	        )
 	      );
 	    }
 	  }]);

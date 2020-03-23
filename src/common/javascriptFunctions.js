@@ -13,6 +13,12 @@ module.exports.moneyFormatter = number => {
   return `$${formatter.format(number)}`
 }
 
+//Devolver Si o No con Booleano
+module.exports.booleanFormatter = bool => {
+  const resultado = bool ? 'Si' : 'No'
+  return resultado
+}
+
 // Obtener la deuda de una fábrica o un cliente
 // Parámetro: objeto - fábrica o cliente
 module.exports.getDeuda = data => {

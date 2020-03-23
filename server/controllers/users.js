@@ -7,6 +7,104 @@ const keys = require("../config/keys")
 const validateRegisterInput = require("../validation/register")
 const validateLoginInput = require("../validation/login")
 
+module.exports.listaUsuarios = (req, res) => {
+  Usuarios
+    .find({})
+    .exec((err, results, status) => {
+      if(!results || results.length < 1){
+        res.status(404).json({ message: "No se encontraron usuarios"})
+      } else if (err) {
+        res.status(404).json(err)
+      } else {
+        res.status(200).json(results)
+      }
+    })
+}
+
+//Obtengo un usuario
+module.exports.getUsuario = (req, res) => {
+  //Controlamos que el id de la fabrica esté en el parámetro
+  if (req.params && req.params.id) {
+    Usuarios
+      .findById(req.params.id)
+      .exec((err, usuario) => {
+        //Si el id específico no existe en la BD
+        if (!usuario) {
+          res.status(404).json({ message: "Id de usuario no encontrado"})
+        //Si la BD devuelve un error
+        } else if (err) {
+          res.status(404).json(err)
+        } else {
+            //Se devuelve el documento encontrado
+            res.status(200).json(usuario)
+        }
+    })
+  } else {
+    res.status(404).json({ message: "No se envió el id como parámetro"})
+  }
+}
+
+//Modificar un usuario
+module.exports.modificarUsuario = (req,res) => {
+  if (!req.params.id) {
+    res.status(404).json({ message: "Se requiere el id del usuario"})
+    return
+  }
+  const auxUsuario = req.body
+  Usuarios
+    .findById(req.params.id)
+    .select('-creada')
+    .exec(
+      (err,usuario) => {
+        if (!usuario) {
+          res.status(404).json({ message: "No se encontró el id del usuario"})
+          return
+        } else if (err) {
+          res.status(404).json(err)
+          return
+        }
+        //Si no hay error, reemplazo con los datos del body
+        usuario.name = auxUsuario.name
+        usuario.email = auxUsuario.email
+        usuario.password = auxUsuario.password
+        usuario.permits = auxUsuario.permits
+        // Hash password antes de guardar en la base de datos
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(usuario.password, salt, (err, hash) => {
+            if (err) throw err
+            usuario.password = hash
+            usuario.save((err, usuario) => {
+              if (err) {
+                res.status(404).json(err)
+              } else {
+                res.status(201).json(usuario)
+              }
+            })
+          })
+        })
+      }
+    )
+}
+
+//Eliminar un usuario
+module.exports.eliminarUsuario = (req,res) => {
+  if (!req.params.id) {
+    res.status(404).json({ message: "Se requiere el id del usuario"})
+    return
+  }
+  Usuarios
+    .findByIdAndRemove(req.params.id)
+    .exec(
+      (err, usuario) => {
+        if(err){
+          res.status(404).json(err)
+        } else {
+          res.status(204).json(null)
+        }
+      }
+    )
+}
+
 module.exports.registrarUsuarios = (req, res) => {
   // Form validation
   const { errors, isValid } = validateRegisterInput(req.body)
@@ -22,9 +120,10 @@ module.exports.registrarUsuarios = (req, res) => {
       const newUser = new Usuarios({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        permits: false
       })
-  // Hash password antes de guardar en la base de datos
+      // Hash password antes de guardar en la base de datos
       bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(newUser.password, salt, (err, hash) => {
           if (err) throw err;

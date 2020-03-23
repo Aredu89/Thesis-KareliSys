@@ -16,6 +16,11 @@ const usuarios = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now
+  },
+  permits: {
+    type: Boolean,
+    required: false,
+    default: false
   }
 })
 
