@@ -114,6 +114,10 @@
 	
 	var _UsuariosLista2 = _interopRequireDefault(_UsuariosLista);
 	
+	var _UsuariosEditar = __webpack_require__(326);
+	
+	var _UsuariosEditar2 = _interopRequireDefault(_UsuariosEditar);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var contentNode = document.getElementById('contents');
@@ -174,6 +178,8 @@
 	      _react2.default.createElement(_reactRouter.Route, { path: 'stock/editar', component: _StockEditar2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'stock/editar/:id', component: _StockEditar2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios', component: _UsuariosLista2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios/editar', component: _UsuariosEditar2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios/editar/:id', component: _UsuariosEditar2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '*', component: noMatch })
 	    ) : _react2.default.createElement(_reactRouter.Redirect, { from: '/*', to: '/login' })
 	  );
@@ -53934,10 +53940,14 @@
 	    }
 	  }, {
 	    key: 'onClickAgregar',
-	    value: function onClickAgregar() {}
+	    value: function onClickAgregar() {
+	      this.props.history.push("/usuarios/editar/");
+	    }
 	  }, {
 	    key: 'handleEditar',
-	    value: function handleEditar() {}
+	    value: function handleEditar(id) {
+	      this.props.history.push('/usuarios/editar/' + id);
+	    }
 	  }, {
 	    key: 'handleEliminar',
 	    value: function handleEliminar() {
@@ -54072,6 +54082,245 @@
 	}(_react2.default.Component);
 	
 	exports.default = UsuariosLista;
+
+/***/ },
+/* 326 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _sweetalert = __webpack_require__(284);
+	
+	var _sweetalert2 = _interopRequireDefault(_sweetalert);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	//https://github.com/sweetalert2/sweetalert2
+	
+	var UsuariosEditar = function (_React$Component) {
+	  _inherits(UsuariosEditar, _React$Component);
+	
+	  function UsuariosEditar() {
+	    _classCallCheck(this, UsuariosEditar);
+	
+	    var _this = _possibleConstructorReturn(this, (UsuariosEditar.__proto__ || Object.getPrototypeOf(UsuariosEditar)).call(this));
+	
+	    _this.state = {
+	      nuevo: true,
+	      cargando: false, // Cambiar
+	      error: "",
+	      _id: "",
+	      //Campos del formulario
+	      name: "",
+	      email: "",
+	      password: "",
+	      password2: "",
+	      errorName: false,
+	      errorEmail: false,
+	      errorPassword: false,
+	      errorPassword2: false,
+	      permits: false
+	    };
+	    _this.handleOnChange = _this.handleOnChange.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(UsuariosEditar, [{
+	    key: 'onClickGuardar',
+	    value: function onClickGuardar() {}
+	
+	    //Manejo de cambios en el formulario
+	
+	  }, {
+	    key: 'handleOnChange',
+	    value: function handleOnChange(event) {
+	      if (event.target.type === "checkbox") {
+	        this.setState(_defineProperty({}, event.target.name, event.target.checked));
+	      } else {
+	        this.setState(_defineProperty({}, event.target.name, event.target.value));
+	      }
+	      //Quito el error del campo obligatorio
+	      if (event.target.name === "name") {
+	        this.setState({
+	          errorName: false
+	        });
+	      }
+	      if (event.target.name === "email") {
+	        this.setState({
+	          errorEmail: false
+	        });
+	      }
+	      if (event.target.name === "password") {
+	        this.setState({
+	          errorPassword: false
+	        });
+	      }
+	      if (event.target.name === "password2") {
+	        this.setState({
+	          errorPassword2: false
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'usuarios-editar text-center' },
+	        !this.state.cargando ? _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 d-flex justify-content-between' },
+	              this.state.nuevo ? _react2.default.createElement(
+	                'h3',
+	                null,
+	                'Crear Usuario'
+	              ) : _react2.default.createElement(
+	                'h3',
+	                null,
+	                'Modificar usuario: ',
+	                this.state.name
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                  'button',
+	                  { type: 'button',
+	                    className: 'btn btn-success',
+	                    onClick: function onClick() {
+	                      return _this2.onClickGuardar();
+	                    }
+	                  },
+	                  '+ Guardar'
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row pt-3 text-center' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 d-flex justify-content-between' },
+	              _react2.default.createElement(
+	                'span',
+	                null,
+	                '\xBFPermisos para utilizar el sistema?'
+	              ),
+	              _react2.default.createElement('input', {
+	                type: 'checkbox',
+	                className: 'form-control',
+	                id: 'permits',
+	                name: 'permits',
+	                checked: this.state.permits,
+	                onChange: this.handleOnChange
+	              })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Nombre de usuario'
+	              ),
+	              _react2.default.createElement('input', { type: 'text',
+	                className: this.state.errorName ? "form-control is-invalid" : "form-control",
+	                id: 'name',
+	                name: 'name',
+	                placeholder: 'Nombre de Usuario...',
+	                value: this.state.name,
+	                onChange: this.handleOnChange }),
+	              this.state.errorNombre ? _react2.default.createElement(
+	                'div',
+	                { className: 'invalid-feedback' },
+	                'El nombre de usuario es requerido'
+	              ) : null
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Email'
+	              ),
+	              _react2.default.createElement('input', { type: 'text',
+	                className: this.state.errorEmail ? "form-control is-invalid" : "form-control",
+	                id: 'email',
+	                name: 'email',
+	                placeholder: 'Email...',
+	                value: this.state.email,
+	                onChange: this.handleOnChange }),
+	              this.state.errorNombre ? _react2.default.createElement(
+	                'div',
+	                { className: 'invalid-feedback' },
+	                'El email es requerido'
+	              ) : null
+	            )
+	          )
+	        ) : this.state.error ?
+	        //Mensaje de error
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'alert alert-dismissible alert-danger' },
+	          _react2.default.createElement(
+	            'button',
+	            { type: 'button', className: 'close', 'data-dismiss': 'alert' },
+	            '\xD7'
+	          ),
+	          _react2.default.createElement(
+	            'strong',
+	            null,
+	            'Error!'
+	          ),
+	          ' ',
+	          this.state.error
+	        ) :
+	        // Spinner
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'spinner-border text-light', role: 'status' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'sr-only' },
+	            'Loading...'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return UsuariosEditar;
+	}(_react2.default.Component);
+	
+	exports.default = UsuariosEditar;
 
 /***/ }
 /******/ ]);

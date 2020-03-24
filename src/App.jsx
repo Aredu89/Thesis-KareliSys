@@ -18,6 +18,7 @@ import ClientesPagos from './clientes/ClientesPagos.jsx'
 import StockLista from './stock/StockLista.jsx'
 import StockEditar from './stock/StockEditar.jsx'
 import UsuariosLista from './usuarios/UsuariosLista.jsx'
+import UsuariosEditar from './usuarios/UsuariosEditar.jsx'
 
 const contentNode = document.getElementById('contents')
 const noMatch = () => <p>Page Not Found</p>
@@ -69,6 +70,8 @@ const RoutedApp = () => {
         <Route path="stock/editar" component={StockEditar} />
         <Route path="stock/editar/:id" component={StockEditar} />
         <Route path="usuarios" component={UsuariosLista} />
+        <Route path="usuarios/editar" component={UsuariosEditar} />
+        <Route path="usuarios/editar/:id" component={UsuariosEditar} />
         <Route path="*" component={noMatch} />
       </Route>
       ) : (

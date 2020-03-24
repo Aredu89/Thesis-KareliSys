@@ -51,11 +51,11 @@ export default class UsuariosLista extends React.Component {
   }
 
   onClickAgregar(){
-
+    this.props.history.push("/usuarios/editar/")
   }
 
-  handleEditar(){
-
+  handleEditar(id){
+    this.props.history.push(`/usuarios/editar/${id}`)
   }
 
   handleEliminar(){
