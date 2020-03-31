@@ -161,3 +161,16 @@
   transform: rotate(180deg);
   transition-duration: 0.25s;
 }
+/* Estilos editar usuario */
+.usuarios-editar .checkbox-permits:focus, .checkbox-permits.focus{
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+.usuarios-editar .contenedor-permisos{
+  padding: 10px;
+  border: solid 1px #DF691A;
+}
+.usuarios-editar .checkbox-permits{
+  height: 30px;
+}

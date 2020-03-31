@@ -12,6 +12,8 @@ export default class UsuariosLista extends React.Component {
       error: ""
     }
     this.cargarUsuarios = this.cargarUsuarios.bind(this)
+    this.handleEditar = this.handleEditar.bind(this)
+    this.quitarDeLaLista = this.quitarDeLaLista.bind(this)
   }
 
   componentDidMount(){
@@ -58,7 +60,7 @@ export default class UsuariosLista extends React.Component {
     this.props.history.push(`/usuarios/editar/${id}`)
   }
 
-  handleEliminar(){
+  handleEliminar(id){
     //Primero pido confirmación
     Swal.fire({
       title: "¿Seguro que desea eliminar?",
@@ -82,7 +84,7 @@ export default class UsuariosLista extends React.Component {
                   "",
                   "success"
                 ).then(()=>{
-                  this.actualizarLista(id)
+                  this.quitarDeLaLista(id)
                 })
             } else {
                 Swal.fire(
@@ -103,7 +105,7 @@ export default class UsuariosLista extends React.Component {
     })
   }
 
-  actualizarLista(id){
+  quitarDeLaLista(id){
     let auxUsuarios = this.state.usuarios
     // Quito la fabricas eliminada de la lista del state
     auxUsuarios.forEach((usuario,i)=>{

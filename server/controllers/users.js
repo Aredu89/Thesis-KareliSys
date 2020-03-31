@@ -115,7 +115,7 @@ module.exports.registrarUsuarios = (req, res) => {
   }
   Usuarios.findOne({ email: req.body.email }).then(user => {
     if (user) {
-      return res.status(400).json({ email: "Ya existe una cuenta con ese Email" })
+      return res.status(400).json({ message: "Ya existe una cuenta con ese Email" })
     } else {
       const newUser = new Usuarios({
         name: req.body.name,

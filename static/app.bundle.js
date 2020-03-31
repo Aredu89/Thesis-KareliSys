@@ -53899,6 +53899,8 @@
 	      error: ""
 	    };
 	    _this.cargarUsuarios = _this.cargarUsuarios.bind(_this);
+	    _this.handleEditar = _this.handleEditar.bind(_this);
+	    _this.quitarDeLaLista = _this.quitarDeLaLista.bind(_this);
 	    return _this;
 	  }
 	
@@ -53950,7 +53952,7 @@
 	    }
 	  }, {
 	    key: 'handleEliminar',
-	    value: function handleEliminar() {
+	    value: function handleEliminar(id) {
 	      var _this3 = this;
 	
 	      //Primero pido confirmación
@@ -53971,7 +53973,7 @@
 	          }).then(function (res) {
 	            if (res.ok) {
 	              _sweetalert2.default.fire("Usuario Eliminado", "", "success").then(function () {
-	                _this3.actualizarLista(id);
+	                _this3.quitarDeLaLista(id);
 	              });
 	            } else {
 	              _sweetalert2.default.fire("Error al eliminar", "", "error");
@@ -53983,8 +53985,8 @@
 	      });
 	    }
 	  }, {
-	    key: 'actualizarLista',
-	    value: function actualizarLista(id) {
+	    key: 'quitarDeLaLista',
+	    value: function quitarDeLaLista(id) {
 	      var _this4 = this;
 	
 	      var auxUsuarios = this.state.usuarios;
@@ -54103,6 +54105,10 @@
 	
 	var _sweetalert2 = _interopRequireDefault(_sweetalert);
 	
+	var _axios = __webpack_require__(252);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -54111,9 +54117,8 @@
 	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //https://github.com/sweetalert2/sweetalert2
 	
-	//https://github.com/sweetalert2/sweetalert2
 	
 	var UsuariosEditar = function (_React$Component) {
 	  _inherits(UsuariosEditar, _React$Component);
@@ -54126,6 +54131,7 @@
 	    _this.state = {
 	      nuevo: true,
 	      cargando: false, // Cambiar
+	      pendingGuardar: false,
 	      error: "",
 	      _id: "",
 	      //Campos del formulario
@@ -54145,7 +54151,71 @@
 	
 	  _createClass(UsuariosEditar, [{
 	    key: 'onClickGuardar',
-	    value: function onClickGuardar() {}
+	    value: function onClickGuardar() {
+	      if (!this.state.name) {
+	        this.setState({
+	          errorName: true
+	        });
+	      }
+	      if (!this.state.email) {
+	        this.setState({
+	          errorEmail: true
+	        });
+	      }
+	      if (!this.state.password) {
+	        this.setState({
+	          errorPassword: true
+	        });
+	      }
+	      if (!this.state.password2) {
+	        this.setState({
+	          errorPassword2: true
+	        });
+	      }
+	      if (this.state.password !== this.state.password2) {
+	        this.setState({
+	          errorPassword2: true
+	        });
+	      }
+	      if (this.state.name && this.state.email && this.state.password && this.state.password2 && this.state.password === this.state.password2) {
+	        if (this.state.nuevo) {
+	          // Se crea un nuevo usuario
+	          this.crearUsuario();
+	        } else {
+	          // Se modifica el usuario
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'crearUsuario',
+	    value: function crearUsuario() {
+	      var _this2 = this;
+	
+	      var userData = {
+	        name: this.state.name,
+	        email: this.state.email,
+	        password: this.state.password,
+	        password2: this.state.password2,
+	        permits: this.state.permits
+	      };
+	      this.setState({
+	        pendingGuardar: true
+	      });
+	      _axios2.default.post("/api/registrar-usuario", userData).then(function (res) {
+	        _this2.setState({
+	          pendingGuardar: false
+	        });
+	        _sweetalert2.default.fire("Usuario registrado", "", "success").then(function () {
+	          _this2.props.history.push("/usuarios"); // se redirecciona a la lista
+	        });
+	      }).catch(function (err) {
+	        _this2.setState({
+	          pendingGuardar: false
+	        });
+	        console.log("Error: ", err);
+	        _sweetalert2.default.fire("Error al registrar usuario", err.message, "error");
+	      });
+	    }
 	
 	    //Manejo de cambios en el formulario
 	
@@ -54182,7 +54252,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      return _react2.default.createElement(
 	        'div',
@@ -54214,10 +54284,20 @@
 	                  { type: 'button',
 	                    className: 'btn btn-success',
 	                    onClick: function onClick() {
-	                      return _this2.onClickGuardar();
+	                      return _this3.onClickGuardar();
 	                    }
 	                  },
-	                  '+ Guardar'
+	                  this.state.pendingGuardar ?
+	                  // Spinner
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'spinner-border text-light', role: 'status' },
+	                    _react2.default.createElement(
+	                      'span',
+	                      { className: 'sr-only' },
+	                      'Loading...'
+	                    )
+	                  ) : "+ Guardar"
 	                )
 	              )
 	            )
@@ -54227,20 +54307,24 @@
 	            { className: 'row pt-3 text-center' },
 	            _react2.default.createElement(
 	              'div',
-	              { className: 'col-12 d-flex justify-content-between' },
+	              { className: 'col-12' },
 	              _react2.default.createElement(
-	                'span',
-	                null,
-	                '\xBFPermisos para utilizar el sistema?'
-	              ),
-	              _react2.default.createElement('input', {
-	                type: 'checkbox',
-	                className: 'form-control',
-	                id: 'permits',
-	                name: 'permits',
-	                checked: this.state.permits,
-	                onChange: this.handleOnChange
-	              })
+	                'div',
+	                { className: 'col-12 d-flex justify-content-between align-items-center contenedor-permisos mb-3' },
+	                _react2.default.createElement(
+	                  'span',
+	                  { className: 'col-6' },
+	                  '\xBFPermisos para utilizar el sistema?'
+	                ),
+	                _react2.default.createElement('input', {
+	                  type: 'checkbox',
+	                  className: 'col-6 form-control checkbox-permits',
+	                  id: 'permits',
+	                  name: 'permits',
+	                  checked: this.state.permits,
+	                  onChange: this.handleOnChange
+	                })
+	              )
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -54257,7 +54341,7 @@
 	                placeholder: 'Nombre de Usuario...',
 	                value: this.state.name,
 	                onChange: this.handleOnChange }),
-	              this.state.errorNombre ? _react2.default.createElement(
+	              this.state.errorName ? _react2.default.createElement(
 	                'div',
 	                { className: 'invalid-feedback' },
 	                'El nombre de usuario es requerido'
@@ -54278,10 +54362,52 @@
 	                placeholder: 'Email...',
 	                value: this.state.email,
 	                onChange: this.handleOnChange }),
-	              this.state.errorNombre ? _react2.default.createElement(
+	              this.state.errorEmail ? _react2.default.createElement(
 	                'div',
 	                { className: 'invalid-feedback' },
 	                'El email es requerido'
+	              ) : null
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Password'
+	              ),
+	              _react2.default.createElement('input', { type: 'password',
+	                className: this.state.errorPassword ? "form-control is-invalid" : "form-control",
+	                id: 'password',
+	                name: 'password',
+	                placeholder: 'Password...',
+	                value: this.state.password,
+	                onChange: this.handleOnChange }),
+	              this.state.errorPassword ? _react2.default.createElement(
+	                'div',
+	                { className: 'invalid-feedback' },
+	                'El password es requerido'
+	              ) : null
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                null,
+	                'Confirme el password'
+	              ),
+	              _react2.default.createElement('input', { type: 'password',
+	                className: this.state.errorPassword2 ? "form-control is-invalid" : "form-control",
+	                id: 'password2',
+	                name: 'password2',
+	                placeholder: 'Confirme el password...',
+	                value: this.state.password2,
+	                onChange: this.handleOnChange }),
+	              this.state.errorPassword2 ? _react2.default.createElement(
+	                'div',
+	                { className: 'invalid-feedback' },
+	                'El password debe coincidir'
 	              ) : null
 	            )
 	          )

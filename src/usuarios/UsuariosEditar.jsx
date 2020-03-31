@@ -1,5 +1,6 @@
 import React from 'react'
 import Swal from 'sweetalert2' //https://github.com/sweetalert2/sweetalert2
+import axios from 'axios'
 
 export default class UsuariosEditar extends React.Component {
   constructor() {
@@ -7,6 +8,7 @@ export default class UsuariosEditar extends React.Component {
     this.state = {
       nuevo: true,
       cargando: false, // Cambiar
+      pendingGuardar: false,
       error: "",
       _id: "",
       //Campos del formulario
@@ -24,7 +26,84 @@ export default class UsuariosEditar extends React.Component {
   }
 
   onClickGuardar(){
+    if(!this.state.name){
+      this.setState({
+        errorName: true
+      })
+    }
+    if(!this.state.email){
+      this.setState({
+        errorEmail: true
+      })
+    }
+    if(!this.state.password){
+      this.setState({
+        errorPassword: true
+      })
+    }
+    if(!this.state.password2){
+      this.setState({
+        errorPassword2: true
+      })
+    }
+    if(this.state.password !== this.state.password2){
+      this.setState({
+        errorPassword2: true
+      })
+    }
+    if(
+      this.state.name &&
+      this.state.email &&
+      this.state.password &&
+      this.state.password2 &&
+      this.state.password === this.state.password2
+    ) {
+      if(this.state.nuevo){
+        // Se crea un nuevo usuario
+        this.crearUsuario()
+      } else {
+        // Se modifica el usuario
+      }
+    }
+  }
 
+  crearUsuario(){
+    const userData = {
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+      password2: this.state.password2,
+      permits: this.state.permits
+    }
+    this.setState({
+      pendingGuardar: true
+    })
+    axios
+      .post("/api/registrar-usuario", userData)
+      .then(res => {
+        this.setState({
+          pendingGuardar: false
+        })
+        Swal.fire(
+          "Usuario registrado",
+          "",
+          "success"
+        ).then(
+          ()=>{
+            this.props.history.push("/usuarios") // se redirecciona a la lista
+          })
+        })
+      .catch(err=>{
+        this.setState({
+          pendingGuardar: false
+        })
+        console.log("Error: ",err)
+        Swal.fire(
+          "Error al registrar usuario",
+          err.message,
+          "error"
+        )
+      })
   }
 
   //Manejo de cambios en el formulario
@@ -80,23 +159,30 @@ export default class UsuariosEditar extends React.Component {
                   <button type="button" 
                     className="btn btn-success"
                     onClick={() => this.onClickGuardar()}
-                    >+ Guardar</button>
+                  >{this.state.pendingGuardar ?
+                    // Spinner
+                    <div className="spinner-border text-light" role="status">
+                      <span className="sr-only">Loading...</span>
+                    </div>
+                   : "+ Guardar"}</button>
                 </div>
               </div>
             </div>
             {/* Formulario */}
             <div className="row pt-3 text-center">
               {/* Permisos */}
-              <div className="col-12 d-flex justify-content-between">
-                <span>¿Permisos para utilizar el sistema?</span>
-                <input 
-                  type="checkbox"
-                  className="form-control"
-                  id="permits"
-                  name="permits"
-                  checked={this.state.permits}
-                  onChange={this.handleOnChange}
-                />
+              <div className="col-12">
+                <div className="col-12 d-flex justify-content-between align-items-center contenedor-permisos mb-3">
+                  <span className="col-6">¿Permisos para utilizar el sistema?</span>
+                  <input 
+                    type="checkbox"
+                    className="col-6 form-control checkbox-permits"
+                    id="permits"
+                    name="permits"
+                    checked={this.state.permits}
+                    onChange={this.handleOnChange}
+                  />
+                </div>
               </div>
               {/* Nombre */}
               <div className="col-sm-6 col-12 form-group">
@@ -109,7 +195,7 @@ export default class UsuariosEditar extends React.Component {
                   value={this.state.name}
                   onChange={this.handleOnChange} />
                 {
-                  this.state.errorNombre ?
+                  this.state.errorName ?
                   <div className="invalid-feedback">El nombre de usuario es requerido</div>
                   : null
                 }
@@ -125,12 +211,43 @@ export default class UsuariosEditar extends React.Component {
                   value={this.state.email}
                   onChange={this.handleOnChange} />
                 {
-                  this.state.errorNombre ?
+                  this.state.errorEmail ?
                   <div className="invalid-feedback">El email es requerido</div>
                   : null
                 }
               </div>
-
+              {/* Password */}
+              <div className="col-sm-6 col-12 form-group">
+                <label>Password</label>
+                <input type="password" 
+                  className={this.state.errorPassword ? "form-control is-invalid" : "form-control"}
+                  id="password" 
+                  name="password"
+                  placeholder="Password..."
+                  value={this.state.password}
+                  onChange={this.handleOnChange} />
+                {
+                  this.state.errorPassword ?
+                  <div className="invalid-feedback">El password es requerido</div>
+                  : null
+                }
+              </div>
+              {/* Password 2 */}
+              <div className="col-sm-6 col-12 form-group">
+                <label>Confirme el password</label>
+                <input type="password" 
+                  className={this.state.errorPassword2 ? "form-control is-invalid" : "form-control"}
+                  id="password2" 
+                  name="password2"
+                  placeholder="Confirme el password..."
+                  value={this.state.password2}
+                  onChange={this.handleOnChange} />
+                {
+                  this.state.errorPassword2 ?
+                  <div className="invalid-feedback">El password debe coincidir</div>
+                  : null
+                }
+              </div>
             </div>
           </div>
           :
