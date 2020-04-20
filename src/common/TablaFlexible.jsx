@@ -64,7 +64,9 @@ export default class TablaFlexible extends React.Component {
                         return <td key={i}>{funciones.moneyFormatter(data[col[1]])}</td>
                       } else if(col[2] === "Boolean"){
                         return <td key={i}>{funciones.booleanFormatter(data[col[1]])}</td>
-                      }else {
+                      } else if(col[2] === "Deuda"){
+                        return <td key={i}>{funciones.moneyFormatter(funciones.getDeuda(data))}</td>
+                      } else {
                         return <td key={i}>{data[col[1]]}</td>
                       }
                     })

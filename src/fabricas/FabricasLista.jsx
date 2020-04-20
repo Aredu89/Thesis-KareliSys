@@ -138,7 +138,8 @@ export default class FabricasLista extends React.Component {
       ["Nombre","nombre","String"],
       ["Ciudad","ciudad","String"],
       ["Dirección","direccion","String"],
-      ["Pedidos pendientes","pedidos","Largo pendiente"]
+      ["Pedidos pendientes","pedidos","Largo pendiente"],
+      ["A pagar","","Deuda"]
     ]
     return (
       <div className="fabricas-lista">

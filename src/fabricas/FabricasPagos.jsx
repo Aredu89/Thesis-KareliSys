@@ -283,6 +283,7 @@ export default class FabricasPagos extends React.Component {
                   onSave={this.onSaveModal}
                   onClose={()=>this.onCloseModal("modalPagos")}
                   titulo={this.state.modalPedidosEditar ? "EDITAR PAGO" : "CARGAR PAGO"}
+                  deudaTotal={deuda}
                 />
             </Modal>
           </div>

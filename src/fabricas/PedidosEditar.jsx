@@ -19,6 +19,7 @@ export default class ContactosEditar extends React.Component {
       _id: "",
       fecha: "",
       detalle: [],
+      errorDetalle: false,
       precioTotal: "",
       errorPrecio: false,
       estado: estados[0].value,
@@ -72,7 +73,8 @@ export default class ContactosEditar extends React.Component {
         cantidad: this.state.cantidadProducto
       })
       this.setState({
-        detalle: productos
+        detalle: productos,
+        errorDetalle: false
       })
     } else {
       this.setState({
@@ -90,7 +92,7 @@ export default class ContactosEditar extends React.Component {
   }
 
   onSave(){
-    if(this.state.precioTotal > 0){
+    if(this.state.precioTotal > 0 && this.state.detalle.length > 0){
       this.props.onSave({
         _id: this.state._id,
         fecha: this.state.fecha ? this.state.fecha : new Date(),
@@ -100,9 +102,16 @@ export default class ContactosEditar extends React.Component {
       }, "pedidos")
       this.props.onClose()
     } else {
-      this.setState({
-        errorPrecio: true
-      })
+      if(this.state.detalle.length < 1){
+        this.setState({
+          errorDetalle: true
+        })
+      }
+      if(this.state.precioTotal < 1){
+        this.setState({
+          errorPrecio: true
+        })
+      }
     }
   }
 
@@ -239,6 +248,15 @@ export default class ContactosEditar extends React.Component {
               </tbody>
             </table>
           </div>
+          {/* Error */}
+          {this.state.errorDetalle ?
+            <div className="col-12 form-group text-center pt-2">
+              <div className="alert alert-dismissible alert-danger">
+                <button type="button" className="close" data-dismiss="alert">&times;</button>
+                <strong>Error!</strong> El pedido debe tener productos
+              </div>
+            </div>
+          : null}
           {/* Boton de guardar */}
           <div className="col-12 form-group text-center pt-2 boton-guardar">
             <button 

@@ -7,7 +7,7 @@ export default class PagosEditar extends React.Component {
     this.state={
       _id: "",
       fecha: "",
-      errorMonto: false,
+      errorMonto: "",
       monto: "",
       formaPago: "",
       observaciones: ""
@@ -31,12 +31,12 @@ export default class PagosEditar extends React.Component {
     })
     if(event.target.name === "monto"){
       this.setState({
-        errorMonto: false
+        errorMonto: ""
       })
     }
   }
   onSave(){
-    if(this.state.monto > 0){
+    if(this.state.monto > 0 && this.state.monto < this.props.deudaTotal){
       this.props.onSave({
         _id: this.state._id,
         fecha: this.state.fecha ? this.state.fecha : new Date(),
@@ -45,9 +45,13 @@ export default class PagosEditar extends React.Component {
         observaciones: this.state.observaciones
       }, "pagos")
       this.props.onClose()
+    } else if (this.state.monto > this.props.deudaTotal){
+      this.setState({
+        errorMonto: "El monto no puede superar la deuda total"
+      })
     } else {
       this.setState({
-        errorMonto: true
+        errorMonto: "El monto debe ser mayor a cero"
       })
     }
   }
@@ -86,7 +90,7 @@ export default class PagosEditar extends React.Component {
             {/* Mensaje de error */}
             {
               this.state.errorMonto ?
-              <div className="invalid-feedback">El monto debe ser mayor a cero</div>
+              <div className="invalid-feedback">{this.state.errorMonto}</div>
               : null
             }
           </div>
