@@ -51205,7 +51205,7 @@
 	    value: function render() {
 	      var _this5 = this;
 	
-	      var columns = [["Nombre", "nombre", "String"], ["Ciudad", "ciudad", "String"], ["Dirección", "direccion", "String"], ["Pedidos pendientes", "pedidos", "Largo pendiente"]];
+	      var columns = [["Nombre", "nombre", "String"], ["Ciudad", "ciudad", "String"], ["Dirección", "direccion", "String"], ["Pedidos pendientes", "pedidos", "Largo pendiente"], ["A cobrar", "", "Deuda"]];
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fabricas-lista' },
@@ -52226,6 +52226,7 @@
 	      _id: "",
 	      fecha: "",
 	      detalle: [],
+	      errorDetalle: false,
 	      precioTotal: "",
 	      errorPrecio: false,
 	      estado: estados[0].value,
@@ -52282,7 +52283,8 @@
 	          cantidad: this.state.cantidadProducto
 	        });
 	        this.setState({
-	          detalle: productos
+	          detalle: productos,
+	          errorDetalle: false
 	        });
 	      } else {
 	        this.setState({
@@ -52302,7 +52304,7 @@
 	  }, {
 	    key: 'onSave',
 	    value: function onSave() {
-	      if (this.state.precioTotal > 0) {
+	      if (this.state.precioTotal > 0 && this.state.detalle.length > 0) {
 	        this.props.onSave({
 	          _id: this.state._id,
 	          fecha: this.state.fecha ? this.state.fecha : new Date(),
@@ -52312,9 +52314,16 @@
 	        }, "pedidos");
 	        this.props.onClose();
 	      } else {
-	        this.setState({
-	          errorPrecio: true
-	        });
+	        if (this.state.detalle.length < 1) {
+	          this.setState({
+	            errorDetalle: true
+	          });
+	        }
+	        if (this.state.precioTotal < 1) {
+	          this.setState({
+	            errorPrecio: true
+	          });
+	        }
 	      }
 	    }
 	  }, {
@@ -52563,6 +52572,25 @@
 	              )
 	            )
 	          ),
+	          this.state.errorDetalle ? _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'alert alert-dismissible alert-danger' },
+	              _react2.default.createElement(
+	                'button',
+	                { type: 'button', className: 'close', 'data-dismiss': 'alert' },
+	                '\xD7'
+	              ),
+	              _react2.default.createElement(
+	                'strong',
+	                null,
+	                'Error!'
+	              ),
+	              ' El pedido debe tener productos'
+	            )
+	          ) : null,
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'col-12 form-group text-center pt-2 boton-guardar' },
@@ -52972,7 +53000,8 @@
 	              onClose: function onClose() {
 	                return _this5.onCloseModal("modalPagos");
 	              },
-	              titulo: this.state.modalPedidosEditar ? "EDITAR PAGO" : "CARGAR PAGO"
+	              titulo: this.state.modalPedidosEditar ? "EDITAR PAGO" : "CARGAR PAGO",
+	              deudaTotal: deuda
 	            })
 	          )
 	        ) : this.state.error ?
@@ -53053,7 +53082,7 @@
 	    _this.state = {
 	      _id: "",
 	      fecha: "",
-	      errorMonto: false,
+	      errorMonto: "",
 	      monto: "",
 	      formaPago: "",
 	      observaciones: ""
@@ -53081,14 +53110,14 @@
 	      this.setState(_defineProperty({}, event.target.name, event.target.value));
 	      if (event.target.name === "monto") {
 	        this.setState({
-	          errorMonto: false
+	          errorMonto: ""
 	        });
 	      }
 	    }
 	  }, {
 	    key: 'onSave',
 	    value: function onSave() {
-	      if (this.state.monto > 0) {
+	      if (this.state.monto > 0 && this.state.monto < this.props.deudaTotal) {
 	        this.props.onSave({
 	          _id: this.state._id,
 	          fecha: this.state.fecha ? this.state.fecha : new Date(),
@@ -53097,9 +53126,13 @@
 	          observaciones: this.state.observaciones
 	        }, "pagos");
 	        this.props.onClose();
+	      } else if (this.state.monto > this.props.deudaTotal) {
+	        this.setState({
+	          errorMonto: "El monto no puede superar la deuda total"
+	        });
 	      } else {
 	        this.setState({
-	          errorMonto: true
+	          errorMonto: "El monto debe ser mayor a cero"
 	        });
 	      }
 	    }
@@ -53171,7 +53204,7 @@
 	            this.state.errorMonto ? _react2.default.createElement(
 	              'div',
 	              { className: 'invalid-feedback' },
-	              'El monto debe ser mayor a cero'
+	              this.state.errorMonto
 	            ) : null
 	          ),
 	          _react2.default.createElement(

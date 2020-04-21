@@ -138,7 +138,8 @@ export default class ClientesLista extends React.Component {
       ["Nombre","nombre","String"],
       ["Ciudad","ciudad","String"],
       ["Dirección","direccion","String"],
-      ["Pedidos pendientes","pedidos","Largo pendiente"]
+      ["Pedidos pendientes","pedidos","Largo pendiente"],
+      ["A cobrar","","Deuda"]
     ]
     return (
       <div className="fabricas-lista">
