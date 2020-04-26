@@ -54202,7 +54202,7 @@
 	
 	    _this.state = {
 	      nuevo: true,
-	      cargando: false, // Cambiar
+	      cargando: true,
 	      pendingGuardar: false,
 	      error: "",
 	      _id: "",
@@ -54222,6 +54222,52 @@
 	  }
 	
 	  _createClass(UsuariosEditar, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      if (this.props.params.id) {
+	        this.obtenerUsusario();
+	      } else {
+	        this.setState({
+	          cargando: false
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'obtenerUsusario',
+	    value: function obtenerUsusario() {
+	      var _this2 = this;
+	
+	      fetch('/api/usuarios/' + this.props.params.id).then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            console.log("Usuario: ", data);
+	            _this2.setState({
+	              cargando: false,
+	              nuevo: false,
+	              _id: data._id,
+	              name: data.name,
+	              email: data.email,
+	              permits: data.permits
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener usuario - ", error.message);
+	            _this2.setState({
+	              cargando: false,
+	              error: error.message
+	            });
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.log("Error en el fetch. ", error.message);
+	        _this2.setState({
+	          cargando: false,
+	          error: error.message
+	        });
+	      });
+	    }
+	  }, {
 	    key: 'onClickGuardar',
 	    value: function onClickGuardar() {
 	      if (!this.state.name) {
@@ -54234,12 +54280,12 @@
 	          errorEmail: true
 	        });
 	      }
-	      if (!this.state.password) {
+	      if (!this.state.password && this.state.nuevo) {
 	        this.setState({
 	          errorPassword: true
 	        });
 	      }
-	      if (!this.state.password2) {
+	      if (!this.state.password2 && this.state.nuevo) {
 	        this.setState({
 	          errorPassword2: true
 	        });
@@ -54249,19 +54295,50 @@
 	          errorPassword2: true
 	        });
 	      }
-	      if (this.state.name && this.state.email && this.state.password && this.state.password2 && this.state.password === this.state.password2) {
+	      if (this.state.name && this.state.email && (this.state.password || !this.state.nuevo) && (this.state.password2 || !this.state.nuevo) && this.state.password === this.state.password2) {
 	        if (this.state.nuevo) {
 	          // Se crea un nuevo usuario
 	          this.crearUsuario();
 	        } else {
 	          // Se modifica el usuario
+	          this.modificarUsuario();
 	        }
 	      }
 	    }
 	  }, {
+	    key: 'modificarUsuario',
+	    value: function modificarUsuario() {
+	      var _this3 = this;
+	
+	      var userData = {
+	        name: this.state.name,
+	        email: this.state.email,
+	        password: this.state.password,
+	        password2: this.state.password2,
+	        permits: this.state.permits
+	      };
+	      this.setState({
+	        pendingGuardar: true
+	      });
+	      _axios2.default.put('/api/usuarios/' + this.props.params.id, userData).then(function (res) {
+	        _this3.setState({
+	          pendingGuardar: false
+	        });
+	        _sweetalert2.default.fire("Usuario modificado", "", "success").then(function () {
+	          _this3.props.history.push("/usuarios"); // se redirecciona a la lista
+	        });
+	      }).catch(function (err) {
+	        _this3.setState({
+	          pendingGuardar: false
+	        });
+	        console.log("Error: ", err);
+	        _sweetalert2.default.fire("Error al modificar usuario", err.message, "error");
+	      });
+	    }
+	  }, {
 	    key: 'crearUsuario',
 	    value: function crearUsuario() {
-	      var _this2 = this;
+	      var _this4 = this;
 	
 	      var userData = {
 	        name: this.state.name,
@@ -54274,14 +54351,14 @@
 	        pendingGuardar: true
 	      });
 	      _axios2.default.post("/api/registrar-usuario", userData).then(function (res) {
-	        _this2.setState({
+	        _this4.setState({
 	          pendingGuardar: false
 	        });
 	        _sweetalert2.default.fire("Usuario registrado", "", "success").then(function () {
-	          _this2.props.history.push("/usuarios"); // se redirecciona a la lista
+	          _this4.props.history.push("/usuarios"); // se redirecciona a la lista
 	        });
 	      }).catch(function (err) {
-	        _this2.setState({
+	        _this4.setState({
 	          pendingGuardar: false
 	        });
 	        console.log("Error: ", err);
@@ -54324,7 +54401,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this3 = this;
+	      var _this5 = this;
 	
 	      return _react2.default.createElement(
 	        'div',
@@ -54356,7 +54433,7 @@
 	                  { type: 'button',
 	                    className: 'btn btn-success',
 	                    onClick: function onClick() {
-	                      return _this3.onClickGuardar();
+	                      return _this5.onClickGuardar();
 	                    }
 	                  },
 	                  this.state.pendingGuardar ?

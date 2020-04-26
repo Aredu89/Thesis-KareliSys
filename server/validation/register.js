@@ -35,6 +35,6 @@ if (!Validator.equals(data.password, data.password2)) {
   }
 return {
     errors,
-    isValid: isEmpty(errors)
+    isValid: isEmpty(errors.message)
   }
 }

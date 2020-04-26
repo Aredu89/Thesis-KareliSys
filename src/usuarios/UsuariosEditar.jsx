@@ -7,7 +7,7 @@ export default class UsuariosEditar extends React.Component {
     super()
     this.state = {
       nuevo: true,
-      cargando: false, // Cambiar
+      cargando: true,
       pendingGuardar: false,
       error: "",
       _id: "",
@@ -25,6 +25,52 @@ export default class UsuariosEditar extends React.Component {
     this.handleOnChange = this.handleOnChange.bind(this)
   }
 
+  componentDidMount(){
+    if(this.props.params.id){
+      this.obtenerUsusario()
+    } else {
+      this.setState({
+        cargando: false
+      })
+    }
+  }
+
+  obtenerUsusario(){
+    fetch(`/api/usuarios/${this.props.params.id}`)
+      .then(res =>{
+        if(res.ok){
+          res.json()
+          .then(data =>{
+            console.log("Usuario: ",data)
+            this.setState({
+              cargando: false,
+              nuevo: false,
+              _id: data._id,
+              name: data.name,
+              email: data.email,
+              permits: data.permits
+            })
+          })
+        } else {
+          res.json()
+          .then(error=>{
+            console.log("Error al obtener usuario - ",error.message)
+            this.setState({
+              cargando: false,
+              error: error.message
+            })
+          })
+        }
+      })
+      .catch(error => {
+        console.log("Error en el fetch. ",error.message)
+        this.setState({
+          cargando: false,
+          error: error.message
+        })
+      })
+  }
+
   onClickGuardar(){
     if(!this.state.name){
       this.setState({
@@ -36,12 +82,12 @@ export default class UsuariosEditar extends React.Component {
         errorEmail: true
       })
     }
-    if(!this.state.password){
+    if(!this.state.password && this.state.nuevo){
       this.setState({
         errorPassword: true
       })
     }
-    if(!this.state.password2){
+    if(!this.state.password2 && this.state.nuevo){
       this.setState({
         errorPassword2: true
       })
@@ -54,8 +100,8 @@ export default class UsuariosEditar extends React.Component {
     if(
       this.state.name &&
       this.state.email &&
-      this.state.password &&
-      this.state.password2 &&
+      (this.state.password || !this.state.nuevo) &&
+      (this.state.password2 || !this.state.nuevo) &&
       this.state.password === this.state.password2
     ) {
       if(this.state.nuevo){
@@ -63,8 +109,48 @@ export default class UsuariosEditar extends React.Component {
         this.crearUsuario()
       } else {
         // Se modifica el usuario
+        this.modificarUsuario()
       }
     }
+  }
+
+  modificarUsuario(){
+    const userData = {
+      name: this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+      password2: this.state.password2,
+      permits: this.state.permits
+    }
+    this.setState({
+      pendingGuardar: true
+    })
+    axios
+      .put(`/api/usuarios/${this.props.params.id}`, userData)
+      .then(res => {
+        this.setState({
+          pendingGuardar: false
+        })
+        Swal.fire(
+          "Usuario modificado",
+          "",
+          "success"
+        ).then(
+          ()=>{
+            this.props.history.push("/usuarios") // se redirecciona a la lista
+          })
+      })
+      .catch(err=>{
+        this.setState({
+          pendingGuardar: false
+        })
+        console.log("Error: ",err)
+        Swal.fire(
+          "Error al modificar usuario",
+          err.message,
+          "error"
+        )
+      })
   }
 
   crearUsuario(){

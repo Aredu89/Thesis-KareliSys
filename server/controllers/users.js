@@ -66,22 +66,67 @@ module.exports.modificarUsuario = (req,res) => {
         //Si no hay error, reemplazo con los datos del body
         usuario.name = auxUsuario.name
         usuario.email = auxUsuario.email
-        usuario.password = auxUsuario.password
+        usuario.password = auxUsuario.password ? auxUsuario.password : usuario.password
         usuario.permits = auxUsuario.permits
-        // Hash password antes de guardar en la base de datos
-        bcrypt.genSalt(10, (err, salt) => {
-          bcrypt.hash(usuario.password, salt, (err, hash) => {
-            if (err) throw err
-            usuario.password = hash
-            usuario.save((err, usuario) => {
-              if (err) {
+
+        // Controlo que queden usuarios con permisos
+        if(!usuario.permits){
+          let validacion = false
+          Usuarios
+            .find({})
+            .exec((err, results, status) => {
+              if(!results || results.length < 1){
+                res.status(404).json({ message: "No se pudo controlar los permisos de usuarios"})
+              } else if (err) {
                 res.status(404).json(err)
               } else {
-                res.status(201).json(usuario)
+                // Asigno el false al permits del usuario modificado
+                const auxResults = results.map(res=>{
+                  if(res._id === usuario._id){
+                    res.permits = false
+                  }
+                  return res
+                })
+                
+                // Controlo si queda algun usuario con permits = true
+                auxResults.forEach(res=>{
+                  if(res.permits){
+                    validacion = true
+                  }
+                })
               }
             })
+          
+          if(!validacion){
+            res.status(400).json({ message: "Debe quedar al menos un usuario con permisos"})
+            return
+          }
+        }
+
+        if(auxUsuario.password){
+          // Hash password antes de guardar en la base de datos
+          bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(usuario.password, salt, (err, hash) => {
+              if (err) throw err
+              usuario.password = hash
+              usuario.save((err, usuario) => {
+                if (err) {
+                  res.status(404).json(err)
+                } else {
+                  res.status(201).json(usuario)
+                }
+              })
+            })
           })
-        })
+        } else {
+          usuario.save((err, usuario) => {
+            if (err) {
+              res.status(404).json(err)
+            } else {
+              res.status(201).json(usuario)
+            }
+          })
+        }
       }
     )
 }
@@ -111,6 +156,7 @@ module.exports.registrarUsuarios = (req, res) => {
 
   // Check validation
   if (!isValid) {
+    console.log("not valid")
     return res.status(400).json(errors)
   }
   Usuarios.findOne({ email: req.body.email }).then(user => {
