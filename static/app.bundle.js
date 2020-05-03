@@ -29703,7 +29703,7 @@
 	                  { className: 'dropdown-menu' },
 	                  _react2.default.createElement(
 	                    'a',
-	                    { className: 'dropdown-item', href: '#' },
+	                    { className: 'dropdown-item', href: '/usuarios' },
 	                    'Opciones de Usuario'
 	                  ),
 	                  _react2.default.createElement('div', { className: 'dropdown-divider' }),
@@ -53973,6 +53973,7 @@
 	    _this.cargarUsuarios = _this.cargarUsuarios.bind(_this);
 	    _this.handleEditar = _this.handleEditar.bind(_this);
 	    _this.quitarDeLaLista = _this.quitarDeLaLista.bind(_this);
+	    _this.handleEliminar = _this.handleEliminar.bind(_this);
 	    return _this;
 	  }
 	
@@ -54048,7 +54049,10 @@
 	                _this3.quitarDeLaLista(id);
 	              });
 	            } else {
-	              _sweetalert2.default.fire("Error al eliminar", "", "error");
+	              res.json().then(function (err) {
+	                console.log("res error: ", err);
+	                _sweetalert2.default.fire("Error al eliminar", err.message, "error");
+	              });
 	            }
 	          }).catch(function (err) {
 	            _sweetalert2.default.fire("Error del servidor", err.message, "error");
@@ -54062,7 +54066,7 @@
 	      var _this4 = this;
 	
 	      var auxUsuarios = this.state.usuarios;
-	      // Quito la fabricas eliminada de la lista del state
+	      // Quito el usuario eliminado de la lista del state
 	      auxUsuarios.forEach(function (usuario, i) {
 	        if (id === usuario._id) {
 	          auxUsuarios.splice(i, 1);
@@ -54331,8 +54335,8 @@
 	        _this3.setState({
 	          pendingGuardar: false
 	        });
-	        console.log("Error: ", err);
-	        _sweetalert2.default.fire("Error al modificar usuario", err.message, "error");
+	        console.log("Error: ", err.response.data);
+	        _sweetalert2.default.fire("Error al modificar usuario", err.response.data.message, "error");
 	      });
 	    }
 	  }, {

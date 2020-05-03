@@ -71,61 +71,87 @@ module.exports.modificarUsuario = (req,res) => {
 
         // Controlo que queden usuarios con permisos
         if(!usuario.permits){
-          let validacion = false
+          let validacionPermits = false
           Usuarios
             .find({})
             .exec((err, results, status) => {
               if(!results || results.length < 1){
-                res.status(404).json({ message: "No se pudo controlar los permisos de usuarios"})
+                res.status(404).json({ message: "No se pudieron controlar los permisos de usuarios"})
+                return
               } else if (err) {
                 res.status(404).json(err)
+                return
               } else {
                 // Asigno el false al permits del usuario modificado
                 const auxResults = results.map(res=>{
-                  if(res._id === usuario._id){
+                  if(res._id.toString() === usuario._id.toString()){
                     res.permits = false
                   }
                   return res
                 })
-                
                 // Controlo si queda algun usuario con permits = true
                 auxResults.forEach(res=>{
                   if(res.permits){
-                    validacion = true
+                    validacionPermits = true
                   }
                 })
               }
-            })
-          
-          if(!validacion){
-            res.status(400).json({ message: "Debe quedar al menos un usuario con permisos"})
-            return
-          }
-        }
-
-        if(auxUsuario.password){
-          // Hash password antes de guardar en la base de datos
-          bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(usuario.password, salt, (err, hash) => {
-              if (err) throw err
-              usuario.password = hash
-              usuario.save((err, usuario) => {
-                if (err) {
-                  res.status(404).json(err)
+              if(validacionPermits === false){
+                res.status(400).json({ message: "Debe quedar al menos un usuario con permisos"})
+                return
+              } else {
+                //Si no hay error, guardo los cambios
+                if(auxUsuario.password){
+                  // Hash password antes de guardar en la base de datos
+                  bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(usuario.password, salt, (err, hash) => {
+                      if (err) throw err
+                      usuario.password = hash
+                      usuario.save((err, usuario) => {
+                        if (err) {
+                          res.status(404).json(err)
+                        } else {
+                          res.status(201).json(usuario)
+                        }
+                      })
+                    })
+                  })
                 } else {
-                  res.status(201).json(usuario)
+                  usuario.save((err, usuario) => {
+                    if (err) {
+                      res.status(404).json(err)
+                    } else {
+                      res.status(201).json(usuario)
+                    }
+                  })
                 }
+              }
+            })
+        } else {
+          if(auxUsuario.password){
+            // Hash password antes de guardar en la base de datos
+            bcrypt.genSalt(10, (err, salt) => {
+              bcrypt.hash(usuario.password, salt, (err, hash) => {
+                if (err) throw err
+                usuario.password = hash
+                usuario.save((err, usuario) => {
+                  if (err) {
+                    res.status(404).json(err)
+                  } else {
+                    res.status(201).json(usuario)
+                  }
+                })
               })
             })
-          })
-        } else {
-          usuario.save((err, usuario) => {
-            if (err) {
-              res.status(404).json(err)
-            } else {
-              res.status(201).json(usuario)
-            }
-          })
+          } else {
+            usuario.save((err, usuario) => {
+              if (err) {
+                res.status(404).json(err)
+              } else {
+                res.status(201).json(usuario)
+              }
+            })
+          }
         }
       }
     )
@@ -137,17 +163,50 @@ module.exports.eliminarUsuario = (req,res) => {
     res.status(404).json({ message: "Se requiere el id del usuario"})
     return
   }
+  // Controlo que queden usuarios con permisos
+  let validacionPermits = false
   Usuarios
-    .findByIdAndRemove(req.params.id)
-    .exec(
-      (err, usuario) => {
-        if(err){
-          res.status(404).json(err)
-        } else {
-          res.status(204).json(null)
-        }
+    .find({})
+    .exec((err, results, status) => {
+      if(!results || results.length < 1){
+        res.status(404).json({ message: "No se pudieron controlar los permisos de usuarios"})
+        return
+      } else if (err) {
+        res.status(404).json(err)
+        return
+      } else {
+        // Asigno el false al permits del usuario modificado
+        const auxResults = results.map(res=>{
+          if(res._id.toString() === req.params.id.toString()){
+            res.permits = false
+          }
+          return res
+        })
+        // Controlo si queda algun usuario con permits = true
+        auxResults.forEach(res=>{
+          if(res.permits){
+            validacionPermits = true
+          }
+        })
       }
-    )
+      if(validacionPermits === false){
+        res.status(400).json({ message: "Debe quedar al menos un usuario con permisos"})
+        return
+      } else {
+        //Si paso la validación, elimino el usuario
+        Usuarios
+          .findByIdAndRemove(req.params.id)
+          .exec(
+            (err, usuario) => {
+              if(err){
+                res.status(404).json(err)
+              } else {
+                res.status(204).json(null)
+              }
+            }
+          )
+            }
+          })
 }
 
 module.exports.registrarUsuarios = (req, res) => {

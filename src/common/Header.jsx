@@ -82,7 +82,7 @@ export default class Header extends React.Component {
                     }
                   </a>
                 <div className="dropdown-menu">
-                  <a className="dropdown-item" href="#">Opciones de Usuario</a>
+                  <a className="dropdown-item" href="/usuarios">Opciones de Usuario</a>
                   <div className="dropdown-divider"></div>
                   <span className="logout dropdown-item" 
                     onClick={()=>{this.logOut()}}>Cerrar Sesión</span>

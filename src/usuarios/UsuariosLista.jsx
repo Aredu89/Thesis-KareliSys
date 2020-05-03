@@ -14,6 +14,7 @@ export default class UsuariosLista extends React.Component {
     this.cargarUsuarios = this.cargarUsuarios.bind(this)
     this.handleEditar = this.handleEditar.bind(this)
     this.quitarDeLaLista = this.quitarDeLaLista.bind(this)
+    this.handleEliminar = this.handleEliminar.bind(this)
   }
 
   componentDidMount(){
@@ -87,11 +88,15 @@ export default class UsuariosLista extends React.Component {
                   this.quitarDeLaLista(id)
                 })
             } else {
+              res.json()
+              .then(err=>{
+                console.log("res error: ",err)
                 Swal.fire(
                   "Error al eliminar",
-                  "",
+                  err.message,
                   "error"
                 )
+              })
             }
           })
           .catch(err=> {
@@ -107,7 +112,7 @@ export default class UsuariosLista extends React.Component {
 
   quitarDeLaLista(id){
     let auxUsuarios = this.state.usuarios
-    // Quito la fabricas eliminada de la lista del state
+    // Quito el usuario eliminado de la lista del state
     auxUsuarios.forEach((usuario,i)=>{
       if(id === usuario._id){
         auxUsuarios.splice(i,1)

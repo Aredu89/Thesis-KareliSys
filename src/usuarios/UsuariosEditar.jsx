@@ -144,10 +144,10 @@ export default class UsuariosEditar extends React.Component {
         this.setState({
           pendingGuardar: false
         })
-        console.log("Error: ",err)
+        console.log("Error: ",err.response.data)
         Swal.fire(
           "Error al modificar usuario",
-          err.message,
+          err.response.data.message,
           "error"
         )
       })
