@@ -128,6 +128,13 @@
 	    'Page Not Found'
 	  );
 	};
+	var noPermits = function noPermits() {
+	  return _react2.default.createElement(
+	    'p',
+	    null,
+	    'Solicite permisos al administrador'
+	  );
+	};
 	
 	// Controlo el token para mantener al usuario logueado
 	if (localStorage.jwtToken) {
@@ -139,6 +146,7 @@
 	  console.log("user: ", decoded);
 	  // Set current user
 	  localStorage.setItem("currentUser", decoded);
+	  localStorage.setItem("userPermits", decoded.permits);
 	  // Check for expired token
 	  var currentTime = Date.now() / 1000; // to get in milliseconds
 	  if (decoded.exp < currentTime) {
@@ -149,6 +157,7 @@
 	    (0, _setAuthToken.setToken)(false);
 	    // Set current user to empty object {} which will set isAuthenticated to false
 	    localStorage.removeItem("currentUser");
+	    localStorage.removeItem("userPermits");
 	    // voy al login
 	    window.location.href = "./login";
 	  }
@@ -156,13 +165,15 @@
 	
 	var RoutedApp = function RoutedApp() {
 	  var user = localStorage.getItem("currentUser");
+	  var permits = localStorage.getItem("userPermits");
+	  console.log("permits: ", permits);
 	  return _react2.default.createElement(
 	    _reactRouter.Router,
 	    { history: _reactRouter.browserHistory },
 	    _react2.default.createElement(_reactRouter.Redirect, { from: '/', to: '/home' }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _Login2.default }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/registrarse', component: _Registrarse2.default }),
-	    user ? _react2.default.createElement(
+	    user ? permits === "true" ? _react2.default.createElement(
 	      _reactRouter.Route,
 	      { path: '/', component: _Header2.default },
 	      _react2.default.createElement(_reactRouter.Route, { path: 'home', component: (0, _reactRouter.withRouter)(_Home2.default) }),
@@ -181,6 +192,10 @@
 	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios/editar', component: _UsuariosEditar2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios/editar/:id', component: _UsuariosEditar2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '*', component: noMatch })
+	    ) : _react2.default.createElement(
+	      _reactRouter.Route,
+	      { path: '/', component: _Header2.default },
+	      _react2.default.createElement(_reactRouter.Route, { path: '*', component: noPermits })
 	    ) : _react2.default.createElement(_reactRouter.Redirect, { from: '/*', to: '/login' })
 	  );
 	};
@@ -29581,6 +29596,7 @@
 	      (0, _setAuthToken.setToken)(false);
 	      // Set current user to empty object {} which will set isAuthenticated to false
 	      localStorage.removeItem("currentUser");
+	      localStorage.removeItem("userPermits");
 	      // voy al login
 	      this.props.history.push("/login");
 	    }
@@ -30700,6 +30716,7 @@
 	        // Set current user
 	        localStorage.setItem("currentUser", decoded);
 	        localStorage.setItem("userName", res.data.user.name);
+	        localStorage.setItem("userPermits", res.data.user.permits);
 	        // Voy al home
 	        window.location.href = "./home";
 	      }).catch(function (err) {

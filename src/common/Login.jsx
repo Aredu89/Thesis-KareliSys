@@ -77,6 +77,7 @@ export default class Login extends React.Component {
         // Set current user
         localStorage.setItem("currentUser", decoded);
         localStorage.setItem("userName", res.data.user.name);
+        localStorage.setItem("userPermits", res.data.user.permits);
         // Voy al home
         window.location.href = "./home"
       })

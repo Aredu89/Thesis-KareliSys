@@ -22,6 +22,7 @@ import UsuariosEditar from './usuarios/UsuariosEditar.jsx'
 
 const contentNode = document.getElementById('contents')
 const noMatch = () => <p>Page Not Found</p>
+const noPermits = () => <p>Solicite permisos al administrador</p>
 
 // Controlo el token para mantener al usuario logueado
 if (localStorage.jwtToken) {
@@ -33,6 +34,7 @@ if (localStorage.jwtToken) {
   console.log("user: ",decoded)
   // Set current user
   localStorage.setItem("currentUser", decoded);
+  localStorage.setItem("userPermits", decoded.permits)
 // Check for expired token
   const currentTime = Date.now() / 1000; // to get in milliseconds
   if (decoded.exp < currentTime) {
@@ -43,6 +45,7 @@ if (localStorage.jwtToken) {
     setToken(false);
     // Set current user to empty object {} which will set isAuthenticated to false
     localStorage.removeItem("currentUser");
+    localStorage.removeItem("userPermits");
     // voy al login
     window.location.href = "./login";
   }
@@ -50,30 +53,38 @@ if (localStorage.jwtToken) {
 
 const RoutedApp = () => {
   const user = localStorage.getItem("currentUser")
+  const permits = localStorage.getItem("userPermits")
+  console.log("permits: ",permits)
   return(
   <Router history={browserHistory} >
     <Redirect from="/" to="/home" />
     <Route path="/login" component={Login} />
     <Route path="/registrarse" component={Registrarse} />
     { user ? (
-      <Route path="/" component={Header} >
-        <Route path="home" component={withRouter(Home)} />
-        <Route path="fabricas" component={FabricasLista} />
-        <Route path="fabricas/editar" component={FabricasEditar} />
-        <Route path="fabricas/editar/:id" component={FabricasEditar} />
-        <Route path="fabricas/pagos/:id" component={FabricasPagos} />
-        <Route path="clientes" component={ClientesLista} />
-        <Route path="clientes/editar" component={ClientesEditar} />
-        <Route path="clientes/editar/:id" component={ClientesEditar} />
-        <Route path="clientes/pagos/:id" component={ClientesPagos} />
-        <Route path="stock" component={StockLista} />
-        <Route path="stock/editar" component={StockEditar} />
-        <Route path="stock/editar/:id" component={StockEditar} />
-        <Route path="usuarios" component={UsuariosLista} />
-        <Route path="usuarios/editar" component={UsuariosEditar} />
-        <Route path="usuarios/editar/:id" component={UsuariosEditar} />
-        <Route path="*" component={noMatch} />
-      </Route>
+      permits === "true" ? (
+        <Route path="/" component={Header} >
+          <Route path="home" component={withRouter(Home)} />
+          <Route path="fabricas" component={FabricasLista} />
+          <Route path="fabricas/editar" component={FabricasEditar} />
+          <Route path="fabricas/editar/:id" component={FabricasEditar} />
+          <Route path="fabricas/pagos/:id" component={FabricasPagos} />
+          <Route path="clientes" component={ClientesLista} />
+          <Route path="clientes/editar" component={ClientesEditar} />
+          <Route path="clientes/editar/:id" component={ClientesEditar} />
+          <Route path="clientes/pagos/:id" component={ClientesPagos} />
+          <Route path="stock" component={StockLista} />
+          <Route path="stock/editar" component={StockEditar} />
+          <Route path="stock/editar/:id" component={StockEditar} />
+          <Route path="usuarios" component={UsuariosLista} />
+          <Route path="usuarios/editar" component={UsuariosEditar} />
+          <Route path="usuarios/editar/:id" component={UsuariosEditar} />
+          <Route path="*" component={noMatch} />
+        </Route>
+      ) : (
+        <Route path="/" component={Header} >
+          <Route path="*" component={noPermits} />
+        </Route>
+      )
       ) : (
         <Redirect from="/*" to="/login" />
       )

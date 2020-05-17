@@ -24,6 +24,7 @@ export default class Header extends React.Component {
     setToken(false);
     // Set current user to empty object {} which will set isAuthenticated to false
     localStorage.removeItem("currentUser");
+    localStorage.removeItem("userPermits")
     // voy al login
     this.props.history.push("/login")
   }

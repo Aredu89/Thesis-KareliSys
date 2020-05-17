@@ -264,7 +264,8 @@ module.exports.loguearUsuarios = (req, res) => {
         // Create JWT Payload
         const payload = {
           id: user.id,
-          name: user.name
+          name: user.name,
+          permits: user.permits
         };
         // Crear token
         jwt.sign(
