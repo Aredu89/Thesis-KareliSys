@@ -2,6 +2,13 @@ import React from 'react'
 import Swal from 'sweetalert2' //https://github.com/sweetalert2/sweetalert2
 import axios from 'axios'
 
+const permits = [
+  "",
+  "LEER",
+  "CREAR",
+  "MODIFICAR"
+]
+
 export default class UsuariosEditar extends React.Component {
   constructor() {
     super()
@@ -20,9 +27,11 @@ export default class UsuariosEditar extends React.Component {
       errorEmail: false,
       errorPassword: false,
       errorPassword2: false,
-      permits: false
+      permits: {},
+      permitsAdmin: false
     }
     this.handleOnChange = this.handleOnChange.bind(this)
+    this.handleOnPermitsChange = this.handleOnPermitsChange.bind(this)
   }
 
   componentDidMount(){
@@ -48,7 +57,8 @@ export default class UsuariosEditar extends React.Component {
               _id: data._id,
               name: data.name,
               email: data.email,
-              permits: data.permits
+              permitsAdmin: data.permitsAdmin,
+              permits: data.permits ? data.permits : {}
             })
           })
         } else {
@@ -120,7 +130,8 @@ export default class UsuariosEditar extends React.Component {
       email: this.state.email,
       password: this.state.password,
       password2: this.state.password2,
-      permits: this.state.permits
+      permits: this.state.permits,
+      permitsAdmin: this.state.permitsAdmin
     }
     this.setState({
       pendingGuardar: true
@@ -159,7 +170,8 @@ export default class UsuariosEditar extends React.Component {
       email: this.state.email,
       password: this.state.password,
       password2: this.state.password2,
-      permits: this.state.permits
+      permits: this.state.permits,
+      permitsAdmin: this.state.permitsAdmin
     }
     this.setState({
       pendingGuardar: true
@@ -226,6 +238,19 @@ export default class UsuariosEditar extends React.Component {
     }
   }
 
+  handleOnPermitsChange(event){
+    const { name, value } = event.target
+    let permits = this.state.permits
+    permits[name] = value ? value : ""
+    this.handleOnChange({
+      target: {
+        type: "",
+        name: "permits",
+        value: permits
+      }
+    })
+  }
+
   render() {
     return (
       <div className="usuarios-editar text-center">
@@ -258,17 +283,36 @@ export default class UsuariosEditar extends React.Component {
             <div className="row pt-3 text-center">
               {/* Permisos */}
               <div className="col-12">
-                <div className="col-12 d-flex justify-content-between align-items-center contenedor-permisos mb-3">
-                  <span className="col-6">¿Permisos para utilizar el sistema?</span>
-                  <input 
-                    type="checkbox"
-                    className="col-6 form-control checkbox-permits"
-                    id="permits"
-                    name="permits"
-                    checked={this.state.permits}
-                    onChange={this.handleOnChange}
-                  />
+                <div className="contenedor-permisos">
+                  <div className="col-12 d-flex justify-content-center align-items-center mb-3">PERMISOS:</div>
+                  <div className="col-12 d-flex justify-content-between align-items-center mb-3">
+                    <span className="col-6">¿Permisos de administrador?</span>
+                    <input 
+                      type="checkbox"
+                      className="col-6 form-control checkbox-permits"
+                      id="permitsAdmin"
+                      name="permitsAdmin"
+                      checked={this.state.permitsAdmin}
+                      onChange={this.handleOnChange}
+                    />
+                  </div>
+                  <div className="col-12 d-flex justify-content-between align-items-center mb-3">
+                    <span className="col-6">Home</span>
+                    <select className="custom-select"
+                      id="home"
+                      name="home"
+                      value={this.state.permits.home ? this.state.permits.home : ""}
+                      onChange={this.handleOnPermitsChange}
+                    >
+                      {
+                        permits.map((permit, i)=>{
+                          return <option value={permit} key={i}>{permit ? permit : "No"}</option>
+                        })
+                      }
+                    </select>
+                  </div>
                 </div>
+                
               </div>
               {/* Nombre */}
               <div className="col-sm-6 col-12 form-group">

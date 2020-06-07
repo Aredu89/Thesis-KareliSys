@@ -170,6 +170,8 @@
 .usuarios-editar .contenedor-permisos{
   padding: 10px;
   border: solid 1px #DF691A;
+  display: block;
+  margin-bottom: 15px;
 }
 .usuarios-editar .checkbox-permits{
   height: 30px;

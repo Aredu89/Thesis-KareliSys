@@ -67,10 +67,11 @@ module.exports.modificarUsuario = (req,res) => {
         usuario.name = auxUsuario.name
         usuario.email = auxUsuario.email
         usuario.password = auxUsuario.password ? auxUsuario.password : usuario.password
-        usuario.permits = auxUsuario.permits
+        usuario.permits = auxUsuario.permits.map(permit=>permit)
+        usuario.permitsAdmin = auxUsuario.permitsAdmin ? auxUsuario.permitsAdmin : false
 
         // Controlo que queden usuarios con permisos
-        if(!usuario.permits){
+        if(!usuario.permitsAdmin){
           let validacionPermits = false
           Usuarios
             .find({})
@@ -82,22 +83,22 @@ module.exports.modificarUsuario = (req,res) => {
                 res.status(404).json(err)
                 return
               } else {
-                // Asigno el false al permits del usuario modificado
+                // Asigno el false al permitsAdmin del usuario modificado
                 const auxResults = results.map(res=>{
                   if(res._id.toString() === usuario._id.toString()){
-                    res.permits = false
+                    res.permitsAdmin = false
                   }
                   return res
                 })
-                // Controlo si queda algun usuario con permits = true
+                // Controlo si queda algun usuario admin
                 auxResults.forEach(res=>{
-                  if(res.permits){
+                  if(res.permitsAdmin){
                     validacionPermits = true
                   }
                 })
               }
               if(validacionPermits === false){
-                res.status(400).json({ message: "Debe quedar al menos un usuario con permisos"})
+                res.status(400).json({ message: "Debe quedar al menos un usuario con permisos de administrador"})
                 return
               } else {
                 //Si no hay error, guardo los cambios
@@ -178,19 +179,19 @@ module.exports.eliminarUsuario = (req,res) => {
         // Asigno el false al permits del usuario modificado
         const auxResults = results.map(res=>{
           if(res._id.toString() === req.params.id.toString()){
-            res.permits = false
+            res.permitsAdmin = false
           }
           return res
         })
         // Controlo si queda algun usuario con permits = true
         auxResults.forEach(res=>{
-          if(res.permits){
+          if(res.permitsAdmin){
             validacionPermits = true
           }
         })
       }
       if(validacionPermits === false){
-        res.status(400).json({ message: "Debe quedar al menos un usuario con permisos"})
+        res.status(400).json({ message: "Debe quedar al menos un usuario con permisos de administrador"})
         return
       } else {
         //Si paso la validación, elimino el usuario
@@ -226,7 +227,8 @@ module.exports.registrarUsuarios = (req, res) => {
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
-        permits: false
+        permits: [],
+        permitsAdmin: false
       })
       // Hash password antes de guardar en la base de datos
       bcrypt.genSalt(10, (err, salt) => {
@@ -265,7 +267,8 @@ module.exports.loguearUsuarios = (req, res) => {
         const payload = {
           id: user.id,
           name: user.name,
-          permits: user.permits
+          permits: user.permits,
+          permitsAdmin: user.permitsAdmin
         };
         // Crear token
         jwt.sign(

@@ -165,15 +165,17 @@
 	
 	var RoutedApp = function RoutedApp() {
 	  var user = localStorage.getItem("currentUser");
-	  var permits = localStorage.getItem("userPermits");
-	  console.log("permits: ", permits);
+	  // const permits = localStorage.getItem("userPermits")
+	  // console.log("permits: ",permits)
 	  return _react2.default.createElement(
 	    _reactRouter.Router,
 	    { history: _reactRouter.browserHistory },
 	    _react2.default.createElement(_reactRouter.Redirect, { from: '/', to: '/home' }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _Login2.default }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/registrarse', component: _Registrarse2.default }),
-	    user ? permits === "true" ? _react2.default.createElement(
+	    user ?
+	    // permits === "true" ? (
+	    _react2.default.createElement(
 	      _reactRouter.Route,
 	      { path: '/', component: _Header2.default },
 	      _react2.default.createElement(_reactRouter.Route, { path: 'home', component: (0, _reactRouter.withRouter)(_Home2.default) }),
@@ -192,11 +194,13 @@
 	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios/editar', component: _UsuariosEditar2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios/editar/:id', component: _UsuariosEditar2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '*', component: noMatch })
-	    ) : _react2.default.createElement(
-	      _reactRouter.Route,
-	      { path: '/', component: _Header2.default },
-	      _react2.default.createElement(_reactRouter.Route, { path: '*', component: noPermits })
-	    ) : _react2.default.createElement(_reactRouter.Redirect, { from: '/*', to: '/login' })
+	    )
+	    // ) : (
+	    //   <Route path="/" component={Header} >
+	    //     <Route path="*" component={noPermits} />
+	    //   </Route>
+	    // )
+	    : _react2.default.createElement(_reactRouter.Redirect, { from: '/*', to: '/login' })
 	  );
 	};
 	
@@ -54099,7 +54103,7 @@
 	    value: function render() {
 	      var _this5 = this;
 	
-	      var columns = [["Nombre de Usuario", "name", "String"], ["Email", "email", "String"], ["Permisos", "permits", "Boolean"]];
+	      var columns = [["Nombre de Usuario", "name", "String"], ["Email", "email", "String"], ["Admin", "permitsAdmin", "Boolean"]];
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'usuarios-lista' },
@@ -54213,6 +54217,8 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //https://github.com/sweetalert2/sweetalert2
 	
 	
+	var permits = ["", "LEER", "CREAR", "MODIFICAR"];
+	
 	var UsuariosEditar = function (_React$Component) {
 	  _inherits(UsuariosEditar, _React$Component);
 	
@@ -54236,9 +54242,11 @@
 	      errorEmail: false,
 	      errorPassword: false,
 	      errorPassword2: false,
-	      permits: false
+	      permits: {},
+	      permitsAdmin: false
 	    };
 	    _this.handleOnChange = _this.handleOnChange.bind(_this);
+	    _this.handleOnPermitsChange = _this.handleOnPermitsChange.bind(_this);
 	    return _this;
 	  }
 	
@@ -54268,7 +54276,8 @@
 	              _id: data._id,
 	              name: data.name,
 	              email: data.email,
-	              permits: data.permits
+	              permitsAdmin: data.permitsAdmin,
+	              permits: data.permits ? data.permits : {}
 	            });
 	          });
 	        } else {
@@ -54336,7 +54345,8 @@
 	        email: this.state.email,
 	        password: this.state.password,
 	        password2: this.state.password2,
-	        permits: this.state.permits
+	        permits: this.state.permits,
+	        permitsAdmin: this.state.permitsAdmin
 	      };
 	      this.setState({
 	        pendingGuardar: true
@@ -54366,7 +54376,8 @@
 	        email: this.state.email,
 	        password: this.state.password,
 	        password2: this.state.password2,
-	        permits: this.state.permits
+	        permits: this.state.permits,
+	        permitsAdmin: this.state.permitsAdmin
 	      };
 	      this.setState({
 	        pendingGuardar: true
@@ -54418,6 +54429,23 @@
 	          errorPassword2: false
 	        });
 	      }
+	    }
+	  }, {
+	    key: 'handleOnPermitsChange',
+	    value: function handleOnPermitsChange(event) {
+	      var _event$target = event.target,
+	          name = _event$target.name,
+	          value = _event$target.value;
+	
+	      var permits = this.state.permits;
+	      permits[name] = value ? value : "";
+	      this.handleOnChange({
+	        target: {
+	          type: "",
+	          name: "permits",
+	          value: permits
+	        }
+	      });
 	    }
 	  }, {
 	    key: 'render',
@@ -54480,20 +54508,54 @@
 	              { className: 'col-12' },
 	              _react2.default.createElement(
 	                'div',
-	                { className: 'col-12 d-flex justify-content-between align-items-center contenedor-permisos mb-3' },
+	                { className: 'contenedor-permisos' },
 	                _react2.default.createElement(
-	                  'span',
-	                  { className: 'col-6' },
-	                  '\xBFPermisos para utilizar el sistema?'
+	                  'div',
+	                  { className: 'col-12 d-flex justify-content-center align-items-center mb-3' },
+	                  'PERMISOS:'
 	                ),
-	                _react2.default.createElement('input', {
-	                  type: 'checkbox',
-	                  className: 'col-6 form-control checkbox-permits',
-	                  id: 'permits',
-	                  name: 'permits',
-	                  checked: this.state.permits,
-	                  onChange: this.handleOnChange
-	                })
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-12 d-flex justify-content-between align-items-center mb-3' },
+	                  _react2.default.createElement(
+	                    'span',
+	                    { className: 'col-6' },
+	                    '\xBFPermisos de administrador?'
+	                  ),
+	                  _react2.default.createElement('input', {
+	                    type: 'checkbox',
+	                    className: 'col-6 form-control checkbox-permits',
+	                    id: 'permitsAdmin',
+	                    name: 'permitsAdmin',
+	                    checked: this.state.permitsAdmin,
+	                    onChange: this.handleOnChange
+	                  })
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'col-12 d-flex justify-content-between align-items-center mb-3' },
+	                  _react2.default.createElement(
+	                    'span',
+	                    { className: 'col-6' },
+	                    'Home'
+	                  ),
+	                  _react2.default.createElement(
+	                    'select',
+	                    { className: 'custom-select',
+	                      id: 'home',
+	                      name: 'home',
+	                      value: this.state.permits.home ? this.state.permits.home : "",
+	                      onChange: this.handleOnPermitsChange
+	                    },
+	                    permits.map(function (permit, i) {
+	                      return _react2.default.createElement(
+	                        'option',
+	                        { value: permit, key: i },
+	                        permit ? permit : "No"
+	                      );
+	                    })
+	                  )
+	                )
 	              )
 	            ),
 	            _react2.default.createElement(

@@ -128,7 +128,7 @@ export default class UsuariosLista extends React.Component {
     const columns = [
       ["Nombre de Usuario","name","String"],
       ["Email","email","String"],
-      ["Permisos","permits","Boolean"]
+      ["Admin","permitsAdmin","Boolean"]
     ]
     return (
       <div className="usuarios-lista">

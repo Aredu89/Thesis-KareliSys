@@ -53,15 +53,15 @@ if (localStorage.jwtToken) {
 
 const RoutedApp = () => {
   const user = localStorage.getItem("currentUser")
-  const permits = localStorage.getItem("userPermits")
-  console.log("permits: ",permits)
+  // const permits = localStorage.getItem("userPermits")
+  // console.log("permits: ",permits)
   return(
   <Router history={browserHistory} >
     <Redirect from="/" to="/home" />
     <Route path="/login" component={Login} />
     <Route path="/registrarse" component={Registrarse} />
     { user ? (
-      permits === "true" ? (
+      // permits === "true" ? (
         <Route path="/" component={Header} >
           <Route path="home" component={withRouter(Home)} />
           <Route path="fabricas" component={FabricasLista} />
@@ -80,11 +80,11 @@ const RoutedApp = () => {
           <Route path="usuarios/editar/:id" component={UsuariosEditar} />
           <Route path="*" component={noMatch} />
         </Route>
-      ) : (
-        <Route path="/" component={Header} >
-          <Route path="*" component={noPermits} />
-        </Route>
-      )
+      // ) : (
+      //   <Route path="/" component={Header} >
+      //     <Route path="*" component={noPermits} />
+      //   </Route>
+      // )
       ) : (
         <Redirect from="/*" to="/login" />
       )
