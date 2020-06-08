@@ -296,20 +296,69 @@ export default class UsuariosEditar extends React.Component {
                       onChange={this.handleOnChange}
                     />
                   </div>
-                  <div className="col-12 d-flex justify-content-between align-items-center mb-3">
-                    <span className="col-6">Home</span>
-                    <select className="custom-select"
-                      id="home"
-                      name="home"
-                      value={this.state.permits.home ? this.state.permits.home : ""}
-                      onChange={this.handleOnPermitsChange}
-                    >
-                      {
-                        permits.map((permit, i)=>{
-                          return <option value={permit} key={i}>{permit ? permit : "No"}</option>
-                        })
-                      }
-                    </select>
+                  <div className="row">
+                    <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center mb-3 pr-4">
+                      <span className="col-6">Home</span>
+                      <select className="custom-select"
+                        id="home"
+                        name="home"
+                        value={this.state.permits.home ? this.state.permits.home : ""}
+                        onChange={this.handleOnPermitsChange}
+                      >
+                        {
+                          permits.map((permit, i)=>{
+                            return <option value={permit} key={i}>{permit ? permit : "No"}</option>
+                          })
+                        }
+                      </select>
+                    </div>
+                    <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center mb-3 pr-4">
+                      <span className="col-6">Fabricas</span>
+                      <select className="custom-select"
+                        id="fabricas"
+                        name="fabricas"
+                        value={this.state.permits.fabricas ? this.state.permits.fabricas : ""}
+                        onChange={this.handleOnPermitsChange}
+                      >
+                        {
+                          permits.map((permit, i)=>{
+                            return <option value={permit} key={i}>{permit ? permit : "No"}</option>
+                          })
+                        }
+                      </select>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center mb-3 pr-4">
+                      <span className="col-6">Clientes</span>
+                      <select className="custom-select"
+                        id="clientes"
+                        name="clientes"
+                        value={this.state.permits.clientes ? this.state.permits.clientes : ""}
+                        onChange={this.handleOnPermitsChange}
+                      >
+                        {
+                          permits.map((permit, i)=>{
+                            return <option value={permit} key={i}>{permit ? permit : "No"}</option>
+                          })
+                        }
+                      </select>
+                    </div>
+                    <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center mb-3 pr-4">
+                      <span className="col-6">Stock</span>
+                      <select className="custom-select"
+                        id="stock"
+                        name="stock"
+                        value={this.state.permits.stock ? this.state.permits.stock : ""}
+                        onChange={this.handleOnPermitsChange}
+                      >
+                        {
+                          permits.map((permit, i)=>{
+                            return <option value={permit} key={i}>{permit ? permit : "No"}</option>
+                          })
+                        }
+                      </select>
+                    </div>
                   </div>
                 </div>
                 

@@ -31,10 +31,8 @@ if (localStorage.jwtToken) {
   setToken(token);
   // Decode token and get user info and exp
   const decoded = jwt_decode(token);
-  console.log("user: ",decoded)
   // Set current user
-  localStorage.setItem("currentUser", decoded);
-  localStorage.setItem("userPermits", decoded.permits)
+  localStorage.setItem("currentUser", JSON.stringify(decoded));
 // Check for expired token
   const currentTime = Date.now() / 1000; // to get in milliseconds
   if (decoded.exp < currentTime) {
@@ -45,7 +43,6 @@ if (localStorage.jwtToken) {
     setToken(false);
     // Set current user to empty object {} which will set isAuthenticated to false
     localStorage.removeItem("currentUser");
-    localStorage.removeItem("userPermits");
     // voy al login
     window.location.href = "./login";
   }
@@ -53,38 +50,37 @@ if (localStorage.jwtToken) {
 
 const RoutedApp = () => {
   const user = localStorage.getItem("currentUser")
-  // const permits = localStorage.getItem("userPermits")
-  // console.log("permits: ",permits)
+  let parseUser = {}
+  if(user){
+    parseUser = JSON.parse(user)
+    console.log("Current user: ",parseUser)
+  }
+  const permitsAdmin = parseUser.permitsAdmin ? parseUser.permitsAdmin : false
+  const permits = parseUser.permits ? parseUser.permits : {}
   return(
   <Router history={browserHistory} >
     <Redirect from="/" to="/home" />
     <Route path="/login" component={Login} />
     <Route path="/registrarse" component={Registrarse} />
     { user ? (
-      // permits === "true" ? (
         <Route path="/" component={Header} >
-          <Route path="home" component={withRouter(Home)} />
-          <Route path="fabricas" component={FabricasLista} />
-          <Route path="fabricas/editar" component={FabricasEditar} />
-          <Route path="fabricas/editar/:id" component={FabricasEditar} />
-          <Route path="fabricas/pagos/:id" component={FabricasPagos} />
-          <Route path="clientes" component={ClientesLista} />
-          <Route path="clientes/editar" component={ClientesEditar} />
-          <Route path="clientes/editar/:id" component={ClientesEditar} />
-          <Route path="clientes/pagos/:id" component={ClientesPagos} />
-          <Route path="stock" component={StockLista} />
-          <Route path="stock/editar" component={StockEditar} />
-          <Route path="stock/editar/:id" component={StockEditar} />
-          <Route path="usuarios" component={UsuariosLista} />
-          <Route path="usuarios/editar" component={UsuariosEditar} />
-          <Route path="usuarios/editar/:id" component={UsuariosEditar} />
+          <Route path="home" component={permits.home ? withRouter(Home) : withRouter(noPermits)} />
+          <Route path="fabricas" component={permits.fabricas ? FabricasLista : noPermits} />
+          <Route path="fabricas/editar" component={permits.fabricas ? FabricasEditar : noPermits} />
+          <Route path="fabricas/editar/:id" component={permits.fabricas ? FabricasEditar : noPermits} />
+          <Route path="fabricas/pagos/:id" component={permits.fabricas ? FabricasPagos : noPermits} />
+          <Route path="clientes" component={permits.clientes ? ClientesLista : noPermits} />
+          <Route path="clientes/editar" component={permits.clientes ? ClientesEditar : noPermits} />
+          <Route path="clientes/editar/:id" component={permits.clientes ? ClientesEditar : noPermits} />
+          <Route path="clientes/pagos/:id" component={permits.clientes ? ClientesPagos : noPermits} />
+          <Route path="stock" component={permits.stock ? StockLista : noPermits} />
+          <Route path="stock/editar" component={permits.stock ? StockEditar : noPermits} />
+          <Route path="stock/editar/:id" component={permits.stock ? StockEditar : noPermits} />
+          <Route path="usuarios" component={permitsAdmin ? UsuariosLista : noPermits} />
+          <Route path="usuarios/editar" component={permitsAdmin ? UsuariosEditar : noPermits} />
+          <Route path="usuarios/editar/:id" component={permitsAdmin ? UsuariosEditar : noPermits} />
           <Route path="*" component={noMatch} />
         </Route>
-      // ) : (
-      //   <Route path="/" component={Header} >
-      //     <Route path="*" component={noPermits} />
-      //   </Route>
-      // )
       ) : (
         <Redirect from="/*" to="/login" />
       )

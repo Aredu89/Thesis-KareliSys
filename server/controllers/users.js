@@ -67,7 +67,7 @@ module.exports.modificarUsuario = (req,res) => {
         usuario.name = auxUsuario.name
         usuario.email = auxUsuario.email
         usuario.password = auxUsuario.password ? auxUsuario.password : usuario.password
-        usuario.permits = auxUsuario.permits.map(permit=>permit)
+        usuario.permits = auxUsuario.permits
         usuario.permitsAdmin = auxUsuario.permitsAdmin ? auxUsuario.permitsAdmin : false
 
         // Controlo que queden usuarios con permisos
@@ -227,7 +227,7 @@ module.exports.registrarUsuarios = (req, res) => {
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
-        permits: [],
+        permits: {},
         permitsAdmin: false
       })
       // Hash password antes de guardar en la base de datos

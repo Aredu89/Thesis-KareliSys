@@ -143,10 +143,8 @@
 	  (0, _setAuthToken.setToken)(token);
 	  // Decode token and get user info and exp
 	  var decoded = (0, _jwtDecode2.default)(token);
-	  console.log("user: ", decoded);
 	  // Set current user
-	  localStorage.setItem("currentUser", decoded);
-	  localStorage.setItem("userPermits", decoded.permits);
+	  localStorage.setItem("currentUser", JSON.stringify(decoded));
 	  // Check for expired token
 	  var currentTime = Date.now() / 1000; // to get in milliseconds
 	  if (decoded.exp < currentTime) {
@@ -157,7 +155,6 @@
 	    (0, _setAuthToken.setToken)(false);
 	    // Set current user to empty object {} which will set isAuthenticated to false
 	    localStorage.removeItem("currentUser");
-	    localStorage.removeItem("userPermits");
 	    // voy al login
 	    window.location.href = "./login";
 	  }
@@ -165,42 +162,39 @@
 	
 	var RoutedApp = function RoutedApp() {
 	  var user = localStorage.getItem("currentUser");
-	  // const permits = localStorage.getItem("userPermits")
-	  // console.log("permits: ",permits)
+	  var parseUser = {};
+	  if (user) {
+	    parseUser = JSON.parse(user);
+	    console.log("Current user: ", parseUser);
+	  }
+	  var permitsAdmin = parseUser.permitsAdmin ? parseUser.permitsAdmin : false;
+	  var permits = parseUser.permits ? parseUser.permits : {};
 	  return _react2.default.createElement(
 	    _reactRouter.Router,
 	    { history: _reactRouter.browserHistory },
 	    _react2.default.createElement(_reactRouter.Redirect, { from: '/', to: '/home' }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _Login2.default }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/registrarse', component: _Registrarse2.default }),
-	    user ?
-	    // permits === "true" ? (
-	    _react2.default.createElement(
+	    user ? _react2.default.createElement(
 	      _reactRouter.Route,
 	      { path: '/', component: _Header2.default },
-	      _react2.default.createElement(_reactRouter.Route, { path: 'home', component: (0, _reactRouter.withRouter)(_Home2.default) }),
-	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas', component: _FabricasLista2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas/editar', component: _FabricasEditar2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas/editar/:id', component: _FabricasEditar2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas/pagos/:id', component: _FabricasPagos2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes', component: _ClientesLista2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes/editar', component: _ClientesEditar2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes/editar/:id', component: _ClientesEditar2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes/pagos/:id', component: _ClientesPagos2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: 'stock', component: _StockLista2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: 'stock/editar', component: _StockEditar2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: 'stock/editar/:id', component: _StockEditar2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios', component: _UsuariosLista2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios/editar', component: _UsuariosEditar2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios/editar/:id', component: _UsuariosEditar2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'home', component: permits.home ? (0, _reactRouter.withRouter)(_Home2.default) : (0, _reactRouter.withRouter)(noPermits) }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas', component: permits.fabricas ? _FabricasLista2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas/editar', component: permits.fabricas ? _FabricasEditar2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas/editar/:id', component: permits.fabricas ? _FabricasEditar2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas/pagos/:id', component: permits.fabricas ? _FabricasPagos2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes', component: permits.clientes ? _ClientesLista2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes/editar', component: permits.clientes ? _ClientesEditar2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes/editar/:id', component: permits.clientes ? _ClientesEditar2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes/pagos/:id', component: permits.clientes ? _ClientesPagos2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'stock', component: permits.stock ? _StockLista2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'stock/editar', component: permits.stock ? _StockEditar2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'stock/editar/:id', component: permits.stock ? _StockEditar2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios', component: permitsAdmin ? _UsuariosLista2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios/editar', component: permitsAdmin ? _UsuariosEditar2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios/editar/:id', component: permitsAdmin ? _UsuariosEditar2.default : noPermits }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '*', component: noMatch })
-	    )
-	    // ) : (
-	    //   <Route path="/" component={Header} >
-	    //     <Route path="*" component={noPermits} />
-	    //   </Route>
-	    // )
-	    : _react2.default.createElement(_reactRouter.Redirect, { from: '/*', to: '/login' })
+	    ) : _react2.default.createElement(_reactRouter.Redirect, { from: '/*', to: '/login' })
 	  );
 	};
 	
@@ -54533,27 +54527,110 @@
 	                ),
 	                _react2.default.createElement(
 	                  'div',
-	                  { className: 'col-12 d-flex justify-content-between align-items-center mb-3' },
+	                  { className: 'row' },
 	                  _react2.default.createElement(
-	                    'span',
-	                    { className: 'col-6' },
-	                    'Home'
+	                    'div',
+	                    { className: 'col-12 col-sm-6 d-flex justify-content-between align-items-center mb-3 pr-4' },
+	                    _react2.default.createElement(
+	                      'span',
+	                      { className: 'col-6' },
+	                      'Home'
+	                    ),
+	                    _react2.default.createElement(
+	                      'select',
+	                      { className: 'custom-select',
+	                        id: 'home',
+	                        name: 'home',
+	                        value: this.state.permits.home ? this.state.permits.home : "",
+	                        onChange: this.handleOnPermitsChange
+	                      },
+	                      permits.map(function (permit, i) {
+	                        return _react2.default.createElement(
+	                          'option',
+	                          { value: permit, key: i },
+	                          permit ? permit : "No"
+	                        );
+	                      })
+	                    )
 	                  ),
 	                  _react2.default.createElement(
-	                    'select',
-	                    { className: 'custom-select',
-	                      id: 'home',
-	                      name: 'home',
-	                      value: this.state.permits.home ? this.state.permits.home : "",
-	                      onChange: this.handleOnPermitsChange
-	                    },
-	                    permits.map(function (permit, i) {
-	                      return _react2.default.createElement(
-	                        'option',
-	                        { value: permit, key: i },
-	                        permit ? permit : "No"
-	                      );
-	                    })
+	                    'div',
+	                    { className: 'col-12 col-sm-6 d-flex justify-content-between align-items-center mb-3 pr-4' },
+	                    _react2.default.createElement(
+	                      'span',
+	                      { className: 'col-6' },
+	                      'Fabricas'
+	                    ),
+	                    _react2.default.createElement(
+	                      'select',
+	                      { className: 'custom-select',
+	                        id: 'fabricas',
+	                        name: 'fabricas',
+	                        value: this.state.permits.fabricas ? this.state.permits.fabricas : "",
+	                        onChange: this.handleOnPermitsChange
+	                      },
+	                      permits.map(function (permit, i) {
+	                        return _react2.default.createElement(
+	                          'option',
+	                          { value: permit, key: i },
+	                          permit ? permit : "No"
+	                        );
+	                      })
+	                    )
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'row' },
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'col-12 col-sm-6 d-flex justify-content-between align-items-center mb-3 pr-4' },
+	                    _react2.default.createElement(
+	                      'span',
+	                      { className: 'col-6' },
+	                      'Clientes'
+	                    ),
+	                    _react2.default.createElement(
+	                      'select',
+	                      { className: 'custom-select',
+	                        id: 'clientes',
+	                        name: 'clientes',
+	                        value: this.state.permits.clientes ? this.state.permits.clientes : "",
+	                        onChange: this.handleOnPermitsChange
+	                      },
+	                      permits.map(function (permit, i) {
+	                        return _react2.default.createElement(
+	                          'option',
+	                          { value: permit, key: i },
+	                          permit ? permit : "No"
+	                        );
+	                      })
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'col-12 col-sm-6 d-flex justify-content-between align-items-center mb-3 pr-4' },
+	                    _react2.default.createElement(
+	                      'span',
+	                      { className: 'col-6' },
+	                      'Stock'
+	                    ),
+	                    _react2.default.createElement(
+	                      'select',
+	                      { className: 'custom-select',
+	                        id: 'stock',
+	                        name: 'stock',
+	                        value: this.state.permits.stock ? this.state.permits.stock : "",
+	                        onChange: this.handleOnPermitsChange
+	                      },
+	                      permits.map(function (permit, i) {
+	                        return _react2.default.createElement(
+	                          'option',
+	                          { value: permit, key: i },
+	                          permit ? permit : "No"
+	                        );
+	                      })
+	                    )
 	                  )
 	                )
 	              )
