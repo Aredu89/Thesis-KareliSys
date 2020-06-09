@@ -29573,7 +29573,8 @@
 	    var _this = _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this));
 	
 	    _this.state = {
-	      userName: ""
+	      userName: "",
+	      currentUser: null
 	    };
 	    return _this;
 	  }
@@ -29581,8 +29582,10 @@
 	  _createClass(Header, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
+	      var currentUser = JSON.parse(localStorage.getItem("currentUser"));
 	      this.setState({
-	        userName: localStorage.getItem("userName")
+	        userName: localStorage.getItem("userName"),
+	        currentUser: currentUser
 	      });
 	    }
 	  }, {
@@ -29594,7 +29597,6 @@
 	      (0, _setAuthToken.setToken)(false);
 	      // Set current user to empty object {} which will set isAuthenticated to false
 	      localStorage.removeItem("currentUser");
-	      localStorage.removeItem("userPermits");
 	      // voy al login
 	      this.props.history.push("/login");
 	    }
@@ -29603,6 +29605,12 @@
 	    value: function render() {
 	      var _this2 = this;
 	
+	      var permits = {};
+	      var permitsAdmin = false;
+	      if (this.state.currentUser) {
+	        permits = this.state.currentUser.permits;
+	        permitsAdmin = this.state.currentUser.permitsAdmin;
+	      }
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'header' },
@@ -29646,7 +29654,7 @@
 	                  )
 	                )
 	              ),
-	              _react2.default.createElement(
+	              permits.fabricas && _react2.default.createElement(
 	                'li',
 	                { className: 'nav-item' },
 	                _react2.default.createElement(
@@ -29655,7 +29663,7 @@
 	                  'F\xE1bricas'
 	                )
 	              ),
-	              _react2.default.createElement(
+	              permits.clientes && _react2.default.createElement(
 	                'li',
 	                { className: 'nav-item' },
 	                _react2.default.createElement(
@@ -29664,7 +29672,7 @@
 	                  'Clientes'
 	                )
 	              ),
-	              _react2.default.createElement(
+	              permits.stock && _react2.default.createElement(
 	                'li',
 	                { className: 'nav-item' },
 	                _react2.default.createElement(
@@ -29673,7 +29681,7 @@
 	                  'Stock'
 	                )
 	              ),
-	              _react2.default.createElement(
+	              permitsAdmin && _react2.default.createElement(
 	                'li',
 	                { className: 'nav-item' },
 	                _react2.default.createElement(

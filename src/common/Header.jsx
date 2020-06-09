@@ -7,13 +7,16 @@ export default class Header extends React.Component {
   constructor() {
     super()
     this.state = {
-      userName: ""
+      userName: "",
+      currentUser: null
     }
   }
 
   componentDidMount(){
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"))
     this.setState({
-      userName: localStorage.getItem("userName")
+      userName: localStorage.getItem("userName"),
+      currentUser: currentUser
     })
   }
 
@@ -24,12 +27,17 @@ export default class Header extends React.Component {
     setToken(false);
     // Set current user to empty object {} which will set isAuthenticated to false
     localStorage.removeItem("currentUser");
-    localStorage.removeItem("userPermits")
     // voy al login
     this.props.history.push("/login")
   }
 
   render() {
+    let permits = {}
+    let permitsAdmin = false
+    if(this.state.currentUser){
+      permits = this.state.currentUser.permits
+      permitsAdmin = this.state.currentUser.permitsAdmin
+    }
     return (
       <div className="header">
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -50,18 +58,18 @@ export default class Header extends React.Component {
               <li className="nav-item active">
                 <Link className="nav-link" to="/">Home <span className="sr-only">(current)</span></Link>
               </li>
-              <li className="nav-item">
+              {permits.fabricas && <li className="nav-item">
                 <Link className="nav-link" to="/fabricas">Fábricas</Link>
-              </li>
-              <li className="nav-item">
+              </li>}
+              {permits.clientes && <li className="nav-item">
                 <Link className="nav-link" to="/clientes">Clientes</Link>
-              </li>
-              <li className="nav-item">
+              </li>}
+              {permits.stock && <li className="nav-item">
                 <Link className="nav-link" to="/stock">Stock</Link>
-              </li>
-              <li className="nav-item">
+              </li>}
+              {permitsAdmin && <li className="nav-item">
                 <Link className="nav-link" to="/usuarios">Usuarios</Link>
-              </li>
+              </li>}
             </ul>
             <div className="form-inline my-2 my-lg-0">
               <div className="nav-item dropdown mr-sm-2">
