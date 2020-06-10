@@ -35,8 +35,8 @@ export default class Header extends React.Component {
     let permits = {}
     let permitsAdmin = false
     if(this.state.currentUser){
-      permits = this.state.currentUser.permits
-      permitsAdmin = this.state.currentUser.permitsAdmin
+      permits = this.state.currentUser.permits ? this.state.currentUser.permits : {}
+      permitsAdmin = this.state.currentUser.permitsAdmin ? this.state.currentUser.permitsAdmin : false
     }
     return (
       <div className="header">

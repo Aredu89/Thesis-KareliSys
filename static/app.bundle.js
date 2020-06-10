@@ -29608,8 +29608,8 @@
 	      var permits = {};
 	      var permitsAdmin = false;
 	      if (this.state.currentUser) {
-	        permits = this.state.currentUser.permits;
-	        permitsAdmin = this.state.currentUser.permitsAdmin;
+	        permits = this.state.currentUser.permits ? this.state.currentUser.permits : {};
+	        permitsAdmin = this.state.currentUser.permitsAdmin ? this.state.currentUser.permitsAdmin : false;
 	      }
 	      return _react2.default.createElement(
 	        'div',
@@ -34200,7 +34200,9 @@
 	    _this.state = {
 	      fabricas: [],
 	      cargando: true,
-	      error: ""
+	      error: "",
+	      //Permisos
+	      permits: ""
 	    };
 	    _this.cargarLista = _this.cargarLista.bind(_this);
 	    _this.handleEditar = _this.handleEditar.bind(_this);
@@ -34214,6 +34216,15 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.cargarLista();
+	      //Controlo permisos
+	      var user = JSON.parse(localStorage.getItem("currentUser"));
+	      if (user) {
+	        if (user.permits) {
+	          this.setState({
+	            permits: user.permits.fabricas ? user.permits.fabricas : ""
+	          });
+	        }
+	      }
 	    }
 	
 	    //Obtener lista de fábricas
@@ -34327,6 +34338,13 @@
 	    value: function render() {
 	      var _this5 = this;
 	
+	      var permits = this.state.permits;
+	      //Permisos
+	
+	      var permitUpdate = permits === "MODIFICAR" ? true : false;
+	      var permitCreate = permits === "MODIFICAR" || permits === "CREAR" ? true : false;
+	      var permitRead = permits === "MODIFICAR" || permits === "CREAR" || permits === "LEER" ? true : false;
+	      //Tabla
 	      var columns = [["Nombre", "nombre", "String"], ["Ciudad", "ciudad", "String"], ["Dirección", "direccion", "String"], ["Pedidos pendientes", "pedidos", "Largo pendiente"], ["A pagar", "", "Deuda"]];
 	      return _react2.default.createElement(
 	        'div',
@@ -34342,7 +34360,7 @@
 	              null,
 	              'Fabricas'
 	            ),
-	            _react2.default.createElement(
+	            permitCreate && _react2.default.createElement(
 	              'button',
 	              { type: 'button',
 	                className: 'btn btn-success',
@@ -34367,7 +34385,9 @@
 	              data: this.state.fabricas,
 	              handleEditar: this.handleEditar,
 	              handleEliminar: this.handleEliminar,
-	              goToPagos: this.goToPagos
+	              goToPagos: this.goToPagos,
+	              blockRead: !permitRead,
+	              blockDelete: !permitUpdate
 	            }) : this.state.error ?
 	            //Mensaje de error
 	            _react2.default.createElement(
@@ -45340,7 +45360,7 @@
 	      if (user) {
 	        if (user.permits) {
 	          this.setState({
-	            permits: user.permits.clientes ? user.permits.clientes : ""
+	            permits: user.permits.fabricas ? user.permits.fabricas : ""
 	          });
 	        }
 	      }
@@ -45674,7 +45694,7 @@
 	                placeholder: 'Nombre...',
 	                value: this.state.nombre,
 	                onChange: this.handleOnChange,
-	                disabled: permitUpdate || permitCreate ? false : true }),
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true }),
 	              this.state.errorNombre ? _react2.default.createElement(
 	                'div',
 	                { className: 'invalid-feedback' },
@@ -45696,7 +45716,7 @@
 	                placeholder: 'Direcci\xF3n...',
 	                value: this.state.direccion,
 	                onChange: this.handleOnChange,
-	                disabled: permitUpdate || permitCreate ? false : true })
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -45713,7 +45733,7 @@
 	                placeholder: 'Ciudad...',
 	                value: this.state.ciudad,
 	                onChange: this.handleOnChange,
-	                disabled: permitUpdate || permitCreate ? false : true })
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -45730,7 +45750,7 @@
 	                placeholder: 'Tel\xE9fono...',
 	                value: this.state.telefono,
 	                onChange: this.handleOnChange,
-	                disabled: permitUpdate || permitCreate ? false : true })
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -45787,8 +45807,8 @@
 	                      data: this.state.contactos,
 	                      handleEditar: this.handleEditarContacto,
 	                      handleEliminar: this.handleEliminarContacto,
-	                      blockRead: !permitRead,
-	                      blockDelete: !permitUpdate
+	                      blockRead: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true,
+	                      blockDelete: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true
 	                    })
 	                  )
 	                )
@@ -45849,8 +45869,8 @@
 	                      data: this.state.pedidos,
 	                      handleEditar: this.handleEditarPedido,
 	                      handleEliminar: this.handleEliminarPedido,
-	                      blockRead: !permitRead,
-	                      blockDelete: !permitUpdate
+	                      blockRead: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true,
+	                      blockDelete: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true
 	                    })
 	                  )
 	                )
@@ -50493,7 +50513,9 @@
 	      cargando: true,
 	      error: "",
 	      modalPagos: false,
-	      modalPagosEditar: null
+	      modalPagosEditar: null,
+	      //Permisos
+	      permits: ""
 	    };
 	    _this.cargarFabrica = _this.cargarFabrica.bind(_this);
 	    _this.onOpenModal = _this.onOpenModal.bind(_this);
@@ -50508,6 +50530,15 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.cargarFabrica();
+	      //Controlo permisos
+	      var user = JSON.parse(localStorage.getItem("currentUser"));
+	      if (user) {
+	        if (user.permits) {
+	          this.setState({
+	            permits: user.permits.fabricas ? user.permits.fabricas : ""
+	          });
+	        }
+	      }
 	    }
 	  }, {
 	    key: 'cargarFabrica',
@@ -50657,6 +50688,11 @@
 	    value: function render() {
 	      var _this5 = this;
 	
+	      var permits = this.state.permits;
+	      //Permisos
+	
+	      var permitUpdate = permits === "MODIFICAR" ? true : false;
+	      //Tabla
 	      var deuda = _javascriptFunctions2.default.getDeuda(this.state.fabrica);
 	      var columnsPagos = [["Fecha", "fecha", "Fecha"], ["Monto", "monto", "Money"], ["Forma de Pago", "formaPago", "String"]];
 	      var columnsPedidos = [["Fecha", "fecha", "Fecha"], ["Productos", "detalle", "Largo"], ["Precio", "precioTotal", "String"], ["Estado", "estado", "String"]];
@@ -50721,7 +50757,7 @@
 	                    )
 	                  )
 	                ),
-	                _react2.default.createElement(
+	                permitUpdate && _react2.default.createElement(
 	                  'button',
 	                  { type: 'button',
 	                    className: 'btn btn-outline-success',
@@ -50746,7 +50782,9 @@
 	                    columns: columnsPagos,
 	                    data: this.state.fabrica.pagos ? this.state.fabrica.pagos : [],
 	                    handleEditar: this.handleEditarPago,
-	                    handleEliminar: this.handleEliminarPago
+	                    handleEliminar: this.handleEliminarPago,
+	                    blockRead: !permitUpdate,
+	                    blockDelete: !permitUpdate
 	                  })
 	                )
 	              )
@@ -51795,7 +51833,7 @@
 	                placeholder: 'Nombre...',
 	                value: this.state.nombre,
 	                onChange: this.handleOnChange,
-	                disabled: permitUpdate || permitCreate ? false : true }),
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true }),
 	              this.state.errorNombre ? _react2.default.createElement(
 	                'div',
 	                { className: 'invalid-feedback' },
@@ -51817,7 +51855,7 @@
 	                placeholder: 'Direcci\xF3n...',
 	                value: this.state.direccion,
 	                onChange: this.handleOnChange,
-	                disabled: permitUpdate || permitCreate ? false : true })
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -51834,7 +51872,7 @@
 	                placeholder: 'Ciudad...',
 	                value: this.state.ciudad,
 	                onChange: this.handleOnChange,
-	                disabled: permitUpdate || permitCreate ? false : true })
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -51851,7 +51889,7 @@
 	                placeholder: 'Tel\xE9fono...',
 	                value: this.state.telefono,
 	                onChange: this.handleOnChange,
-	                disabled: permitUpdate || permitCreate ? false : true })
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -51908,8 +51946,8 @@
 	                      data: this.state.contactos,
 	                      handleEditar: this.handleEditarContacto,
 	                      handleEliminar: this.handleEliminarContacto,
-	                      blockRead: !permitRead,
-	                      blockDelete: !permitUpdate
+	                      blockRead: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true,
+	                      blockDelete: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true
 	                    })
 	                  )
 	                )
@@ -51970,8 +52008,8 @@
 	                      data: this.state.pedidos,
 	                      handleEditar: this.handleEditarPedido,
 	                      handleEliminar: this.handleEliminarPedido,
-	                      blockRead: !permitRead,
-	                      blockDelete: !permitUpdate
+	                      blockRead: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true,
+	                      blockDelete: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true
 	                    })
 	                  )
 	                )
@@ -52775,7 +52813,9 @@
 	      cargando: true,
 	      error: "",
 	      modalPagos: false,
-	      modalPagosEditar: null
+	      modalPagosEditar: null,
+	      //Permisos
+	      permits: ""
 	    };
 	    _this.cargarCliente = _this.cargarCliente.bind(_this);
 	    _this.onOpenModal = _this.onOpenModal.bind(_this);
@@ -52790,6 +52830,15 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.cargarCliente();
+	      //Controlo permisos
+	      var user = JSON.parse(localStorage.getItem("currentUser"));
+	      if (user) {
+	        if (user.permits) {
+	          this.setState({
+	            permits: user.permits.clientes ? user.permits.clientes : ""
+	          });
+	        }
+	      }
 	    }
 	  }, {
 	    key: 'cargarCliente',
@@ -52939,6 +52988,11 @@
 	    value: function render() {
 	      var _this5 = this;
 	
+	      var permits = this.state.permits;
+	      //Permisos
+	
+	      var permitUpdate = permits === "MODIFICAR" ? true : false;
+	      //Tabla
 	      var deuda = _javascriptFunctions2.default.getDeuda(this.state.cliente);
 	      var columnsPagos = [["Fecha", "fecha", "Fecha"], ["Monto", "monto", "Money"], ["Forma de Pago", "formaPago", "String"]];
 	      var columnsPedidos = [["Fecha", "fecha", "Fecha"], ["Productos", "detalle", "Largo"], ["Precio", "precioTotal", "String"], ["Estado", "estado", "String"]];
@@ -53003,7 +53057,7 @@
 	                    )
 	                  )
 	                ),
-	                _react2.default.createElement(
+	                permitUpdate && _react2.default.createElement(
 	                  'button',
 	                  { type: 'button',
 	                    className: 'btn btn-outline-success',
@@ -53028,7 +53082,9 @@
 	                    columns: columnsPagos,
 	                    data: this.state.cliente.pagos ? this.state.cliente.pagos : [],
 	                    handleEditar: this.handleEditarPago,
-	                    handleEliminar: this.handleEliminarPago
+	                    handleEliminar: this.handleEliminarPago,
+	                    blockRead: !permitUpdate,
+	                    blockDelete: !permitUpdate
 	                  })
 	                )
 	              )
@@ -53409,7 +53465,9 @@
 	    _this.state = {
 	      stock: [],
 	      cargando: true,
-	      error: ""
+	      error: "",
+	      //Permisos
+	      permits: ""
 	    };
 	    _this.cargarLista = _this.cargarLista.bind(_this);
 	    _this.handleEditar = _this.handleEditar.bind(_this);
@@ -53422,6 +53480,15 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.cargarLista();
+	      //Controlo permisos
+	      var user = JSON.parse(localStorage.getItem("currentUser"));
+	      if (user) {
+	        if (user.permits) {
+	          this.setState({
+	            permits: user.permits.stock ? user.permits.stock : ""
+	          });
+	        }
+	      }
 	    }
 	
 	    //Obtener lista de stock
@@ -53524,6 +53591,13 @@
 	    value: function render() {
 	      var _this5 = this;
 	
+	      var permits = this.state.permits;
+	      //Permisos
+	
+	      var permitUpdate = permits === "MODIFICAR" ? true : false;
+	      var permitCreate = permits === "MODIFICAR" || permits === "CREAR" ? true : false;
+	      var permitRead = permits === "MODIFICAR" || permits === "CREAR" || permits === "LEER" ? true : false;
+	      //Tabla
 	      var columns = [["Producto", "producto", "String"], ["Tipo", "tipo", "String"], ["Material", "material", "String"], ["Talle", "talle", "String"], ["Estilo", "estilo", "String"], ["Cantidad", "cantidad", "String"], ["Estante", "estante", "String"]];
 	      return _react2.default.createElement(
 	        'div',
@@ -53539,7 +53613,7 @@
 	              null,
 	              'Stock'
 	            ),
-	            _react2.default.createElement(
+	            permitCreate && _react2.default.createElement(
 	              'button',
 	              { type: 'button',
 	                className: 'btn btn-success',
@@ -53563,7 +53637,9 @@
 	              columns: columns,
 	              data: this.state.stock,
 	              handleEditar: this.handleEditar,
-	              handleEliminar: this.handleEliminar
+	              handleEliminar: this.handleEliminar,
+	              blockRead: !permitRead,
+	              blockDelete: !permitUpdate
 	            }) : this.state.error ?
 	            //Mensaje de error
 	            _react2.default.createElement(
@@ -53656,7 +53732,9 @@
 	      estilo: "",
 	      cantidad: "",
 	      estante: "",
-	      errorProducto: false
+	      errorProducto: false,
+	      //Permisos
+	      permits: ""
 	    };
 	    _this.handleOnChange = _this.handleOnChange.bind(_this);
 	    _this.obtenerStock = _this.obtenerStock.bind(_this);
@@ -53672,6 +53750,15 @@
 	        this.setState({
 	          cargando: false
 	        });
+	      }
+	      //Controlo permisos
+	      var user = JSON.parse(localStorage.getItem("currentUser"));
+	      if (user) {
+	        if (user.permits) {
+	          this.setState({
+	            permits: user.permits.stock ? user.permits.stock : ""
+	          });
+	        }
 	      }
 	    }
 	  }, {
@@ -53828,6 +53915,12 @@
 	    value: function render() {
 	      var _this5 = this;
 	
+	      var permits = this.state.permits;
+	      //Permisos
+	
+	      var permitUpdate = permits === "MODIFICAR" ? true : false;
+	      var permitCreate = permits === "MODIFICAR" || permits === "CREAR" ? true : false;
+	      var permitRead = permits === "MODIFICAR" || permits === "CREAR" || permits === "LEER" ? true : false;
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fabricas-editar text-center' },
@@ -53850,7 +53943,7 @@
 	                'Modificar Stock: ',
 	                this.state.producto
 	              ),
-	              _react2.default.createElement(
+	              (this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate) && _react2.default.createElement(
 	                'button',
 	                { type: 'button',
 	                  className: 'btn btn-success',
@@ -53879,7 +53972,8 @@
 	                name: 'producto',
 	                placeholder: 'Producto...',
 	                value: this.state.producto,
-	                onChange: this.handleOnChange }),
+	                onChange: this.handleOnChange,
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true }),
 	              this.state.errorProducto ? _react2.default.createElement(
 	                'div',
 	                { className: 'invalid-feedback' },
@@ -53900,7 +53994,8 @@
 	                name: 'tipo',
 	                placeholder: 'Tipo...',
 	                value: this.state.tipo,
-	                onChange: this.handleOnChange })
+	                onChange: this.handleOnChange,
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -53916,7 +54011,8 @@
 	                name: 'material',
 	                placeholder: 'Material...',
 	                value: this.state.material,
-	                onChange: this.handleOnChange })
+	                onChange: this.handleOnChange,
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -53932,7 +54028,8 @@
 	                name: 'talle',
 	                placeholder: 'Talle...',
 	                value: this.state.talle,
-	                onChange: this.handleOnChange })
+	                onChange: this.handleOnChange,
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -53948,7 +54045,8 @@
 	                name: 'estilo',
 	                placeholder: 'Estilo...',
 	                value: this.state.estilo,
-	                onChange: this.handleOnChange })
+	                onChange: this.handleOnChange,
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -53964,7 +54062,8 @@
 	                name: 'cantidad',
 	                placeholder: 'Cantidad...',
 	                value: this.state.cantidad,
-	                onChange: this.handleOnChange })
+	                onChange: this.handleOnChange,
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -53980,7 +54079,8 @@
 	                name: 'estante',
 	                placeholder: 'Estante...',
 	                value: this.state.estante,
-	                onChange: this.handleOnChange })
+	                onChange: this.handleOnChange,
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true })
 	            )
 	          )
 	        ) : this.state.error ?

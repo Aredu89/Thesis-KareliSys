@@ -14,6 +14,8 @@ export default class ClientesPagos extends React.Component {
       error: "",
       modalPagos: false,
       modalPagosEditar: null,
+      //Permisos
+      permits: ""
     }
     this.cargarCliente = this.cargarCliente.bind(this)
     this.onOpenModal = this.onOpenModal.bind(this)
@@ -25,6 +27,15 @@ export default class ClientesPagos extends React.Component {
 
   componentDidMount(){
     this.cargarCliente()
+    //Controlo permisos
+    const user = JSON.parse(localStorage.getItem("currentUser"))
+    if(user){
+      if(user.permits){
+        this.setState({
+          permits: user.permits.clientes ? user.permits.clientes : ""
+        })
+      }
+    }
   }
 
   cargarCliente(){
@@ -177,6 +188,12 @@ export default class ClientesPagos extends React.Component {
   }
 
   render() {
+    const {
+      permits
+    } = this.state
+    //Permisos
+    const permitUpdate = permits === "MODIFICAR" ? true : false
+    //Tabla
     const deuda = Funciones.getDeuda(this.state.cliente)
     const columnsPagos = [
       ["Fecha","fecha","Fecha"],
@@ -219,10 +236,13 @@ export default class ClientesPagos extends React.Component {
                         <i className="material-icons ml-3">keyboard_arrow_down</i>
                       </h5>
                     </button>
-                  <button type="button" 
-                    className="btn btn-outline-success"
-                    onClick={() => this.onOpenModal("modalPagos")}
-                    >+ Agregar Pago</button>
+                  {
+                    permitUpdate &&
+                      <button type="button" 
+                        className="btn btn-outline-success"
+                        onClick={() => this.onOpenModal("modalPagos")}
+                        >+ Agregar Pago</button>
+                  }
                 </div>
                 <div id="collapseOne" 
                   className="collapse" 
@@ -235,6 +255,8 @@ export default class ClientesPagos extends React.Component {
                       data={this.state.cliente.pagos ? this.state.cliente.pagos : []}
                       handleEditar={this.handleEditarPago}
                       handleEliminar={this.handleEliminarPago}
+                      blockRead={!permitUpdate}
+                      blockDelete={!permitUpdate}
                     />
                   </div>
                 </div>

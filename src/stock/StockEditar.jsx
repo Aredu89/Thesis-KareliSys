@@ -17,7 +17,9 @@ export default class FabricasEditar extends React.Component {
       estilo: "",
       cantidad: "",
       estante: "",
-      errorProducto: false
+      errorProducto: false,
+      //Permisos
+      permits: ""
     }
     this.handleOnChange = this.handleOnChange.bind(this)
     this.obtenerStock = this.obtenerStock.bind(this)
@@ -30,6 +32,15 @@ export default class FabricasEditar extends React.Component {
       this.setState({
         cargando: false
       })
+    }
+    //Controlo permisos
+    const user = JSON.parse(localStorage.getItem("currentUser"))
+    if(user){
+      if(user.permits){
+        this.setState({
+          permits: user.permits.stock ? user.permits.stock : ""
+        })
+      }
     }
   }
 
@@ -204,6 +215,16 @@ export default class FabricasEditar extends React.Component {
   }
 
   render() {
+    const {
+      permits
+    } = this.state
+    //Permisos
+    const permitUpdate = permits === "MODIFICAR" ? true : false
+    const permitCreate = permits === "MODIFICAR" ||
+      permits === "CREAR" ? true : false
+    const permitRead = permits === "MODIFICAR" ||
+      permits === "CREAR" ||
+      permits === "LEER" ? true : false
     return (
       <div className="fabricas-editar text-center">
         {!this.state.cargando ?
@@ -218,10 +239,16 @@ export default class FabricasEditar extends React.Component {
                   <h3>Modificar Stock: {this.state.producto}</h3>
               }
               {/* Boton para guardar cambios */}
-              <button type="button" 
-                className="btn btn-success"
-                onClick={() => this.onClickGuardar()}
-                >+ Guardar</button>
+              {
+                (
+                  this.state.nuevo && permitCreate ||
+                  !this.state.nuevo && permitUpdate
+                ) &&
+                <button type="button" 
+                  className="btn btn-success"
+                  onClick={() => this.onClickGuardar()}
+                  >+ Guardar</button>
+              }
             </div>
           </div>
           {/* Formulario */}
@@ -235,7 +262,9 @@ export default class FabricasEditar extends React.Component {
                 name="producto"
                 placeholder="Producto..."
                 value={this.state.producto}
-                onChange={this.handleOnChange} />
+                onChange={this.handleOnChange}
+                disabled={this.state.nuevo && permitCreate ||
+                  !this.state.nuevo && permitUpdate ? false : true} />
               {
                 this.state.errorProducto ?
                 <div className="invalid-feedback">El producto es requerido</div>
@@ -251,7 +280,9 @@ export default class FabricasEditar extends React.Component {
                 name="tipo"
                 placeholder="Tipo..."
                 value={this.state.tipo}
-                onChange={this.handleOnChange} />
+                onChange={this.handleOnChange}
+                disabled={this.state.nuevo && permitCreate ||
+                  !this.state.nuevo && permitUpdate ? false : true} />
             </div>
             {/* Material */}
             <div className="col-sm-6 col-12 form-group">
@@ -262,7 +293,9 @@ export default class FabricasEditar extends React.Component {
                 name="material"
                 placeholder="Material..."
                 value={this.state.material}
-                onChange={this.handleOnChange} />
+                onChange={this.handleOnChange}
+                disabled={this.state.nuevo && permitCreate ||
+                  !this.state.nuevo && permitUpdate ? false : true} />
             </div>
             {/* Talle */}
             <div className="col-sm-6 col-12 form-group">
@@ -273,7 +306,9 @@ export default class FabricasEditar extends React.Component {
                 name="talle"
                 placeholder="Talle..."
                 value={this.state.talle}
-                onChange={this.handleOnChange} />
+                onChange={this.handleOnChange}
+                disabled={this.state.nuevo && permitCreate ||
+                  !this.state.nuevo && permitUpdate ? false : true} />
             </div>
             {/* Estilo */}
             <div className="col-sm-6 col-12 form-group">
@@ -284,7 +319,9 @@ export default class FabricasEditar extends React.Component {
                 name="estilo"
                 placeholder="Estilo..."
                 value={this.state.estilo}
-                onChange={this.handleOnChange} />
+                onChange={this.handleOnChange}
+                disabled={this.state.nuevo && permitCreate ||
+                  !this.state.nuevo && permitUpdate ? false : true} />
             </div>
             {/* Cantidad */}
             <div className="col-sm-6 col-12 form-group">
@@ -295,7 +332,9 @@ export default class FabricasEditar extends React.Component {
                 name="cantidad"
                 placeholder="Cantidad..."
                 value={this.state.cantidad}
-                onChange={this.handleOnChange} />
+                onChange={this.handleOnChange}
+                disabled={this.state.nuevo && permitCreate ||
+                  !this.state.nuevo && permitUpdate ? false : true} />
             </div>
             {/* Estante */}
             <div className="col-sm-6 col-12 form-group">
@@ -306,7 +345,9 @@ export default class FabricasEditar extends React.Component {
                 name="estante"
                 placeholder="Estante..."
                 value={this.state.estante}
-                onChange={this.handleOnChange} />
+                onChange={this.handleOnChange}
+                disabled={this.state.nuevo && permitCreate ||
+                  !this.state.nuevo && permitUpdate ? false : true} />
             </div>
           </div>
         </div>

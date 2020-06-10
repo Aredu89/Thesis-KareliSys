@@ -8,7 +8,9 @@ export default class StockLista extends React.Component {
     this.state = {
       stock: [],
       cargando: true,
-      error: ""
+      error: "",
+      //Permisos
+      permits: ""
     }
     this.cargarLista = this.cargarLista.bind(this)
     this.handleEditar = this.handleEditar.bind(this)
@@ -18,6 +20,15 @@ export default class StockLista extends React.Component {
 
   componentDidMount(){
     this.cargarLista()
+    //Controlo permisos
+    const user = JSON.parse(localStorage.getItem("currentUser"))
+    if(user){
+      if(user.permits){
+        this.setState({
+          permits: user.permits.stock ? user.permits.stock : ""
+        })
+      }
+    }
   }
 
   //Obtener lista de stock
@@ -122,6 +133,17 @@ export default class StockLista extends React.Component {
   }
 
   render() {
+    const {
+      permits
+    } = this.state
+    //Permisos
+    const permitUpdate = permits === "MODIFICAR" ? true : false
+    const permitCreate = permits === "MODIFICAR" ||
+      permits === "CREAR" ? true : false
+    const permitRead = permits === "MODIFICAR" ||
+      permits === "CREAR" ||
+      permits === "LEER" ? true : false
+    //Tabla
     const columns = [
       ["Producto","producto","String"],
       ["Tipo","tipo","String"],
@@ -138,10 +160,13 @@ export default class StockLista extends React.Component {
             {/* Titulo */}
             <h3>Stock</h3>
             {/* Boton para crear nuevo */}
-            <button type="button" 
-              className="btn btn-success"
-              onClick={() => this.onClickAgregar()}
-              >+ Agregar Stock</button>
+            {
+              permitCreate &&
+              <button type="button" 
+                className="btn btn-success"
+                onClick={() => this.onClickAgregar()}
+                >+ Agregar Stock</button>
+            }
           </div>
         </div>
         <div className="row">
@@ -154,6 +179,8 @@ export default class StockLista extends React.Component {
                   data={this.state.stock}
                   handleEditar={this.handleEditar}
                   handleEliminar={this.handleEliminar}
+                  blockRead={!permitRead}
+                  blockDelete={!permitUpdate}
                 />
               :
                 this.state.error ?

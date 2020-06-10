@@ -155,7 +155,7 @@ export default class ClientesLista extends React.Component {
     const permitRead = permits === "MODIFICAR" ||
       permits === "CREAR" ||
       permits === "LEER" ? true : false
-      //Tabla
+    //Tabla
     const columns = [
       ["Nombre","nombre","String"],
       ["Ciudad","ciudad","String"],

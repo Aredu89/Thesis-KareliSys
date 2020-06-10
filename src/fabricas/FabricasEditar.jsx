@@ -53,7 +53,7 @@ export default class FabricasEditar extends React.Component {
     if(user){
       if(user.permits){
         this.setState({
-          permits: user.permits.clientes ? user.permits.clientes : ""
+          permits: user.permits.fabricas ? user.permits.fabricas : ""
         })
       }
     }
@@ -386,7 +386,8 @@ export default class FabricasEditar extends React.Component {
                 placeholder="Nombre..."
                 value={this.state.nombre}
                 onChange={this.handleOnChange}
-                disabled={permitUpdate || permitCreate ? false : true} />
+                disabled={this.state.nuevo && permitCreate ||
+                  !this.state.nuevo && permitUpdate ? false : true} />
               {
                 this.state.errorNombre ?
                 <div className="invalid-feedback">El nombre es requerido</div>
@@ -403,7 +404,8 @@ export default class FabricasEditar extends React.Component {
                 placeholder="Dirección..."
                 value={this.state.direccion}
                 onChange={this.handleOnChange}
-                disabled={permitUpdate || permitCreate ? false : true} />
+                disabled={this.state.nuevo && permitCreate ||
+                  !this.state.nuevo && permitUpdate ? false : true} />
             </div>
             {/* Ciudad */}
             <div className="col-sm-6 col-12 form-group">
@@ -415,7 +417,8 @@ export default class FabricasEditar extends React.Component {
                 placeholder="Ciudad..."
                 value={this.state.ciudad}
                 onChange={this.handleOnChange}
-                disabled={permitUpdate || permitCreate ? false : true} />
+                disabled={this.state.nuevo && permitCreate ||
+                  !this.state.nuevo && permitUpdate ? false : true} />
             </div>
             {/* Teléfono */}
             <div className="col-sm-6 col-12 form-group">
@@ -427,7 +430,8 @@ export default class FabricasEditar extends React.Component {
                 placeholder="Teléfono..."
                 value={this.state.telefono}
                 onChange={this.handleOnChange}
-                disabled={permitUpdate || permitCreate ? false : true} />
+                disabled={this.state.nuevo && permitCreate ||
+                  !this.state.nuevo && permitUpdate ? false : true} />
             </div>
             {/* Contactos */}
             <div className="col-12 mt-3">
@@ -466,8 +470,10 @@ export default class FabricasEditar extends React.Component {
                       data={this.state.contactos}
                       handleEditar={this.handleEditarContacto}
                       handleEliminar={this.handleEliminarContacto}
-                      blockRead={!permitRead}
-                      blockDelete={!permitUpdate}
+                      blockRead={this.state.nuevo && permitCreate ||
+                        !this.state.nuevo && permitUpdate ? false : true}
+                      blockDelete={this.state.nuevo && permitCreate ||
+                        !this.state.nuevo && permitUpdate ? false : true}
                     />
                   </div>
                 </div>
@@ -510,8 +516,10 @@ export default class FabricasEditar extends React.Component {
                       data={this.state.pedidos}
                       handleEditar={this.handleEditarPedido}
                       handleEliminar={this.handleEliminarPedido}
-                      blockRead={!permitRead}
-                      blockDelete={!permitUpdate}
+                      blockRead={this.state.nuevo && permitCreate ||
+                        !this.state.nuevo && permitUpdate ? false : true}
+                      blockDelete={this.state.nuevo && permitCreate ||
+                        !this.state.nuevo && permitUpdate ? false : true}
                     />
                   </div>
                 </div>

@@ -14,6 +14,8 @@ export default class FabricasPagos extends React.Component {
       error: "",
       modalPagos: false,
       modalPagosEditar: null,
+      //Permisos
+      permits: ""
     }
     this.cargarFabrica = this.cargarFabrica.bind(this)
     this.onOpenModal = this.onOpenModal.bind(this)
@@ -25,6 +27,15 @@ export default class FabricasPagos extends React.Component {
 
   componentDidMount(){
     this.cargarFabrica()
+    //Controlo permisos
+    const user = JSON.parse(localStorage.getItem("currentUser"))
+    if(user){
+      if(user.permits){
+        this.setState({
+          permits: user.permits.fabricas ? user.permits.fabricas : ""
+        })
+      }
+    }
   }
 
   cargarFabrica(){
@@ -177,6 +188,12 @@ export default class FabricasPagos extends React.Component {
   }
 
   render() {
+    const {
+      permits
+    } = this.state
+    //Permisos
+    const permitUpdate = permits === "MODIFICAR" ? true : false
+    //Tabla
     const deuda = Funciones.getDeuda(this.state.fabrica)
     const columnsPagos = [
       ["Fecha","fecha","Fecha"],
@@ -219,10 +236,14 @@ export default class FabricasPagos extends React.Component {
                         <i className="material-icons ml-3">keyboard_arrow_down</i>
                       </h5>
                     </button>
-                  <button type="button" 
-                    className="btn btn-outline-success"
-                    onClick={() => this.onOpenModal("modalPagos")}
-                    >+ Agregar Pago</button>
+                  {
+                    permitUpdate &&
+                    <button type="button" 
+                      className="btn btn-outline-success"
+                      onClick={() => this.onOpenModal("modalPagos")}
+                      >+ Agregar Pago</button>
+                  }
+                  
                 </div>
                 <div id="collapseOne" 
                   className="collapse" 
@@ -235,6 +256,8 @@ export default class FabricasPagos extends React.Component {
                       data={this.state.fabrica.pagos ? this.state.fabrica.pagos : []}
                       handleEditar={this.handleEditarPago}
                       handleEliminar={this.handleEliminarPago}
+                      blockRead={!permitUpdate}
+                      blockDelete={!permitUpdate}
                     />
                   </div>
                 </div>
