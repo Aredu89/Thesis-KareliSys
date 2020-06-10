@@ -25,7 +25,9 @@ export default class FabricasEditar extends React.Component {
       modalContactos: false,
       modalContactosEditar: null,
       modalPedidos: false,
-      modalPedidosEditar: null
+      modalPedidosEditar: null,
+      //Permisos
+      permits: ""
     }
     this.handleOnChange = this.handleOnChange.bind(this)
     this.obtenerFabrica = this.obtenerFabrica.bind(this)
@@ -45,6 +47,15 @@ export default class FabricasEditar extends React.Component {
       this.setState({
         cargando: false
       })
+    }
+    //Controlo permisos
+    const user = JSON.parse(localStorage.getItem("currentUser"))
+    if(user){
+      if(user.permits){
+        this.setState({
+          permits: user.permits.clientes ? user.permits.clientes : ""
+        })
+      }
     }
   }
 
@@ -304,6 +315,17 @@ export default class FabricasEditar extends React.Component {
   }
 
   render() {
+    const {
+      permits
+    } = this.state
+    //Permisos
+    const permitUpdate = permits === "MODIFICAR" ? true : false
+    const permitCreate = permits === "MODIFICAR" ||
+      permits === "CREAR" ? true : false
+    const permitRead = permits === "MODIFICAR" ||
+      permits === "CREAR" ||
+      permits === "LEER" ? true : false
+    //Tabla
     const columnsContactos = [
       ["Nombre","nombre","String"],
       ["Apellido","apellido","String"],
@@ -331,10 +353,16 @@ export default class FabricasEditar extends React.Component {
               }
               {/* Boton para guardar cambios */}
               <div>
-                <button type="button" 
-                  className="btn btn-success"
-                  onClick={() => this.onClickGuardar()}
-                  >+ Guardar</button>
+                {
+                  (
+                    this.state.nuevo && permitCreate ||
+                    !this.state.nuevo && permitUpdate
+                  ) &&
+                  <button type="button" 
+                    className="btn btn-success"
+                    onClick={() => this.onClickGuardar()}
+                    >+ Guardar</button>
+                }
                 {
                   !this.state.nuevo ?
                     <button type="button" 
@@ -357,7 +385,8 @@ export default class FabricasEditar extends React.Component {
                 name="nombre"
                 placeholder="Nombre..."
                 value={this.state.nombre}
-                onChange={this.handleOnChange} />
+                onChange={this.handleOnChange}
+                disabled={permitUpdate || permitCreate ? false : true} />
               {
                 this.state.errorNombre ?
                 <div className="invalid-feedback">El nombre es requerido</div>
@@ -373,7 +402,8 @@ export default class FabricasEditar extends React.Component {
                 name="direccion"
                 placeholder="Dirección..."
                 value={this.state.direccion}
-                onChange={this.handleOnChange} />
+                onChange={this.handleOnChange}
+                disabled={permitUpdate || permitCreate ? false : true} />
             </div>
             {/* Ciudad */}
             <div className="col-sm-6 col-12 form-group">
@@ -384,7 +414,8 @@ export default class FabricasEditar extends React.Component {
                 name="ciudad"
                 placeholder="Ciudad..."
                 value={this.state.ciudad}
-                onChange={this.handleOnChange} />
+                onChange={this.handleOnChange}
+                disabled={permitUpdate || permitCreate ? false : true} />
             </div>
             {/* Teléfono */}
             <div className="col-sm-6 col-12 form-group">
@@ -395,7 +426,8 @@ export default class FabricasEditar extends React.Component {
                 name="telefono"
                 placeholder="Teléfono..."
                 value={this.state.telefono}
-                onChange={this.handleOnChange} />
+                onChange={this.handleOnChange}
+                disabled={permitUpdate || permitCreate ? false : true} />
             </div>
             {/* Contactos */}
             <div className="col-12 mt-3">
@@ -412,10 +444,16 @@ export default class FabricasEditar extends React.Component {
                         <i className="material-icons ml-3">keyboard_arrow_down</i>
                       </h5>
                     </button>
-                  <button type="button" 
-                    className="btn btn-outline-success"
-                    onClick={() => this.onOpenModal("modalContactos")}
-                    >+ Agregar Contacto</button>
+                  {
+                    (
+                      this.state.nuevo && permitCreate ||
+                      !this.state.nuevo && permitUpdate
+                    ) && 
+                    <button type="button" 
+                      className="btn btn-outline-success"
+                      onClick={() => this.onOpenModal("modalContactos")}
+                      >+ Agregar Contacto</button>
+                  }
                 </div>
                 <div id="collapseOne" 
                   className="collapse" 
@@ -428,6 +466,8 @@ export default class FabricasEditar extends React.Component {
                       data={this.state.contactos}
                       handleEditar={this.handleEditarContacto}
                       handleEliminar={this.handleEliminarContacto}
+                      blockRead={!permitRead}
+                      blockDelete={!permitUpdate}
                     />
                   </div>
                 </div>
@@ -448,10 +488,16 @@ export default class FabricasEditar extends React.Component {
                         <i className="material-icons ml-3">keyboard_arrow_down</i>
                       </h5>
                     </button>
-                  <button type="button" 
-                    className="btn btn-outline-success"
-                    onClick={() => this.onOpenModal("modalPedidos")}
-                    >+ Agregar Pedido</button>
+                  {
+                    (
+                      this.state.nuevo && permitCreate ||
+                      !this.state.nuevo && permitUpdate
+                    ) &&
+                      <button type="button" 
+                        className="btn btn-outline-success"
+                        onClick={() => this.onOpenModal("modalPedidos")}
+                        >+ Agregar Pedido</button>
+                  }
                 </div>
                 <div id="collapseTwo" 
                   className="collapse" 
@@ -464,6 +510,8 @@ export default class FabricasEditar extends React.Component {
                       data={this.state.pedidos}
                       handleEditar={this.handleEditarPedido}
                       handleEliminar={this.handleEliminarPedido}
+                      blockRead={!permitRead}
+                      blockDelete={!permitUpdate}
                     />
                   </div>
                 </div>

@@ -64,6 +64,9 @@
 .fabricas-editar .contenedor-formulario{
   padding-top: 15px;
 }
+.fabricas-editar .contenedor-formulario input:disabled{
+  color: #FFF;
+}
 .fabricas-editar .btn-link{
   color: #fff;
 }

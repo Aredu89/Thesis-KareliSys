@@ -9,7 +9,9 @@ export default class ClientesLista extends React.Component {
     this.state = {
       clientes: [],
       cargando: true,
-      error: ""
+      error: "",
+      //Permisos
+      permits: ""
     }
     this.cargarLista = this.cargarLista.bind(this)
     this.handleEditar = this.handleEditar.bind(this)
@@ -20,6 +22,15 @@ export default class ClientesLista extends React.Component {
 
   componentDidMount(){
     this.cargarLista()
+    //Controlo permisos
+    const user = JSON.parse(localStorage.getItem("currentUser"))
+    if(user){
+      if(user.permits){
+        this.setState({
+          permits: user.permits.clientes ? user.permits.clientes : ""
+        })
+      }
+    }
   }
 
   //Obtener lista de fábricas
@@ -134,6 +145,17 @@ export default class ClientesLista extends React.Component {
   }
 
   render() {
+    const {
+      permits
+    } = this.state
+    //Permisos
+    const permitUpdate = permits === "MODIFICAR" ? true : false
+    const permitCreate = permits === "MODIFICAR" ||
+      permits === "CREAR" ? true : false
+    const permitRead = permits === "MODIFICAR" ||
+      permits === "CREAR" ||
+      permits === "LEER" ? true : false
+      //Tabla
     const columns = [
       ["Nombre","nombre","String"],
       ["Ciudad","ciudad","String"],
@@ -148,10 +170,13 @@ export default class ClientesLista extends React.Component {
             {/* Titulo */}
             <h3>Clientes</h3>
             {/* Boton para crear nuevo */}
-            <button type="button" 
-              className="btn btn-success"
-              onClick={() => this.onClickAgregar()}
-              >+ Agregar Cliente</button>
+            {
+              permitCreate &&
+              <button type="button" 
+                className="btn btn-success"
+                onClick={() => this.onClickAgregar()}
+                >+ Agregar Cliente</button>
+            }
           </div>
         </div>
         <div className="row">
@@ -165,6 +190,8 @@ export default class ClientesLista extends React.Component {
                   handleEditar={this.handleEditar}
                   handleEliminar={this.handleEliminar}
                   goToPagos={this.goToPagos}
+                  blockRead={!permitRead}
+                  blockDelete={!permitUpdate}
                 />
               :
                 this.state.error ?

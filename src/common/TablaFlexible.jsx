@@ -3,6 +3,11 @@ import $ from 'jquery'
 import funciones from './javascriptFunctions.js'
 
 export default class TablaFlexible extends React.Component {
+  constructor(props){
+    super(props)
+    this.blockRead = props.blockRead ? props.blockRead : false
+    this.blockDelete = props.blockDelete ? props.blockDelete : false
+  }
   // Props:
   // columns: Array de arrays con la siguiente estructura
   // [ ["Titulo de la columna","clave del objeto data","tipo"] ] 
@@ -74,7 +79,7 @@ export default class TablaFlexible extends React.Component {
                   {/* Acciones */}
                   <td className="d-flex justify-content-end">
                     {
-                      this.props.handleEditar ?
+                      this.props.handleEditar && !this.blockRead ?
                         <button type="button" 
                           className="btn btn-outline-primary"
                           title="Editar"
@@ -83,7 +88,7 @@ export default class TablaFlexible extends React.Component {
                       : null
                     }
                     {
-                      this.props.goToPagos ?
+                      this.props.goToPagos && !this.blockRead ?
                         <button type="button" 
                           className="btn btn-outline-primary"
                           title="Pagos"
@@ -92,7 +97,7 @@ export default class TablaFlexible extends React.Component {
                       : null
                     }
                     {
-                      this.props.handleEliminar ?
+                      this.props.handleEliminar && !this.blockDelete ?
                         <button type="button" 
                           className="btn btn-outline-danger"
                           title="Eliminar"

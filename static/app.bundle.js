@@ -34442,23 +34442,27 @@
 	var TablaFlexible = function (_React$Component) {
 	  _inherits(TablaFlexible, _React$Component);
 	
-	  function TablaFlexible() {
+	  function TablaFlexible(props) {
 	    _classCallCheck(this, TablaFlexible);
 	
-	    return _possibleConstructorReturn(this, (TablaFlexible.__proto__ || Object.getPrototypeOf(TablaFlexible)).apply(this, arguments));
+	    var _this = _possibleConstructorReturn(this, (TablaFlexible.__proto__ || Object.getPrototypeOf(TablaFlexible)).call(this, props));
+	
+	    _this.blockRead = props.blockRead ? props.blockRead : false;
+	    _this.blockDelete = props.blockDelete ? props.blockDelete : false;
+	    return _this;
 	  }
+	  // Props:
+	  // columns: Array de arrays con la siguiente estructura
+	  // [ ["Titulo de la columna","clave del objeto data","tipo"] ] 
+	  // El tipo puede ser: "String, Largo, Largo pendiente, Fecha, Money, Boolean (Muetra si / no )"
+	  // data: Array de objetos con los datos para completar la tabla
+	  // ---------- botones -------------
+	  // handleEditar: función para el botón editar. Parametro: _id
+	  // handleEliminar: función para el botón eliminar. Parametro: _id
+	
 	
 	  _createClass(TablaFlexible, [{
 	    key: 'componentDidMount',
-	
-	    // Props:
-	    // columns: Array de arrays con la siguiente estructura
-	    // [ ["Titulo de la columna","clave del objeto data","tipo"] ] 
-	    // El tipo puede ser: "String, Largo, Largo pendiente, Fecha, Money, Boolean (Muetra si / no )"
-	    // data: Array de objetos con los datos para completar la tabla
-	    // ---------- botones -------------
-	    // handleEditar: función para el botón editar. Parametro: _id
-	    // handleEliminar: función para el botón eliminar. Parametro: _id
 	    value: function componentDidMount() {
 	      var lista = this.props.lista;
 	      //JQuery para el filtro de la tabla
@@ -34570,7 +34574,7 @@
 	                _react2.default.createElement(
 	                  'td',
 	                  { className: 'd-flex justify-content-end' },
-	                  _this2.props.handleEditar ? _react2.default.createElement(
+	                  _this2.props.handleEditar && !_this2.blockRead ? _react2.default.createElement(
 	                    'button',
 	                    { type: 'button',
 	                      className: 'btn btn-outline-primary',
@@ -34585,7 +34589,7 @@
 	                      'create'
 	                    )
 	                  ) : null,
-	                  _this2.props.goToPagos ? _react2.default.createElement(
+	                  _this2.props.goToPagos && !_this2.blockRead ? _react2.default.createElement(
 	                    'button',
 	                    { type: 'button',
 	                      className: 'btn btn-outline-primary',
@@ -34600,7 +34604,7 @@
 	                      'attach_money'
 	                    )
 	                  ) : null,
-	                  _this2.props.handleEliminar ? _react2.default.createElement(
+	                  _this2.props.handleEliminar && !_this2.blockDelete ? _react2.default.createElement(
 	                    'button',
 	                    { type: 'button',
 	                      className: 'btn btn-outline-danger',
@@ -45305,7 +45309,9 @@
 	      modalContactos: false,
 	      modalContactosEditar: null,
 	      modalPedidos: false,
-	      modalPedidosEditar: null
+	      modalPedidosEditar: null,
+	      //Permisos
+	      permits: ""
 	    };
 	    _this.handleOnChange = _this.handleOnChange.bind(_this);
 	    _this.obtenerFabrica = _this.obtenerFabrica.bind(_this);
@@ -45328,6 +45334,15 @@
 	        this.setState({
 	          cargando: false
 	        });
+	      }
+	      //Controlo permisos
+	      var user = JSON.parse(localStorage.getItem("currentUser"));
+	      if (user) {
+	        if (user.permits) {
+	          this.setState({
+	            permits: user.permits.clientes ? user.permits.clientes : ""
+	          });
+	        }
 	      }
 	    }
 	  }, {
@@ -45584,6 +45599,13 @@
 	    value: function render() {
 	      var _this9 = this;
 	
+	      var permits = this.state.permits;
+	      //Permisos
+	
+	      var permitUpdate = permits === "MODIFICAR" ? true : false;
+	      var permitCreate = permits === "MODIFICAR" || permits === "CREAR" ? true : false;
+	      var permitRead = permits === "MODIFICAR" || permits === "CREAR" || permits === "LEER" ? true : false;
+	      //Tabla
 	      var columnsContactos = [["Nombre", "nombre", "String"], ["Apellido", "apellido", "String"], ["Email", "email", "String"], ["Teléfono", "telefono", "String"]];
 	      var columnsPedidos = [["Fecha", "fecha", "Fecha"], ["Productos", "detalle", "Largo"], ["Precio", "precioTotal", "String"], ["Estado", "estado", "String"]];
 	      return _react2.default.createElement(
@@ -45611,7 +45633,7 @@
 	              _react2.default.createElement(
 	                'div',
 	                null,
-	                _react2.default.createElement(
+	                (this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate) && _react2.default.createElement(
 	                  'button',
 	                  { type: 'button',
 	                    className: 'btn btn-success',
@@ -45651,7 +45673,8 @@
 	                name: 'nombre',
 	                placeholder: 'Nombre...',
 	                value: this.state.nombre,
-	                onChange: this.handleOnChange }),
+	                onChange: this.handleOnChange,
+	                disabled: permitUpdate || permitCreate ? false : true }),
 	              this.state.errorNombre ? _react2.default.createElement(
 	                'div',
 	                { className: 'invalid-feedback' },
@@ -45672,7 +45695,8 @@
 	                name: 'direccion',
 	                placeholder: 'Direcci\xF3n...',
 	                value: this.state.direccion,
-	                onChange: this.handleOnChange })
+	                onChange: this.handleOnChange,
+	                disabled: permitUpdate || permitCreate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -45688,7 +45712,8 @@
 	                name: 'ciudad',
 	                placeholder: 'Ciudad...',
 	                value: this.state.ciudad,
-	                onChange: this.handleOnChange })
+	                onChange: this.handleOnChange,
+	                disabled: permitUpdate || permitCreate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -45704,7 +45729,8 @@
 	                name: 'telefono',
 	                placeholder: 'Tel\xE9fono...',
 	                value: this.state.telefono,
-	                onChange: this.handleOnChange })
+	                onChange: this.handleOnChange,
+	                disabled: permitUpdate || permitCreate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -45735,7 +45761,7 @@
 	                      )
 	                    )
 	                  ),
-	                  _react2.default.createElement(
+	                  (this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate) && _react2.default.createElement(
 	                    'button',
 	                    { type: 'button',
 	                      className: 'btn btn-outline-success',
@@ -45760,7 +45786,9 @@
 	                      columns: columnsContactos,
 	                      data: this.state.contactos,
 	                      handleEditar: this.handleEditarContacto,
-	                      handleEliminar: this.handleEliminarContacto
+	                      handleEliminar: this.handleEliminarContacto,
+	                      blockRead: !permitRead,
+	                      blockDelete: !permitUpdate
 	                    })
 	                  )
 	                )
@@ -45795,7 +45823,7 @@
 	                      )
 	                    )
 	                  ),
-	                  _react2.default.createElement(
+	                  (this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate) && _react2.default.createElement(
 	                    'button',
 	                    { type: 'button',
 	                      className: 'btn btn-outline-success',
@@ -45820,7 +45848,9 @@
 	                      columns: columnsPedidos,
 	                      data: this.state.pedidos,
 	                      handleEditar: this.handleEditarPedido,
-	                      handleEliminar: this.handleEliminarPedido
+	                      handleEliminar: this.handleEliminarPedido,
+	                      blockRead: !permitRead,
+	                      blockDelete: !permitUpdate
 	                    })
 	                  )
 	                )
@@ -51101,7 +51131,9 @@
 	    _this.state = {
 	      clientes: [],
 	      cargando: true,
-	      error: ""
+	      error: "",
+	      //Permisos
+	      permits: ""
 	    };
 	    _this.cargarLista = _this.cargarLista.bind(_this);
 	    _this.handleEditar = _this.handleEditar.bind(_this);
@@ -51115,6 +51147,15 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.cargarLista();
+	      //Controlo permisos
+	      var user = JSON.parse(localStorage.getItem("currentUser"));
+	      if (user) {
+	        if (user.permits) {
+	          this.setState({
+	            permits: user.permits.clientes ? user.permits.clientes : ""
+	          });
+	        }
+	      }
 	    }
 	
 	    //Obtener lista de fábricas
@@ -51228,6 +51269,13 @@
 	    value: function render() {
 	      var _this5 = this;
 	
+	      var permits = this.state.permits;
+	      //Permisos
+	
+	      var permitUpdate = permits === "MODIFICAR" ? true : false;
+	      var permitCreate = permits === "MODIFICAR" || permits === "CREAR" ? true : false;
+	      var permitRead = permits === "MODIFICAR" || permits === "CREAR" || permits === "LEER" ? true : false;
+	      //Tabla
 	      var columns = [["Nombre", "nombre", "String"], ["Ciudad", "ciudad", "String"], ["Dirección", "direccion", "String"], ["Pedidos pendientes", "pedidos", "Largo pendiente"], ["A cobrar", "", "Deuda"]];
 	      return _react2.default.createElement(
 	        'div',
@@ -51243,7 +51291,7 @@
 	              null,
 	              'Clientes'
 	            ),
-	            _react2.default.createElement(
+	            permitCreate && _react2.default.createElement(
 	              'button',
 	              { type: 'button',
 	                className: 'btn btn-success',
@@ -51268,7 +51316,9 @@
 	              data: this.state.clientes,
 	              handleEditar: this.handleEditar,
 	              handleEliminar: this.handleEliminar,
-	              goToPagos: this.goToPagos
+	              goToPagos: this.goToPagos,
+	              blockRead: !permitRead,
+	              blockDelete: !permitUpdate
 	            }) : this.state.error ?
 	            //Mensaje de error
 	            _react2.default.createElement(
@@ -51380,7 +51430,9 @@
 	      modalContactos: false,
 	      modalContactosEditar: null,
 	      modalPedidos: false,
-	      modalPedidosEditar: null
+	      modalPedidosEditar: null,
+	      //Permisos
+	      permits: ""
 	    };
 	    _this.handleOnChange = _this.handleOnChange.bind(_this);
 	    _this.obtenerCliente = _this.obtenerCliente.bind(_this);
@@ -51403,6 +51455,15 @@
 	        this.setState({
 	          cargando: false
 	        });
+	      }
+	      //Controlo permisos
+	      var user = JSON.parse(localStorage.getItem("currentUser"));
+	      if (user) {
+	        if (user.permits) {
+	          this.setState({
+	            permits: user.permits.clientes ? user.permits.clientes : ""
+	          });
+	        }
 	      }
 	    }
 	  }, {
@@ -51659,6 +51720,13 @@
 	    value: function render() {
 	      var _this9 = this;
 	
+	      var permits = this.state.permits;
+	      //Permisos
+	
+	      var permitUpdate = permits === "MODIFICAR" ? true : false;
+	      var permitCreate = permits === "MODIFICAR" || permits === "CREAR" ? true : false;
+	      var permitRead = permits === "MODIFICAR" || permits === "CREAR" || permits === "LEER" ? true : false;
+	      //Tabla
 	      var columnsContactos = [["Nombre", "nombre", "String"], ["Apellido", "apellido", "String"], ["Email", "email", "String"], ["Teléfono", "telefono", "String"]];
 	      var columnsPedidos = [["Fecha", "fecha", "Fecha"], ["Productos", "detalle", "Largo"], ["Precio", "precioTotal", "String"], ["Estado", "estado", "String"]];
 	      return _react2.default.createElement(
@@ -51680,13 +51748,13 @@
 	              ) : _react2.default.createElement(
 	                'h3',
 	                null,
-	                'Modificar F\xE1brica: ',
+	                'Modificar Cliente: ',
 	                this.state.nombre
 	              ),
 	              _react2.default.createElement(
 	                'div',
 	                null,
-	                _react2.default.createElement(
+	                (this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate) && _react2.default.createElement(
 	                  'button',
 	                  { type: 'button',
 	                    className: 'btn btn-success',
@@ -51726,7 +51794,8 @@
 	                name: 'nombre',
 	                placeholder: 'Nombre...',
 	                value: this.state.nombre,
-	                onChange: this.handleOnChange }),
+	                onChange: this.handleOnChange,
+	                disabled: permitUpdate || permitCreate ? false : true }),
 	              this.state.errorNombre ? _react2.default.createElement(
 	                'div',
 	                { className: 'invalid-feedback' },
@@ -51747,7 +51816,8 @@
 	                name: 'direccion',
 	                placeholder: 'Direcci\xF3n...',
 	                value: this.state.direccion,
-	                onChange: this.handleOnChange })
+	                onChange: this.handleOnChange,
+	                disabled: permitUpdate || permitCreate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -51763,7 +51833,8 @@
 	                name: 'ciudad',
 	                placeholder: 'Ciudad...',
 	                value: this.state.ciudad,
-	                onChange: this.handleOnChange })
+	                onChange: this.handleOnChange,
+	                disabled: permitUpdate || permitCreate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -51779,7 +51850,8 @@
 	                name: 'telefono',
 	                placeholder: 'Tel\xE9fono...',
 	                value: this.state.telefono,
-	                onChange: this.handleOnChange })
+	                onChange: this.handleOnChange,
+	                disabled: permitUpdate || permitCreate ? false : true })
 	            ),
 	            _react2.default.createElement(
 	              'div',
@@ -51810,7 +51882,7 @@
 	                      )
 	                    )
 	                  ),
-	                  _react2.default.createElement(
+	                  (this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate) && _react2.default.createElement(
 	                    'button',
 	                    { type: 'button',
 	                      className: 'btn btn-outline-success',
@@ -51835,7 +51907,9 @@
 	                      columns: columnsContactos,
 	                      data: this.state.contactos,
 	                      handleEditar: this.handleEditarContacto,
-	                      handleEliminar: this.handleEliminarContacto
+	                      handleEliminar: this.handleEliminarContacto,
+	                      blockRead: !permitRead,
+	                      blockDelete: !permitUpdate
 	                    })
 	                  )
 	                )
@@ -51870,7 +51944,7 @@
 	                      )
 	                    )
 	                  ),
-	                  _react2.default.createElement(
+	                  (this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate) && _react2.default.createElement(
 	                    'button',
 	                    { type: 'button',
 	                      className: 'btn btn-outline-success',
@@ -51895,7 +51969,9 @@
 	                      columns: columnsPedidos,
 	                      data: this.state.pedidos,
 	                      handleEditar: this.handleEditarPedido,
-	                      handleEliminar: this.handleEliminarPedido
+	                      handleEliminar: this.handleEliminarPedido,
+	                      blockRead: !permitRead,
+	                      blockDelete: !permitUpdate
 	                    })
 	                  )
 	                )
