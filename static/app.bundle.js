@@ -45293,6 +45293,10 @@
 	
 	var _PedidosEditar2 = _interopRequireDefault(_PedidosEditar);
 	
+	var _ProductosEditar = __webpack_require__(327);
+	
+	var _ProductosEditar2 = _interopRequireDefault(_ProductosEditar);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -45323,6 +45327,7 @@
 	      ciudad: "",
 	      telefono: "",
 	      contactos: [],
+	      productos: [],
 	      pedidos: [],
 	      creada: new Date(),
 	      errorNombre: false,
@@ -45330,6 +45335,8 @@
 	      modalContactosEditar: null,
 	      modalPedidos: false,
 	      modalPedidosEditar: null,
+	      modalProductos: false,
+	      modalProductosEditar: null,
 	      //Permisos
 	      permits: ""
 	    };
@@ -45340,6 +45347,8 @@
 	    _this.handleEditarContacto = _this.handleEditarContacto.bind(_this);
 	    _this.onSaveModal = _this.onSaveModal.bind(_this);
 	    _this.handleEliminarContacto = _this.handleEliminarContacto.bind(_this);
+	    _this.handleEditarProducto = _this.handleEditarProducto.bind(_this);
+	    _this.handleEliminarProducto = _this.handleEliminarProducto.bind(_this);
 	    _this.handleEditarPedido = _this.handleEditarPedido.bind(_this);
 	    _this.handleEliminarPedido = _this.handleEliminarPedido.bind(_this);
 	    return _this;
@@ -45383,6 +45392,7 @@
 	              ciudad: data.ciudad,
 	              telefono: data.telefono,
 	              contactos: data.contactos,
+	              productos: data.productos,
 	              pedidos: data.pedidos,
 	              creada: data.creada
 	            });
@@ -45492,7 +45502,7 @@
 	            ciudad: this.state.ciudad,
 	            telefono: this.state.telefono,
 	            contactos: this.state.contactos,
-	            pedidos: this.state.pedidos,
+	            productos: this.state.productos,
 	            creada: this.state.creada
 	          });
 	        } else {
@@ -45503,7 +45513,7 @@
 	            ciudad: this.state.ciudad,
 	            telefono: this.state.telefono,
 	            contactos: this.state.contactos,
-	            pedidos: this.state.pedidos,
+	            productos: this.state.productos,
 	            creada: this.state.creada
 	          }, this.state._id);
 	        }
@@ -45546,37 +45556,43 @@
 	      });
 	    }
 	  }, {
-	    key: 'handleEditarPedido',
-	    value: function handleEditarPedido(id) {
+	    key: 'handleEditarProducto',
+	    value: function handleEditarProducto(id) {
 	      var _this7 = this;
 	
 	      //Busco el id
-	      this.state.pedidos.forEach(function (pedido) {
-	        if (pedido._id === id) {
+	      this.state.productos.forEach(function (producto) {
+	        if (producto._id === id) {
 	          _this7.setState({
-	            modalPedidosEditar: pedido
-	          }, _this7.onOpenModal("modalPedidos"));
+	            modalProductosEditar: producto
+	          }, _this7.onOpenModal("modalProductos"));
 	          return;
 	        }
 	      });
 	    }
 	  }, {
-	    key: 'handleEliminarPedido',
-	    value: function handleEliminarPedido(id) {
+	    key: 'handleEliminarProducto',
+	    value: function handleEliminarProducto(id) {
 	      var _this8 = this;
 	
-	      var auxPedidos = this.state.pedidos;
+	      var auxProductos = this.state.productos;
 	      //Elimino el contacto del state
-	      auxPedidos.forEach(function (pedido, i) {
-	        if (pedido._id === id) {
-	          auxPedidos.splice(i, 1);
+	      auxProductos.forEach(function (producto, i) {
+	        if (producto._id === id) {
+	          auxProductos.splice(i, 1);
 	          _this8.setState({
-	            pedidos: auxPedidos
+	            productos: auxProductos
 	          });
 	          return;
 	        }
 	      });
 	    }
+	  }, {
+	    key: 'handleEditarPedido',
+	    value: function handleEditarPedido(id) {}
+	  }, {
+	    key: 'handleEliminarPedido',
+	    value: function handleEliminarPedido(id) {}
 	  }, {
 	    key: 'goToPagos',
 	    value: function goToPagos() {
@@ -45628,6 +45644,7 @@
 	      //Tabla
 	      var columnsContactos = [["Nombre", "nombre", "String"], ["Apellido", "apellido", "String"], ["Email", "email", "String"], ["Teléfono", "telefono", "String"]];
 	      var columnsPedidos = [["Fecha", "fecha", "Fecha"], ["Productos", "detalle", "Largo"], ["Precio", "precioTotal", "String"], ["Estado", "estado", "String"]];
+	      var columnsProductos = [["Nombre", "nombre", "String"], ["Talles", "talles", "Largo"]];
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fabricas-editar text-center' },
@@ -45828,6 +45845,68 @@
 	                    { type: 'button',
 	                      className: 'btn btn-link collapsed col-sm-8 col-6',
 	                      'data-toggle': 'collapse',
+	                      'data-target': '#collapseThree',
+	                      'aria-expanded': 'false',
+	                      'aria-controls': 'collapseThree' },
+	                    _react2.default.createElement(
+	                      'h5',
+	                      { className: 'd-flex align-items-center mb-0' },
+	                      'Productos disponibles: ',
+	                      this.state.productos.length,
+	                      _react2.default.createElement(
+	                        'i',
+	                        { className: 'material-icons ml-3' },
+	                        'keyboard_arrow_down'
+	                      )
+	                    )
+	                  ),
+	                  (this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate) && _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-outline-success',
+	                      onClick: function onClick() {
+	                        return _this9.onOpenModal("modalProductos");
+	                      }
+	                    },
+	                    '+ Agregar Producto'
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { id: 'collapseThree',
+	                    className: 'collapse',
+	                    'aria-labelledby': 'headingOne',
+	                    'data-parent': '#card' },
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'card-body contenedor-tabla' },
+	                    _react2.default.createElement(_TablaFlexible2.default, {
+	                      lista: "productos",
+	                      columns: columnsProductos,
+	                      data: this.state.productos,
+	                      handleEditar: this.handleEditarProducto,
+	                      handleEliminar: this.handleEliminarProducto,
+	                      blockRead: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true,
+	                      blockDelete: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true
+	                    })
+	                  )
+	                )
+	              )
+	            ),
+	            !this.state.nuevo && _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 mt-3' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card border-primary', id: 'card' },
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'card-header d-flex justify-content-between', id: 'headingOne' },
+	                  _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-link collapsed col-sm-8 col-6',
+	                      'data-toggle': 'collapse',
 	                      'data-target': '#collapseTwo',
 	                      'aria-expanded': 'false',
 	                      'aria-controls': 'collapseTwo' },
@@ -45915,6 +45994,26 @@
 	                return _this9.onCloseModal("modalPedidos");
 	              },
 	              titulo: this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"
+	            })
+	          ),
+	          _react2.default.createElement(
+	            _reactResponsiveModal2.default,
+	            {
+	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
+	              onClose: function onClose() {
+	                return _this9.onCloseModal("modalProductos");
+	              },
+	              showCloseIcon: false,
+	              open: this.state.modalProductos,
+	              center: true
+	            },
+	            _react2.default.createElement(_ProductosEditar2.default, {
+	              data: this.state.modalProductosEditar,
+	              onSave: this.onSaveModal,
+	              onClose: function onClose() {
+	                return _this9.onCloseModal("modalProductos");
+	              },
+	              titulo: this.state.modalPedidosEditar ? "EDITAR PRODUCTO" : "CREAR PRODUCTO"
 	            })
 	          )
 	        ) : this.state.error ?
@@ -54940,6 +55039,55 @@
 	}(_react2.default.Component);
 	
 	exports.default = UsuariosEditar;
+
+/***/ },
+/* 327 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ContactosEditar = function (_React$Component) {
+	  _inherits(ContactosEditar, _React$Component);
+	
+	  function ContactosEditar() {
+	    _classCallCheck(this, ContactosEditar);
+	
+	    return _possibleConstructorReturn(this, (ContactosEditar.__proto__ || Object.getPrototypeOf(ContactosEditar)).call(this));
+	  }
+	
+	  _createClass(ContactosEditar, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "productos-editar" },
+	        "Productos editar"
+	      );
+	    }
+	  }]);
+	
+	  return ContactosEditar;
+	}(_react2.default.Component);
+	
+	exports.default = ContactosEditar;
 
 /***/ }
 /******/ ]);

@@ -7,10 +7,9 @@ const contactos = new mongoose.Schema({
   telefono: Number
 })
 
-const productosRef = new mongoose.Schema({
+const productos = new mongoose.Schema({
   nombre: String,
-  talle: Number,
-  cantidad: Number
+  talles: [Number]
 })
 
 const pagos = new mongoose.Schema({
@@ -20,11 +19,22 @@ const pagos = new mongoose.Schema({
   observaciones: String
 })
 
+const detalle = new mongoose.Schema({
+  producto: String,
+  talle: Number,
+  cantidad: Number
+})
+
 const pedidos = new mongoose.Schema({
-  fecha: {type: Date, default: Date.now},
-  detalle: [productosRef],
+  fechaPedido: {type: Date, default: Date.now},
+  fechaEntrega: Date,
+  fechaEntregado: Date,
+  detalle: [detalle],
   precioTotal: Number,
-  estado: {type: String, enum:["pendiente","entregado"], default: "pendiente"}
+  pagos: [pagos],
+  estado: {type: String,
+    enum:["pendiente","aprobado","pagado","entregado","finalizado","cancelado"],
+    default: "pendiente"}
 })
 
 const fabricas = new mongoose.Schema({
@@ -32,10 +42,10 @@ const fabricas = new mongoose.Schema({
   direccion: String,
   ciudad: String,
   telefono: Number,
+  productos: [productos],
   contactos: [contactos],
   pedidos: [pedidos],
   creada: {type: Date, default: Date.now},
-  pagos: [pagos]
 })
 
 mongoose.model('Fabricas', fabricas)

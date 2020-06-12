@@ -27,7 +27,7 @@ module.exports.getEgresosMes = (req, res) => {
     .find(filter)
     .exec((err, results, status) => {
       if(!results || results.length < 1){
-        res.status(404).json({ message: "No se encontraron fabricas"})
+        res.status(200).json({ egresosMes: 0 })
       } else if (err) {
         res.status(404).json(err)
       } else {
@@ -39,13 +39,21 @@ module.exports.getEgresosMes = (req, res) => {
         const desde = new Date(año, mes, 1)
         const hasta = new Date(año, mesSiguiente, 1)
         let egresos = 0
-        results.forEach(fabrica=>{
-          fabrica.pagos.forEach(pago=>{
-            if(pago.fecha > desde && pago.fecha < hasta){
-              egresos = egresos + pago.monto
+        if(results.length > 0){
+          results.forEach(fabrica=>{
+            if(fabrica.pedidos.length > 0){
+              fabrica.pedidos.forEacht(pedido=>{
+                if(pedido.pagos.length > 0){
+                  pedido.pagos.forEacht(pago=>{
+                    if(pago.fecha > desde && pago.fecha < hasta){
+                      egresos = egresos + pago.monto
+                    }
+                  })
+                }
+              })
             }
           })
-        })
+        }
         res.status(200).json({ egresosMes: egresos })
       }
     })
@@ -83,6 +91,12 @@ module.exports.crearFabrica = (req, res) => {
   newFabrica.direccion = auxBody.direccion
   newFabrica.ciudad = auxBody.ciudad
   newFabrica.telefono = auxBody.telefono
+  newFabrica.productos = auxBody.productos ? auxBody.productos.map(producto=>{
+    return {
+      nombre: producto.nombre,
+      talles: producto.talles
+    }
+  }) : []
   newFabrica.contactos = auxBody.contactos ? auxBody.contactos.map(contacto=>{
     return {
       nombre: contacto.nombre,
@@ -91,22 +105,7 @@ module.exports.crearFabrica = (req, res) => {
       telefono: contacto.telefono
     }
   }) : []
-  newFabrica.pedidos = auxBody.pedidos ? auxBody.pedidos.map(pedido=>{
-    return {
-      fecha: pedido.fecha,
-      detalle: pedido.detalle,
-      precioTotal: pedido.precioTotal,
-      estado: pedido.estado
-    }
-  }): []
-  newFabrica.pagos = auxBody.pagos ? auxBody.pagos.map(pago=>{
-    return {
-      fecha: pago.fecha,
-      monto: pago.monto,
-      formaPago: pago.formaPago,
-      observaciones: pago.observaciones
-    }
-  }) : []
+  newFabrica.pedidos = []
   Fabricas
     .create(newFabrica, (err, fabrica) => {
       if(err) {
@@ -141,28 +140,18 @@ module.exports.modificarFabrica = (req,res) => {
         fabrica.direccion = auxFabrica.direccion
         fabrica.ciudad = auxFabrica.ciudad
         fabrica.telefono = auxFabrica.telefono
+        fabrica.productos = auxFabrica.productos ? auxFabrica.productos.map(producto=>{
+          return {
+            nombre: producto.nombre,
+            talles: producto.talles
+          }
+        }) : []
         fabrica.contactos = auxFabrica.contactos ? auxFabrica.contactos.map(contacto=>{
           return {
             nombre: contacto.nombre,
             apellido: contacto.apellido,
             email: contacto.email,
             telefono: contacto.telefono
-          }
-        }) : []
-        fabrica.pedidos = auxFabrica.pedidos ? auxFabrica.pedidos.map(pedido=>{
-          return {
-            fecha: pedido.fecha,
-            detalle: pedido.detalle,
-            precioTotal: pedido.precioTotal,
-            estado: pedido.estado
-          }
-        }): []
-        fabrica.pagos = auxFabrica.pagos ? auxFabrica.pagos.map(pago=>{
-          return {
-            fecha: pago.fecha,
-            monto: pago.monto,
-            formaPago: pago.formaPago,
-            observaciones: pago.observaciones
           }
         }) : []
         fabrica.save((err, fabrica) => {
@@ -182,15 +171,33 @@ module.exports.eliminarFabrica = (req,res) => {
     res.status(404).json({ message: "Se requiere el id de la fábrica"})
     return
   }
+  //Controlo si hay pedidos asociados a la fábrica
   Fabricas
-    .findByIdAndRemove(req.params.id)
-    .exec(
-      (err, fabrica) => {
-        if(err){
-          res.status(404).json(err)
+    .findById(req.params.id)
+    .exec((err, fabrica) => {
+      //Si el id específico no existe en la BD
+      if (!fabrica) {
+        res.status(404).json({ message: "Id de fabrica no encontrado"})
+      //Si la BD devuelve un error
+      } else if (err) {
+        res.status(404).json(err)
+      } else {
+        if(fabrica.pedidos.length > 0){
+          res.status(404).json({ message: "No se puede eliminar una fábrica con pedidos"})
         } else {
-          res.status(204).json(null)
+          //Elimino la fábrica
+          Fabricas
+            .findByIdAndRemove(req.params.id)
+            .exec(
+              (err, fabrica) => {
+                if(err){
+                  res.status(404).json(err)
+                } else {
+                  res.status(204).json(null)
+                }
+              }
+            )
         }
       }
-    )
+    })
 }

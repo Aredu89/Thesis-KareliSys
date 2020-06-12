@@ -4,6 +4,7 @@ import TablaFlexible from '../common/TablaFlexible.jsx'
 import Modal from 'react-responsive-modal'
 import ContactosEditar from './ContactosEditar.jsx'
 import PedidosEditar from './PedidosEditar.jsx'
+import ProductosEditar from './ProductosEditar.jsx'
 
 export default class FabricasEditar extends React.Component {
   constructor() {
@@ -19,6 +20,7 @@ export default class FabricasEditar extends React.Component {
       ciudad: "",
       telefono: "",
       contactos: [],
+      productos: [],
       pedidos: [],
       creada: new Date(),
       errorNombre: false,
@@ -26,6 +28,8 @@ export default class FabricasEditar extends React.Component {
       modalContactosEditar: null,
       modalPedidos: false,
       modalPedidosEditar: null,
+      modalProductos: false,
+      modalProductosEditar: null,
       //Permisos
       permits: ""
     }
@@ -36,6 +40,8 @@ export default class FabricasEditar extends React.Component {
     this.handleEditarContacto = this.handleEditarContacto.bind(this)
     this.onSaveModal = this.onSaveModal.bind(this)
     this.handleEliminarContacto = this.handleEliminarContacto.bind(this)
+    this.handleEditarProducto = this.handleEditarProducto.bind(this)
+    this.handleEliminarProducto = this.handleEliminarProducto.bind(this)
     this.handleEditarPedido = this.handleEditarPedido.bind(this)
     this.handleEliminarPedido = this.handleEliminarPedido.bind(this)
   }
@@ -75,6 +81,7 @@ export default class FabricasEditar extends React.Component {
               ciudad: data.ciudad,
               telefono: data.telefono,
               contactos: data.contactos,
+              productos: data.productos,
               pedidos: data.pedidos,
               creada: data.creada
             })
@@ -206,7 +213,7 @@ export default class FabricasEditar extends React.Component {
           ciudad: this.state.ciudad,
           telefono: this.state.telefono,
           contactos: this.state.contactos,
-          pedidos: this.state.pedidos,
+          productos: this.state.productos,
           creada: this.state.creada
         })
       } else {
@@ -217,7 +224,7 @@ export default class FabricasEditar extends React.Component {
           ciudad: this.state.ciudad,
           telefono: this.state.telefono,
           contactos: this.state.contactos,
-          pedidos: this.state.pedidos,
+          productos: this.state.productos,
           creada: this.state.creada
         }, this.state._id)
       }
@@ -254,30 +261,38 @@ export default class FabricasEditar extends React.Component {
     })
   }
 
-  handleEditarPedido(id){
+  handleEditarProducto(id){
     //Busco el id
-    this.state.pedidos.forEach(pedido => {
-      if(pedido._id === id){
+    this.state.productos.forEach(producto => {
+      if(producto._id === id){
         this.setState({
-          modalPedidosEditar: pedido
-        }, this.onOpenModal("modalPedidos"))
+          modalProductosEditar: producto
+        }, this.onOpenModal("modalProductos"))
         return
       }
     })
   }
   
-  handleEliminarPedido(id){
-    let auxPedidos = this.state.pedidos
+  handleEliminarProducto(id){
+    let auxProductos = this.state.productos
     //Elimino el contacto del state
-    auxPedidos.forEach((pedido, i) => {
-      if(pedido._id === id){
-        auxPedidos.splice(i,1)
+    auxProductos.forEach((producto, i) => {
+      if(producto._id === id){
+        auxProductos.splice(i,1)
         this.setState({
-          pedidos: auxPedidos
+          productos: auxProductos
         })
         return
       }
     })
+  }
+
+  handleEditarPedido(id){
+    
+  }
+  
+  handleEliminarPedido(id){
+    
   }
 
   goToPagos(){
@@ -337,6 +352,10 @@ export default class FabricasEditar extends React.Component {
       ["Productos","detalle","Largo"],
       ["Precio","precioTotal","String"],
       ["Estado","estado","String"]
+    ]
+    const columnsProductos = [
+      ["Nombre","nombre","String"],
+      ["Talles","talles","Largo"], // concatenar los talles!!
     ]
     return (
       <div className="fabricas-editar text-center">
@@ -479,18 +498,18 @@ export default class FabricasEditar extends React.Component {
                 </div>
               </div>
             </div>
-            {/* Pedidos */}
+            {/* Productos */}
             <div className="col-12 mt-3">
               <div className="card border-primary" id="card">
                 <div className="card-header d-flex justify-content-between" id="headingOne">
                   <button type="button"
                     className="btn btn-link collapsed col-sm-8 col-6"
                     data-toggle="collapse"
-                    data-target="#collapseTwo"
+                    data-target="#collapseThree"
                     aria-expanded="false" 
-                    aria-controls="collapseTwo">
+                    aria-controls="collapseThree">
                       <h5 className="d-flex align-items-center mb-0">
-                        Pedidos: {this.state.pedidos.length}
+                        Productos disponibles: {this.state.productos.length}
                         <i className="material-icons ml-3">keyboard_arrow_down</i>
                       </h5>
                     </button>
@@ -498,24 +517,24 @@ export default class FabricasEditar extends React.Component {
                     (
                       this.state.nuevo && permitCreate ||
                       !this.state.nuevo && permitUpdate
-                    ) &&
-                      <button type="button" 
-                        className="btn btn-outline-success"
-                        onClick={() => this.onOpenModal("modalPedidos")}
-                        >+ Agregar Pedido</button>
+                    ) && 
+                    <button type="button" 
+                      className="btn btn-outline-success"
+                      onClick={() => this.onOpenModal("modalProductos")}
+                      >+ Agregar Producto</button>
                   }
                 </div>
-                <div id="collapseTwo" 
+                <div id="collapseThree" 
                   className="collapse" 
-                  aria-labelledby="headingTwo" 
+                  aria-labelledby="headingOne" 
                   data-parent="#card">
                   <div className="card-body contenedor-tabla">
                     <TablaFlexible
-                      lista={"pedidos"}
-                      columns={columnsPedidos}
-                      data={this.state.pedidos}
-                      handleEditar={this.handleEditarPedido}
-                      handleEliminar={this.handleEliminarPedido}
+                      lista={"productos"}
+                      columns={columnsProductos}
+                      data={this.state.productos}
+                      handleEditar={this.handleEditarProducto}
+                      handleEliminar={this.handleEliminarProducto}
                       blockRead={this.state.nuevo && permitCreate ||
                         !this.state.nuevo && permitUpdate ? false : true}
                       blockDelete={this.state.nuevo && permitCreate ||
@@ -525,6 +544,56 @@ export default class FabricasEditar extends React.Component {
                 </div>
               </div>
             </div>
+            {/* Pedidos */}
+            {
+              !this.state.nuevo &&
+              <div className="col-12 mt-3">
+                <div className="card border-primary" id="card">
+                  <div className="card-header d-flex justify-content-between" id="headingOne">
+                    <button type="button"
+                      className="btn btn-link collapsed col-sm-8 col-6"
+                      data-toggle="collapse"
+                      data-target="#collapseTwo"
+                      aria-expanded="false" 
+                      aria-controls="collapseTwo">
+                        <h5 className="d-flex align-items-center mb-0">
+                          Pedidos: {this.state.pedidos.length}
+                          <i className="material-icons ml-3">keyboard_arrow_down</i>
+                        </h5>
+                      </button>
+                    {
+                      (
+                        this.state.nuevo && permitCreate ||
+                        !this.state.nuevo && permitUpdate
+                      ) &&
+                        <button type="button" 
+                          className="btn btn-outline-success"
+                          onClick={() => this.onOpenModal("modalPedidos")}
+                          >+ Agregar Pedido</button>
+                    }
+                  </div>
+                  <div id="collapseTwo" 
+                    className="collapse" 
+                    aria-labelledby="headingTwo" 
+                    data-parent="#card">
+                    <div className="card-body contenedor-tabla">
+                      <TablaFlexible
+                        lista={"pedidos"}
+                        columns={columnsPedidos}
+                        data={this.state.pedidos}
+                        handleEditar={this.handleEditarPedido}
+                        handleEliminar={this.handleEliminarPedido}
+                        blockRead={this.state.nuevo && permitCreate ||
+                          !this.state.nuevo && permitUpdate ? false : true}
+                        blockDelete={this.state.nuevo && permitCreate ||
+                          !this.state.nuevo && permitUpdate ? false : true}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+            
           </div>
           {/* Modal contactos */}
           <Modal
@@ -554,6 +623,21 @@ export default class FabricasEditar extends React.Component {
                 onSave={this.onSaveModal}
                 onClose={()=>this.onCloseModal("modalPedidos")}
                 titulo={this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"}
+              />
+            </Modal>
+          {/* Modal Productos */}
+          <Modal
+            classNames={{modal: ['modal-custom'], closeButton: ['modal-custom-button']}}
+            onClose={()=>this.onCloseModal("modalProductos")}
+            showCloseIcon={false}
+            open={this.state.modalProductos}
+            center
+            >
+              <ProductosEditar
+                data={this.state.modalProductosEditar}
+                onSave={this.onSaveModal}
+                onClose={()=>this.onCloseModal("modalProductos")}
+                titulo={this.state.modalPedidosEditar ? "EDITAR PRODUCTO" : "CREAR PRODUCTO"}
               />
             </Modal>
         </div>
