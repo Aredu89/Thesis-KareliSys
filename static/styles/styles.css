@@ -133,6 +133,35 @@
   border: solid 1px #DF691A;
   padding: 15px;
 }
+/* Editar productos Modal */
+.productos-editar .header{
+  height: 65px;
+  background-color: #DF691A;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.productos-editar .modal-cerrar{
+  color: #fff;
+  background-color: #DF691A;
+  border: none;
+}
+.productos-editar .formulario{
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 15px;
+  font-size: 15px;
+  background-color: #2B3E50;
+  border-left: solid 1px #DF691A;
+  border-right: solid 1px #DF691A;
+  border-bottom: solid 1px #DF691A;
+}
+.productos-editar .contenedor-productos{
+  border: solid 1px #DF691A;
+  padding: 15px;
+}
 /* Fabricas Pagos */
 .fabricas-pagos .mensaje-deuda{
   border: solid 1px #DF691A;

@@ -86,35 +86,35 @@
 	
 	var _FabricasEditar2 = _interopRequireDefault(_FabricasEditar);
 	
-	var _FabricasPagos = __webpack_require__(315);
+	var _FabricasPagos = __webpack_require__(316);
 	
 	var _FabricasPagos2 = _interopRequireDefault(_FabricasPagos);
 	
-	var _ClientesLista = __webpack_require__(317);
+	var _ClientesLista = __webpack_require__(318);
 	
 	var _ClientesLista2 = _interopRequireDefault(_ClientesLista);
 	
-	var _ClientesEditar = __webpack_require__(318);
+	var _ClientesEditar = __webpack_require__(319);
 	
 	var _ClientesEditar2 = _interopRequireDefault(_ClientesEditar);
 	
-	var _ClientesPagos = __webpack_require__(321);
+	var _ClientesPagos = __webpack_require__(322);
 	
 	var _ClientesPagos2 = _interopRequireDefault(_ClientesPagos);
 	
-	var _StockLista = __webpack_require__(323);
+	var _StockLista = __webpack_require__(324);
 	
 	var _StockLista2 = _interopRequireDefault(_StockLista);
 	
-	var _StockEditar = __webpack_require__(324);
+	var _StockEditar = __webpack_require__(325);
 	
 	var _StockEditar2 = _interopRequireDefault(_StockEditar);
 	
-	var _UsuariosLista = __webpack_require__(325);
+	var _UsuariosLista = __webpack_require__(326);
 	
 	var _UsuariosLista2 = _interopRequireDefault(_UsuariosLista);
 	
-	var _UsuariosEditar = __webpack_require__(326);
+	var _UsuariosEditar = __webpack_require__(327);
 	
 	var _UsuariosEditar2 = _interopRequireDefault(_UsuariosEditar);
 	
@@ -45293,7 +45293,7 @@
 	
 	var _PedidosEditar2 = _interopRequireDefault(_PedidosEditar);
 	
-	var _ProductosEditar = __webpack_require__(327);
+	var _ProductosEditar = __webpack_require__(315);
 	
 	var _ProductosEditar2 = _interopRequireDefault(_ProductosEditar);
 	
@@ -50556,6 +50556,373 @@
 /* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ContactosEditar = function (_React$Component) {
+	  _inherits(ContactosEditar, _React$Component);
+	
+	  function ContactosEditar() {
+	    _classCallCheck(this, ContactosEditar);
+	
+	    var _this = _possibleConstructorReturn(this, (ContactosEditar.__proto__ || Object.getPrototypeOf(ContactosEditar)).call(this));
+	
+	    _this.state = {
+	      _id: "",
+	      nombre: "",
+	      errorNombre: false,
+	      talleNuevo: 0,
+	      errorTalleNuevo: false,
+	      talles: [],
+	      errorTalles: false,
+	      errorTalleRepetido: false
+	    };
+	    _this.handleOnChange = _this.handleOnChange.bind(_this);
+	    _this.agregarTalle = _this.agregarTalle.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(ContactosEditar, [{
+	    key: "handleOnChange",
+	    value: function handleOnChange(event) {
+	      this.setState(_defineProperty({}, event.target.name, event.target.value));
+	      //Limpio el error del nombre
+	      if (event.target.name === "nombre" && this.state.errorNombre == true) {
+	        this.setState({
+	          errorNombre: false
+	        });
+	      }
+	    }
+	  }, {
+	    key: "agregarTalle",
+	    value: function agregarTalle() {
+	      var _this2 = this;
+	
+	      var talles = this.state.talles;
+	      //controlar que el nombre tenga un valor
+	      if (this.state.talleNuevo > 0) {
+	        var value = null;
+	        this.setState({
+	          errorTalleNuevo: false
+	        });
+	        value = talles.find(function (talle) {
+	          return talle === _this2.state.talleNuevo;
+	        });
+	        if (value) {
+	          this.setState({
+	            errorTalleRepetido: true
+	          });
+	        } else {
+	          talles.push(this.state.talleNuevo);
+	          this.setState({
+	            talles: talles,
+	            errorTalleRepetido: false,
+	            errorTalles: false
+	          });
+	        }
+	      } else {
+	        this.setState({
+	          errorTalleNuevo: true
+	        });
+	      }
+	    }
+	  }, {
+	    key: "eliminarTalle",
+	    value: function eliminarTalle(i) {
+	      var talles = this.state.talles;
+	      talles.splice(i, 1);
+	      this.setState({
+	        talles: talles
+	      });
+	    }
+	  }, {
+	    key: "onSave",
+	    value: function onSave() {
+	      if (this.state.nombre && this.state.talles.length > 0) {
+	        this.props.onSave({
+	          _id: this.state._id,
+	          nombre: this.state.nombre,
+	          talles: this.state.talles,
+	          errorTalles: false,
+	          errorNombre: false
+	        }, "productos");
+	        this.props.onClose();
+	      } else {
+	        if (!this.state.nombre) {
+	          this.setState({
+	            errorNombre: true
+	          });
+	        }
+	        if (this.state.talles.length < 1) {
+	          this.setState({
+	            errorTalles: true
+	          });
+	        }
+	      }
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      var _this3 = this;
+	
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "productos-editar" },
+	        _react2.default.createElement(
+	          "div",
+	          { className: "header d-flex justify-content-between align-items-center" },
+	          _react2.default.createElement(
+	            "span",
+	            null,
+	            this.props.titulo
+	          ),
+	          _react2.default.createElement(
+	            "button",
+	            {
+	              type: "button",
+	              className: "modal-cerrar d-flex align-items-center",
+	              onClick: function onClick() {
+	                return _this3.props.onClose();
+	              }
+	            },
+	            _react2.default.createElement(
+	              "i",
+	              { className: "material-icons" },
+	              "clear"
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "formulario pt-2" },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Nombre"
+	            ),
+	            _react2.default.createElement("input", {
+	              className: this.state.errorNombre ? "form-control is-invalid" : "form-control",
+	              id: "nombre",
+	              name: "nombre",
+	              placeholder: "Nombre...",
+	              value: this.state.nombre,
+	              onChange: this.handleOnChange
+	            }),
+	            this.state.errorNombre && _react2.default.createElement(
+	              "div",
+	              { className: "invalid-feedback" },
+	              "Se debe ingresar un nombre"
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "label",
+	              null,
+	              "Agregar talles disponibles"
+	            ),
+	            _react2.default.createElement(
+	              "div",
+	              { className: "contenedor-productos" },
+	              _react2.default.createElement(
+	                "div",
+	                { className: "d-flex justify-content-between" },
+	                _react2.default.createElement(
+	                  "div",
+	                  { className: "text-center" },
+	                  _react2.default.createElement(
+	                    "label",
+	                    null,
+	                    "Talle"
+	                  ),
+	                  _react2.default.createElement("input", { type: "number",
+	                    className: "form-control",
+	                    id: "talleNuevo",
+	                    name: "talleNuevo",
+	                    placeholder: "Talle...",
+	                    value: this.state.talleNuevo,
+	                    onChange: this.handleOnChange
+	                  })
+	                ),
+	                _react2.default.createElement(
+	                  "div",
+	                  { className: "text-center d-flex align-items-end" },
+	                  _react2.default.createElement(
+	                    "button",
+	                    {
+	                      type: "button",
+	                      className: "btn btn-outline-success",
+	                      onClick: function onClick() {
+	                        return _this3.agregarTalle();
+	                      }
+	                    },
+	                    "+"
+	                  )
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "table",
+	            { className: "table table-hover" },
+	            _react2.default.createElement(
+	              "thead",
+	              null,
+	              _react2.default.createElement(
+	                "tr",
+	                null,
+	                _react2.default.createElement(
+	                  "th",
+	                  { scope: "col" },
+	                  "Talle"
+	                ),
+	                _react2.default.createElement(
+	                  "th",
+	                  { scope: "col" },
+	                  "Quitar"
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              "tbody",
+	              null,
+	              this.state.talles.map(function (talle, i) {
+	                return _react2.default.createElement(
+	                  "tr",
+	                  { className: "table-default", key: i },
+	                  _react2.default.createElement(
+	                    "td",
+	                    null,
+	                    talle
+	                  ),
+	                  _react2.default.createElement(
+	                    "td",
+	                    null,
+	                    _react2.default.createElement(
+	                      "button",
+	                      {
+	                        type: "button",
+	                        className: "btn btn-outline-success",
+	                        onClick: function onClick() {
+	                          return _this3.eliminarTalle(i);
+	                        }
+	                      },
+	                      "X"
+	                    )
+	                  )
+	                );
+	              })
+	            )
+	          ),
+	          this.state.errorTalleNuevo ? _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "alert alert-dismissible alert-danger" },
+	              _react2.default.createElement(
+	                "button",
+	                { type: "button", className: "close", "data-dismiss": "alert" },
+	                "\xD7"
+	              ),
+	              _react2.default.createElement(
+	                "strong",
+	                null,
+	                "Error!"
+	              ),
+	              " El talle debe ser mayor a cero"
+	            )
+	          ) : null,
+	          this.state.errorTalleRepetido ? _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "alert alert-dismissible alert-danger" },
+	              _react2.default.createElement(
+	                "button",
+	                { type: "button", className: "close", "data-dismiss": "alert" },
+	                "\xD7"
+	              ),
+	              _react2.default.createElement(
+	                "strong",
+	                null,
+	                "Error!"
+	              ),
+	              " Ya se agreg\xF3 ese talle"
+	            )
+	          ) : null,
+	          this.state.errorTalles ? _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "alert alert-dismissible alert-danger" },
+	              _react2.default.createElement(
+	                "button",
+	                { type: "button", className: "close", "data-dismiss": "alert" },
+	                "\xD7"
+	              ),
+	              _react2.default.createElement(
+	                "strong",
+	                null,
+	                "Error!"
+	              ),
+	              " Debe haber talles disponibles"
+	            )
+	          ) : null,
+	          _react2.default.createElement(
+	            "div",
+	            { className: "col-12 form-group text-center pt-2 boton-guardar" },
+	            _react2.default.createElement(
+	              "button",
+	              {
+	                type: "button",
+	                className: "btn btn-success",
+	                onClick: function onClick() {
+	                  return _this3.onSave();
+	                }
+	              },
+	              "Guardar"
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return ContactosEditar;
+	}(_react2.default.Component);
+	
+	exports.default = ContactosEditar;
+
+/***/ },
+/* 316 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
@@ -50584,7 +50951,7 @@
 	
 	var _reactResponsiveModal2 = _interopRequireDefault(_reactResponsiveModal);
 	
-	var _PagosEditar = __webpack_require__(316);
+	var _PagosEditar = __webpack_require__(317);
 	
 	var _PagosEditar2 = _interopRequireDefault(_PagosEditar);
 	
@@ -50996,7 +51363,7 @@
 	exports.default = FabricasPagos;
 
 /***/ },
-/* 316 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51222,7 +51589,7 @@
 	exports.default = PagosEditar;
 
 /***/ },
-/* 317 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51496,7 +51863,7 @@
 	exports.default = ClientesLista;
 
 /***/ },
-/* 318 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51523,11 +51890,11 @@
 	
 	var _reactResponsiveModal2 = _interopRequireDefault(_reactResponsiveModal);
 	
-	var _ContactosEditar = __webpack_require__(319);
+	var _ContactosEditar = __webpack_require__(320);
 	
 	var _ContactosEditar2 = _interopRequireDefault(_ContactosEditar);
 	
-	var _PedidosEditar = __webpack_require__(320);
+	var _PedidosEditar = __webpack_require__(321);
 	
 	var _PedidosEditar2 = _interopRequireDefault(_PedidosEditar);
 	
@@ -52193,7 +52560,7 @@
 	exports.default = ClientesEditar;
 
 /***/ },
-/* 319 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -52413,7 +52780,7 @@
 	exports.default = ContactosEditar;
 
 /***/ },
-/* 320 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52853,7 +53220,7 @@
 	exports.default = ContactosEditar;
 
 /***/ },
-/* 321 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52884,7 +53251,7 @@
 	
 	var _reactResponsiveModal2 = _interopRequireDefault(_reactResponsiveModal);
 	
-	var _PagosEditar = __webpack_require__(322);
+	var _PagosEditar = __webpack_require__(323);
 	
 	var _PagosEditar2 = _interopRequireDefault(_PagosEditar);
 	
@@ -53296,7 +53663,7 @@
 	exports.default = ClientesPagos;
 
 /***/ },
-/* 322 */
+/* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53522,7 +53889,7 @@
 	exports.default = PagosEditar;
 
 /***/ },
-/* 323 */
+/* 324 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53779,7 +54146,7 @@
 	exports.default = StockLista;
 
 /***/ },
-/* 324 */
+/* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54220,7 +54587,7 @@
 	exports.default = FabricasEditar;
 
 /***/ },
-/* 325 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54460,7 +54827,7 @@
 	exports.default = UsuariosLista;
 
 /***/ },
-/* 326 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55039,55 +55406,6 @@
 	}(_react2.default.Component);
 	
 	exports.default = UsuariosEditar;
-
-/***/ },
-/* 327 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var ContactosEditar = function (_React$Component) {
-	  _inherits(ContactosEditar, _React$Component);
-	
-	  function ContactosEditar() {
-	    _classCallCheck(this, ContactosEditar);
-	
-	    return _possibleConstructorReturn(this, (ContactosEditar.__proto__ || Object.getPrototypeOf(ContactosEditar)).call(this));
-	  }
-	
-	  _createClass(ContactosEditar, [{
-	    key: "render",
-	    value: function render() {
-	      return _react2.default.createElement(
-	        "div",
-	        { className: "productos-editar" },
-	        "Productos editar"
-	      );
-	    }
-	  }]);
-	
-	  return ContactosEditar;
-	}(_react2.default.Component);
-	
-	exports.default = ContactosEditar;
 
 /***/ }
 /******/ ]);
