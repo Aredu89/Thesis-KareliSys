@@ -201,3 +201,173 @@ module.exports.eliminarFabrica = (req,res) => {
       }
     })
 }
+
+//Crear pedido
+module.exports.crearPedido = (req,res) => {
+  if (!req.params.id) {
+    res.status(404).json({ message: "Se requiere el id de la fábrica"})
+    return
+  }
+  const pedidoBody = req.body
+  Fabricas
+    .findById(req.params.id)
+    .select('-creada')
+    .exec(
+      (err,fabrica) => {
+        if (!fabrica) {
+          res.status(404).json({ message: "No se encontró el id de la fábrica"})
+          return
+        } else if (err) {
+          res.status(404).json(err)
+          return
+        }
+        //Si no hay error, reemplazo con los datos del body
+        fabrica.pedidos.push({
+          fechaPedido: pedidoBody.fechaPedido,
+          detalle: pedidoBody.detalle.map(det=>{
+            return {
+              producto: det.producto,
+              talle: det.talle,
+              cantidad: det.cantidad
+            }
+          }),
+          pagos: [],
+          estado: "pendiente"
+        })
+        //Guardo los cambios en BD
+        fabrica.save((err, fabrica) => {
+          if (err) {
+            res.status(404).json(err)
+          } else {
+            res.status(201).json(fabrica)
+          }
+        })
+      }
+    )
+}
+
+//Modificar pedido
+module.exports.modificarPedido = (req,res) => {
+  if (!req.params.id || !req.params.idPedido) {
+    res.status(404).json({ message: "Se requiere el id de la fábrica y del pedido"})
+    return
+  }
+  const pedidoBody = req.body
+  Fabricas
+    .findById(req.params.id)
+    .select('-creada')
+    .exec(
+      (err,fabrica) => {
+        if (!fabrica) {
+          res.status(404).json({ message: "No se encontró el id de la fábrica"})
+          return
+        } else if (err) {
+          res.status(404).json(err)
+          return
+        }
+        //Defino si cambia el estado
+        let estadoAux = "pendiente"
+        if(
+          pedidoBody.fechaEntrega &&
+          pedidoBody.precioTotal
+        ){
+          estadoAux = "aprobado"
+        }
+        const sum = 0
+        pedidoBody.pagos.forEach(pago=>{
+          sum = sum + pago.monto
+        })
+        if(
+          sum === pedidoBody.precioTotal
+        ){
+          estadoAux = "pagado"
+        }
+        if(
+          pedidoBody.fechaEntregado
+        ){
+          estadoAux = "entregado"
+        }
+        if(
+          sum === pedidoBody.precioTotal &&
+          pedidoBody.fechaEntregado
+        ){
+          estadoAux = "finalizado"
+        }
+        //Si no hay error, reemplazo con los datos del body
+        const pedidos = fabrica.pedidos.map(ped=>{
+          if(ped._id === req.params.idPedido){
+            return {
+              fechaPedido: pedidoBody.fechaPedido,
+              fechaEntrega: pedidoBody.fechaEntrega ? pedidoBody.fechaEntrega : null,
+              fechaEntregado: pedidoBody.fechaEntregado ? pedidoBody.fechaEntregado : null,
+              detalle: pedidoBody.detalle.map(det=>{
+                return {
+                  producto: det.producto,
+                  talle: det.talle,
+                  cantidad: det.cantidad
+                }
+              }),
+              precioTotal: pedidoBody.precioTotal,
+              pagos: pedidoBody.pagos.map(pago=>{
+                return {
+                  fecha: pago.fecha,
+                  monto: pago.monto,
+                  formaPago: pago.formaPago,
+                  observaciones: pago.observaciones
+                }
+              }),
+              estado: estadoAux,
+            }
+          } else {
+            return ped
+          }
+        })
+        fabrica.pedidos = pedidos
+        //Guardo los cambios en BD
+        fabrica.save((err, fabrica) => {
+          if (err) {
+            res.status(404).json(err)
+          } else {
+            res.status(201).json(fabrica)
+          }
+        })
+      }
+    )
+}
+
+//Eliminar pedido
+module.exports.eliminarPedido = (req,res) => {
+  if (!req.params.id || !req.params.idPedido) {
+    res.status(404).json({ message: "Se requiere el id de la fábrica y del pedido"})
+    return
+  }
+  Fabricas
+    .findById(req.params.id)
+    .select('-creada')
+    .exec(
+      (err,fabrica) => {
+        if (!fabrica) {
+          res.status(404).json({ message: "No se encontró el id de la fábrica"})
+          return
+        } else if (err) {
+          res.status(404).json(err)
+          return
+        }
+        //Si no hay error, reemplazo con los datos del body
+        const pedidos = fabrica.pedidos.map(pedido=>{
+          if(pedido._id !== !req.params.idPedido){
+            return pedido
+          }
+        })
+        fabrica.pedidos = pedidos
+        //Guardo los cambios en BD
+        fabrica.save((err, fabrica) => {
+          if (err) {
+            res.status(404).json(err)
+          } else {
+            res.status(201).json(fabrica)
+          }
+        })
+      }
+    )
+}

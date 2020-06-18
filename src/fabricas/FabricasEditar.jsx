@@ -288,7 +288,15 @@ export default class FabricasEditar extends React.Component {
   }
 
   handleEditarPedido(id){
-    
+    //Busco el id
+    this.state.pedidos.forEach(pedido => {
+      if(pedido._id === id){
+        this.setState({
+          modalPedidosEditar: pedido
+        }, this.onOpenModal("modalPedidos"))
+        return
+      }
+    })
   }
   
   handleEliminarPedido(id){
@@ -623,6 +631,7 @@ export default class FabricasEditar extends React.Component {
                 onSave={this.onSaveModal}
                 onClose={()=>this.onCloseModal("modalPedidos")}
                 titulo={this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"}
+                productos={this.state.productos}
               />
             </Modal>
           {/* Modal Productos */}
@@ -637,7 +646,7 @@ export default class FabricasEditar extends React.Component {
                 data={this.state.modalProductosEditar}
                 onSave={this.onSaveModal}
                 onClose={()=>this.onCloseModal("modalProductos")}
-                titulo={this.state.modalPedidosEditar ? "EDITAR PRODUCTO" : "CREAR PRODUCTO"}
+                titulo={this.state.modalProductosEditar ? "EDITAR PRODUCTO" : "CREAR PRODUCTO"}
               />
             </Modal>
         </div>

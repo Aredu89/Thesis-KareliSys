@@ -17,6 +17,18 @@ export default class ContactosEditar extends React.Component {
     this.agregarTalle = this.agregarTalle.bind(this)
   }
 
+  componentDidMount(){
+    if(this.props.data){
+      this.setState({
+        _id: this.props.data._id,
+        nombre: this.props.data.nombre,
+        talles: this.props.data.talles,
+        errorTalles: false,
+        errorTalleRepetido: false,
+      })
+    }
+  }
+
   handleOnChange(event){
     this.setState({
       [event.target.name]: event.target.value

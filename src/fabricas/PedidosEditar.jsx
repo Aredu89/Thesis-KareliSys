@@ -1,28 +1,20 @@
 import React from 'react'
-import funciones from '../common/javascriptFunctions.js'
-
-const estados = [
-  {
-    label: "Pendiente",
-    value: "pendiente"
-  },
-  {
-    label: "Entregado",
-    value: "entregado"
-  }
-]
+import DatePicker from '../common/DatePicker.jsx'
 
 export default class ContactosEditar extends React.Component {
   constructor() {
     super()
     this.state={
       _id: "",
-      fecha: "",
+      fechaPedido: "",
+      fechaEntrega: "",
+      fechaEntregado: "",
       detalle: [],
       errorDetalle: false,
       precioTotal: "",
       errorPrecio: false,
-      estado: estados[0].value,
+      estado: "pendiente",
+      pagos: [],
       nombreProducto: "",
       errorNombreProducto: false,
       talleProducto: "",
@@ -37,10 +29,13 @@ export default class ContactosEditar extends React.Component {
     if(this.props.data){
       this.setState({
         _id: this.props.data._id,
-        fecha: (this.props.data.fecha).toString(),
+        fechaPedido: (this.props.data.fechaPedido).toString(),
+        fechaEntrega: (this.props.data.fechaEntrega).toString(),
+        fechaEntregado: (this.props.data.fechaEntregado).toString(),
         detalle: this.props.data.detalle,
         precioTotal: this.props.data.precioTotal,
-        estado: this.props.data.estado
+        estado: this.props.data.estado,
+        pagos: this.props.data.pagos,
       })
     }
   }
@@ -115,6 +110,11 @@ export default class ContactosEditar extends React.Component {
     }
   }
 
+  primeraUpperCase(string){
+    let firstLetter = string.slice(0,1)
+    return firstLetter[0].toUpperCase() + string.substring(1)
+  }
+
   render(){
     return(
       <div className="contactos-editar">
@@ -131,14 +131,24 @@ export default class ContactosEditar extends React.Component {
         </div>
         {/* Formulario */}
         <div className="formulario pt-2">
-          {/* Fecha */}
+          {/* Estado */}
           {
-            this.state.fecha ?
-              <div className="col-12 form-group text-center pt-2">
-                <label className="mb-0">{`Fecha: ${funciones.formatearDate(this.state.fecha)}`}</label>
-              </div>
-            : null
+            this.state.estado &&
+            <div className="col-12 form-group text-center pt-2">
+              <label>Estado:</label>
+              <div>{this.primeraUpperCase(this.state.estado)}</div>
+            </div>
           }
+          {/* Fecha del pedido */}
+          <div className="col-12 form-group text-center pt-2">
+            {/* <label className="mb-0">{`Fecha: ${funciones.formatearDate(this.state.fecha)}`}</label> */}
+            <label>Fecha del pedido</label>
+            <DatePicker
+              name="fechaPedido"
+              value={this.state.fechaPedido ? this.state.fechaPedido : ""}
+              onChange={this.handleOnChange}
+              />
+          </div>
           {/* Precio Total */}
           <div className="col-12 form-group text-center pt-2">
             <label>Precio Total</label>
@@ -154,24 +164,6 @@ export default class ContactosEditar extends React.Component {
               this.state.errorPrecio &&
               <div className="invalid-feedback">Se debe ingresar un precio</div>
             }
-          </div>
-          {/* Estado */}
-          <div className="col-12 form-group text-center pt-2">
-            <label>Estado</label>
-            <div className="form-group">
-              <select className="custom-select"
-                id="estado"
-                name="estado"
-                value={this.state.estado}
-                onChange={this.handleOnChange}
-              >
-                {
-                  estados.map((estado, i)=>{
-                    return <option value={estado.value} key={i}>{estado.label}</option>
-                  })
-                }
-              </select>
-            </div>
           </div>
           {/* Productos */}
           <div className="col-12 form-group text-center pt-2">

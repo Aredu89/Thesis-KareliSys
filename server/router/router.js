@@ -13,6 +13,9 @@ router.get('/egresos', fabricas.getEgresosMes)
 router.put('/fabricas/:id', fabricas.modificarFabrica)
 router.post('/fabricas', fabricas.crearFabrica)
 router.delete('/fabricas/:id', fabricas.eliminarFabrica)
+router.post('/fabricas/:id/pedidos', fabricas.crearPedido)
+router.put('/fabricas/:id/pedidos/:idPedido', fabricas.modificarPedido)
+router.delete('/fabricas/:id/pedidos/:idPedido', fabricas.eliminarPedido)
 
 //clientes
 router.get('/clientes', clientes.listaClientes)
