@@ -34,7 +34,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
     "mongodb": "^2.2.6",
-    "mongoose": "^5.4.15",
+    "mongoose": "^5.7.5",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "react-responsive-modal": "^3.6.0",
