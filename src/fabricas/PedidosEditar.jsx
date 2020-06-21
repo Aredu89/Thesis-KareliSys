@@ -1,7 +1,8 @@
 import React from 'react'
 import DatePicker from '../common/DatePicker.jsx'
+import FormSelect from '../common/FormSelect.jsx'
 
-export default class ContactosEditar extends React.Component {
+export default class PedidosEditar extends React.Component {
   constructor() {
     super()
     this.state={
@@ -44,6 +45,12 @@ export default class ContactosEditar extends React.Component {
     this.setState({
       [event.target.name]: event.target.value
     })
+    //Limpio el talle seleccionado
+    if(event.target.name === "nombreProducto"){
+      this.setState({
+        talleProducto: ""
+      })
+    }
     //Limpio el error del precio
     if(event.target.name === "precioTotal" && this.state.errorPrecio == true){
       this.setState({
@@ -115,7 +122,36 @@ export default class ContactosEditar extends React.Component {
     return firstLetter[0].toUpperCase() + string.substring(1)
   }
 
+  fechaNumeros(fecha){
+    const date = new Date(fecha)
+    const dia = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+    const mesraw = date.getMonth() + 1
+    const mes = mesraw < 10 ? '0' + mesraw : mesraw
+    return dia + '/' + mes + '/' + date.getFullYear()
+  }
+
   render(){
+    let productosOptions = []
+    if(this.props.productos){
+      this.props.productos.forEach(prod=>{
+        productosOptions.push({
+          id: prod.nombre,
+          value: prod.nombre
+        })
+      })
+    }
+    let tallesOptions = []
+    if(this.state.nombreProducto && this.props.productos){
+      const producto = this.props.productos.find(prod=>prod.nombre === this.state.nombreProducto)
+      if(producto){
+        producto.talles.forEach(talle=>{
+          tallesOptions.push({
+            id: talle,
+            value: talle
+          })
+        })
+      }
+    }
     return(
       <div className="contactos-editar">
         {/* Header */}
@@ -145,38 +181,40 @@ export default class ContactosEditar extends React.Component {
             <label>Fecha del pedido</label>
             <DatePicker
               name="fechaPedido"
-              value={this.state.fechaPedido ? this.state.fechaPedido : ""}
+              value={this.state.fechaPedido ? fechaNumeros(this.state.fechaPedido) : ""}
               onChange={this.handleOnChange}
               />
           </div>
           {/* Precio Total */}
-          <div className="col-12 form-group text-center pt-2">
-            <label>Precio Total</label>
-            <input type="number" 
-              className={this.state.errorPrecio ? "form-control is-invalid" : "form-control"}
-              id="precioTotal" 
-              name="precioTotal"
-              placeholder="Precio Total..."
-              value={this.state.precioTotal}
-              onChange={this.handleOnChange} 
-              />
-            {
-              this.state.errorPrecio &&
-              <div className="invalid-feedback">Se debe ingresar un precio</div>
-            }
-          </div>
+          {
+            this.state._id &&
+            <div className="col-12 form-group text-center pt-2">
+              <label>Precio Total</label>
+              <input type="number" 
+                className={this.state.errorPrecio ? "form-control is-invalid" : "form-control"}
+                id="precioTotal" 
+                name="precioTotal"
+                placeholder="Precio Total..."
+                value={this.state.precioTotal}
+                onChange={this.handleOnChange} 
+                />
+              {
+                this.state.errorPrecio &&
+                <div className="invalid-feedback">Se debe ingresar un precio</div>
+              }
+            </div>
+          }
           {/* Productos */}
           <div className="col-12 form-group text-center pt-2">
             <label>Agregar productos al pedido</label>
             <div className="contenedor-productos">
-              <label>Nombre</label>
-              <input type="text" 
-                className={this.state.errorNombreProducto ? "form-control is-invalid" : "form-control"}
-                id="nombreProducto" 
+              <FormSelect
+                label="Nombre"
                 name="nombreProducto"
-                placeholder="Nombre del producto..."
                 value={this.state.nombreProducto}
-                onChange={this.handleOnChange} 
+                onChange={this.handleOnChange}
+                error={this.state.errorNombreProducto}
+                options={productosOptions}
                 />
               <div className="d-flex justify-content-between">
                 <div className="text-center">
