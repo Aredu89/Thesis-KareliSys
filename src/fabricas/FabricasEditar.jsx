@@ -601,7 +601,6 @@ export default class FabricasEditar extends React.Component {
                 </div>
               </div>
             }
-            
           </div>
           {/* Modal contactos */}
           <Modal

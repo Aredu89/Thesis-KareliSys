@@ -50181,7 +50181,9 @@
 	      nombreProducto: "",
 	      errorNombreProducto: false,
 	      talleProducto: "",
-	      cantidadProducto: ""
+	      errorTalleProducto: false,
+	      cantidadProducto: "",
+	      errorCantidadProducto: false
 	    };
 	    _this.handleOnChange = _this.handleOnChange.bind(_this);
 	    _this.agregarProducto = _this.agregarProducto.bind(_this);
@@ -50215,16 +50217,22 @@
 	          talleProducto: ""
 	        });
 	      }
-	      //Limpio el error del precio
-	      if (event.target.name === "precioTotal" && this.state.errorPrecio == true) {
-	        this.setState({
-	          errorPrecio: false
-	        });
-	      }
 	      //Limpio el error del nombre del producto
 	      if (event.target.name === "nombreProducto" && this.state.errorNombreProducto == true) {
 	        this.setState({
 	          errorNombreProducto: false
+	        });
+	      }
+	      //Limpio el error del talle del producto
+	      if (event.target.name === "talleProducto" && this.state.errorTalleProducto == true) {
+	        this.setState({
+	          errorTalleProducto: false
+	        });
+	      }
+	      //Limpio el error de cantidad del producto
+	      if (event.target.name === "cantidadProducto" && this.state.errorCantidadProducto == true) {
+	        this.setState({
+	          errorCantidadProducto: false
 	        });
 	      }
 	    }
@@ -50233,7 +50241,7 @@
 	    value: function agregarProducto() {
 	      var productos = this.state.detalle;
 	      //controlar que el nombre tenga un valor
-	      if (this.state.nombreProducto) {
+	      if (this.state.nombreProducto && this.state.talleProducto && this.state.cantidadProducto) {
 	        productos.push({
 	          nombre: this.state.nombreProducto,
 	          talle: this.state.talleProducto,
@@ -50244,8 +50252,22 @@
 	          errorDetalle: false
 	        });
 	      } else {
+	        var errorNombre = false;
+	        var errorTalle = false;
+	        var errorCantidad = false;
+	        if (!this.state.nombreProducto) {
+	          errorNombre = true;
+	        }
+	        if (!this.state.talleProducto) {
+	          errorTalle = true;
+	        }
+	        if (!this.state.cantidadProducto) {
+	          errorCantidad = true;
+	        }
 	        this.setState({
-	          errorNombreProducto: true
+	          errorNombreProducto: errorNombre,
+	          errorTallePRoducto: errorTalle,
+	          errorCantidadProducto: errorCantidad
 	        });
 	      }
 	    }
@@ -50431,18 +50453,13 @@
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'text-center' },
-	                  _react2.default.createElement(
-	                    'label',
-	                    null,
-	                    'Talle'
-	                  ),
-	                  _react2.default.createElement('input', { type: 'number',
-	                    className: 'form-control',
-	                    id: 'talleProducto',
+	                  _react2.default.createElement(_FormSelect2.default, {
+	                    label: 'Talle',
 	                    name: 'talleProducto',
-	                    placeholder: 'Talle...',
 	                    value: this.state.talleProducto,
-	                    onChange: this.handleOnChange
+	                    onChange: this.handleOnChange,
+	                    error: this.state.errorTalleProducto,
+	                    options: tallesOptions
 	                  })
 	                ),
 	                _react2.default.createElement(
@@ -50454,13 +50471,18 @@
 	                    'Cantidad'
 	                  ),
 	                  _react2.default.createElement('input', { type: 'number',
-	                    className: 'form-control',
+	                    className: this.state.errorCantidadProducto ? "form-control is-invalid" : "form-control",
 	                    id: 'cantidadProducto',
 	                    name: 'cantidadProducto',
 	                    placeholder: 'Cantidad...',
 	                    value: this.state.cantidadProducto,
 	                    onChange: this.handleOnChange
-	                  })
+	                  }),
+	                  this.state.errorCantidadProducto && _react2.default.createElement(
+	                    'div',
+	                    { className: 'invalid-feedback' },
+	                    'Ingrese una cantidad'
+	                  )
 	                ),
 	                _react2.default.createElement(
 	                  'div',
@@ -50665,7 +50687,8 @@
 	      options = props.options,
 	      name = props.name,
 	      value = props.value,
-	      onChange = props.onChange;
+	      onChange = props.onChange,
+	      error = props.error;
 	
 	
 	  var selectOptions = [];
@@ -50681,6 +50704,7 @@
 	      });
 	    }
 	  }
+	  console.log("error: ", error);
 	
 	  return _react2.default.createElement(
 	    "div",
@@ -50693,7 +50717,7 @@
 	    _react2.default.createElement(
 	      "select",
 	      {
-	        className: "select mb-2",
+	        className: error ? 'select mb-2 is-invalid' : 'select mb-2',
 	        name: name,
 	        value: value,
 	        onChange: onChange
@@ -50709,6 +50733,11 @@
 	        null,
 	        "Sin opciones..."
 	      )
+	    ),
+	    error && _react2.default.createElement(
+	      "div",
+	      { className: "invalid-feedback" },
+	      "Seleccione una opci\xF3n v\xE1lida..."
 	    )
 	  );
 	}

@@ -6,7 +6,8 @@ export default function FormSelect(props) {
     options,
     name,
     value,
-    onChange
+    onChange,
+    error
   } = props
 
   let selectOptions = []
@@ -22,6 +23,7 @@ export default function FormSelect(props) {
       })
     }
   }
+  console.log("error: ",error)
 
   return(
     <div className="form-select">
@@ -30,7 +32,7 @@ export default function FormSelect(props) {
         <div className="mb-2">{label}</div>
       }
       <select
-        className='select mb-2'
+        className={error ? 'select mb-2 is-invalid' : 'select mb-2'}
         name={name}
         value={value}
         onChange={onChange}
@@ -45,6 +47,10 @@ export default function FormSelect(props) {
           )
         }
       </select>
+      {
+        error &&
+        <div className="invalid-feedback">Seleccione una opción válida...</div>
+      }
     </div>
   )
 }

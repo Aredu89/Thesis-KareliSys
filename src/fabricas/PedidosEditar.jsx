@@ -19,7 +19,9 @@ export default class PedidosEditar extends React.Component {
       nombreProducto: "",
       errorNombreProducto: false,
       talleProducto: "",
-      cantidadProducto: ""
+      errorTalleProducto: false,
+      cantidadProducto: "",
+      errorCantidadProducto: false,
     }
     this.handleOnChange = this.handleOnChange.bind(this)
     this.agregarProducto = this.agregarProducto.bind(this)
@@ -51,16 +53,22 @@ export default class PedidosEditar extends React.Component {
         talleProducto: ""
       })
     }
-    //Limpio el error del precio
-    if(event.target.name === "precioTotal" && this.state.errorPrecio == true){
-      this.setState({
-        errorPrecio: false
-      })
-    }
     //Limpio el error del nombre del producto
     if(event.target.name === "nombreProducto" && this.state.errorNombreProducto == true){
       this.setState({
         errorNombreProducto: false
+      })
+    }
+    //Limpio el error del talle del producto
+    if(event.target.name === "talleProducto" && this.state.errorTalleProducto == true){
+      this.setState({
+        errorTalleProducto: false
+      })
+    }
+    //Limpio el error de cantidad del producto
+    if(event.target.name === "cantidadProducto" && this.state.errorCantidadProducto == true){
+      this.setState({
+        errorCantidadProducto: false
       })
     }
   }
@@ -68,7 +76,11 @@ export default class PedidosEditar extends React.Component {
   agregarProducto(){
     let productos = this.state.detalle
     //controlar que el nombre tenga un valor
-    if(this.state.nombreProducto){
+    if(
+      this.state.nombreProducto &&
+      this.state.talleProducto &&
+      this.state.cantidadProducto
+      ){
       productos.push({
         nombre: this.state.nombreProducto,
         talle: this.state.talleProducto,
@@ -79,8 +91,22 @@ export default class PedidosEditar extends React.Component {
         errorDetalle: false
       })
     } else {
+      let errorNombre = false
+      let errorTalle = false
+      let errorCantidad = false
+      if(!this.state.nombreProducto){
+        errorNombre = true
+      }
+      if(!this.state.talleProducto){
+        errorTalle = true
+      }
+      if(!this.state.cantidadProducto){
+        errorCantidad = true
+      }
       this.setState({
-        errorNombreProducto: true
+        errorNombreProducto: errorNombre,
+        errorTallePRoducto: errorTalle,
+        errorCantidadProducto: errorCantidad
       })
     }
   }
@@ -218,26 +244,29 @@ export default class PedidosEditar extends React.Component {
                 />
               <div className="d-flex justify-content-between">
                 <div className="text-center">
-                  <label>Talle</label>
-                  <input type="number" 
-                    className="form-control"
-                    id="talleProducto" 
-                    name="talleProducto"
-                    placeholder="Talle..."
-                    value={this.state.talleProducto}
-                    onChange={this.handleOnChange} 
-                    />
+                <FormSelect
+                  label="Talle"
+                  name="talleProducto"
+                  value={this.state.talleProducto}
+                  onChange={this.handleOnChange}
+                  error={this.state.errorTalleProducto}
+                  options={tallesOptions}
+                  />
                 </div>
                 <div className="text-center">
                   <label>Cantidad</label>
                   <input type="number" 
-                    className="form-control"
+                    className={this.state.errorCantidadProducto ? "form-control is-invalid" : "form-control"}
                     id="cantidadProducto" 
                     name="cantidadProducto"
                     placeholder="Cantidad..."
                     value={this.state.cantidadProducto}
                     onChange={this.handleOnChange} 
                     />
+                  {
+                    this.state.errorCantidadProducto &&
+                    <div className="invalid-feedback">Ingrese una cantidad</div>
+                  }
                 </div>
                 <div className="text-center d-flex align-items-end">
                   <button 
