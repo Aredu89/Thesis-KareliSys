@@ -50170,6 +50170,7 @@
 	    _this.state = {
 	      _id: "",
 	      fechaPedido: "",
+	      errorFechaPedido: false,
 	      fechaEntrega: "",
 	      fechaEntregado: "",
 	      detalle: [],
@@ -50181,7 +50182,9 @@
 	      nombreProducto: "",
 	      errorNombreProducto: false,
 	      talleProducto: "",
-	      cantidadProducto: ""
+	      errorTalleProducto: false,
+	      cantidadProducto: "",
+	      errorCantidadProducto: false
 	    };
 	    _this.handleOnChange = _this.handleOnChange.bind(_this);
 	    _this.agregarProducto = _this.agregarProducto.bind(_this);
@@ -50195,9 +50198,9 @@
 	      if (this.props.data) {
 	        this.setState({
 	          _id: this.props.data._id,
-	          fechaPedido: this.props.data.fechaPedido.toString(),
-	          fechaEntrega: this.props.data.fechaEntrega.toString(),
-	          fechaEntregado: this.props.data.fechaEntregado.toString(),
+	          fechaPedido: this.props.data.fechaPedido ? this.fechaANumeros(this.props.data.fechaPedido) : "",
+	          fechaEntrega: this.props.data.fechaEntrega ? this.fechaANumeros(this.props.data.fechaEntrega) : "",
+	          fechaEntregado: this.props.data.fechaEntregado ? this.fechaANumeros(this.props.data.fechaEntregado) : "",
 	          detalle: this.props.data.detalle,
 	          precioTotal: this.props.data.precioTotal,
 	          estado: this.props.data.estado,
@@ -50215,16 +50218,28 @@
 	          talleProducto: ""
 	        });
 	      }
-	      //Limpio el error del precio
-	      if (event.target.name === "precioTotal" && this.state.errorPrecio == true) {
-	        this.setState({
-	          errorPrecio: false
-	        });
-	      }
 	      //Limpio el error del nombre del producto
 	      if (event.target.name === "nombreProducto" && this.state.errorNombreProducto == true) {
 	        this.setState({
 	          errorNombreProducto: false
+	        });
+	      }
+	      //Limpio el error del talle del producto
+	      if (event.target.name === "talleProducto" && this.state.errorTalleProducto == true) {
+	        this.setState({
+	          errorTalleProducto: false
+	        });
+	      }
+	      //Limpio el error de cantidad del producto
+	      if (event.target.name === "cantidadProducto" && this.state.errorCantidadProducto == true) {
+	        this.setState({
+	          errorCantidadProducto: false
+	        });
+	      }
+	      //Limpio el error de fecha del pedido
+	      if (event.target.name === "fechaPedido" && this.state.errorFechaPedido == true) {
+	        this.setState({
+	          errorFechaPedido: false
 	        });
 	      }
 	    }
@@ -50233,7 +50248,7 @@
 	    value: function agregarProducto() {
 	      var productos = this.state.detalle;
 	      //controlar que el nombre tenga un valor
-	      if (this.state.nombreProducto) {
+	      if (this.state.nombreProducto && this.state.talleProducto && this.state.cantidadProducto) {
 	        productos.push({
 	          nombre: this.state.nombreProducto,
 	          talle: this.state.talleProducto,
@@ -50244,8 +50259,22 @@
 	          errorDetalle: false
 	        });
 	      } else {
+	        var errorNombre = false;
+	        var errorTalle = false;
+	        var errorCantidad = false;
+	        if (!this.state.nombreProducto) {
+	          errorNombre = true;
+	        }
+	        if (!this.state.talleProducto) {
+	          errorTalle = true;
+	        }
+	        if (!this.state.cantidadProducto) {
+	          errorCantidad = true;
+	        }
 	        this.setState({
-	          errorNombreProducto: true
+	          errorNombreProducto: errorNombre,
+	          errorTalleProducto: errorTalle,
+	          errorCantidadProducto: errorCantidad
 	        });
 	      }
 	    }
@@ -50261,12 +50290,11 @@
 	  }, {
 	    key: 'onSave',
 	    value: function onSave() {
-	      if (this.state.precioTotal > 0 && this.state.detalle.length > 0) {
+	      if (this.state.fechaPedido && this.state.detalle.length > 0) {
 	        this.props.onSave({
 	          _id: this.state._id,
-	          fecha: this.state.fecha ? this.state.fecha : new Date(),
+	          fechaPedido: this.state.fechaPedido ? this.numerosAFecha(this.state.fechaPedido) : new Date(),
 	          detalle: this.state.detalle,
-	          precioTotal: this.state.precioTotal,
 	          estado: this.state.estado
 	        }, "pedidos");
 	        this.props.onClose();
@@ -50276,9 +50304,9 @@
 	            errorDetalle: true
 	          });
 	        }
-	        if (this.state.precioTotal < 1) {
+	        if (!this.state.fechaPedido) {
 	          this.setState({
-	            errorPrecio: true
+	            errorFechaPedido: true
 	          });
 	        }
 	      }
@@ -50290,13 +50318,26 @@
 	      return firstLetter[0].toUpperCase() + string.substring(1);
 	    }
 	  }, {
-	    key: 'fechaNumeros',
-	    value: function fechaNumeros(fecha) {
+	    key: 'fechaANumeros',
+	    value: function fechaANumeros(fecha) {
 	      var date = new Date(fecha);
 	      var dia = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
 	      var mesraw = date.getMonth() + 1;
 	      var mes = mesraw < 10 ? '0' + mesraw : mesraw;
 	      return dia + '/' + mes + '/' + date.getFullYear();
+	    }
+	  }, {
+	    key: 'numerosAFecha',
+	    value: function numerosAFecha(string) {
+	      // Recibe un string con formato "dd/mm/yyyy"
+	      if (string) {
+	        var numeros = string.split('/');
+	        var date = numeros[2] + '-' + numeros[1] + '-' + numeros[0];
+	        console.log("fecha a guardar: ", new Date(date));
+	        return new Date(date);
+	      } else {
+	        return new Date();
+	      }
 	    }
 	  }, {
 	    key: 'render',
@@ -50380,8 +50421,9 @@
 	            ),
 	            _react2.default.createElement(_DatePicker2.default, {
 	              name: 'fechaPedido',
-	              value: this.state.fechaPedido ? fechaNumeros(this.state.fechaPedido) : "",
-	              onChange: this.handleOnChange
+	              value: this.state.fechaPedido ? this.state.fechaPedido : "",
+	              onChange: this.handleOnChange,
+	              error: this.state.errorFechaPedido
 	            })
 	          ),
 	          this.state._id && _react2.default.createElement(
@@ -50431,18 +50473,13 @@
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'text-center' },
-	                  _react2.default.createElement(
-	                    'label',
-	                    null,
-	                    'Talle'
-	                  ),
-	                  _react2.default.createElement('input', { type: 'number',
-	                    className: 'form-control',
-	                    id: 'talleProducto',
+	                  _react2.default.createElement(_FormSelect2.default, {
+	                    label: 'Talle',
 	                    name: 'talleProducto',
-	                    placeholder: 'Talle...',
 	                    value: this.state.talleProducto,
-	                    onChange: this.handleOnChange
+	                    onChange: this.handleOnChange,
+	                    error: this.state.errorTalleProducto,
+	                    options: tallesOptions
 	                  })
 	                ),
 	                _react2.default.createElement(
@@ -50454,13 +50491,18 @@
 	                    'Cantidad'
 	                  ),
 	                  _react2.default.createElement('input', { type: 'number',
-	                    className: 'form-control',
+	                    className: this.state.errorCantidadProducto ? "form-control is-invalid" : "form-control",
 	                    id: 'cantidadProducto',
 	                    name: 'cantidadProducto',
 	                    placeholder: 'Cantidad...',
 	                    value: this.state.cantidadProducto,
 	                    onChange: this.handleOnChange
-	                  })
+	                  }),
+	                  this.state.errorCantidadProducto && _react2.default.createElement(
+	                    'div',
+	                    { className: 'invalid-feedback' },
+	                    'Ingrese una cantidad'
+	                  )
 	                ),
 	                _react2.default.createElement(
 	                  'div',
@@ -50552,17 +50594,12 @@
 	              )
 	            )
 	          ),
-	          this.state.errorDetalle ? _react2.default.createElement(
+	          this.state.errorDetalle && _react2.default.createElement(
 	            'div',
 	            { className: 'col-12 form-group text-center pt-2' },
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'alert alert-dismissible alert-danger' },
-	              _react2.default.createElement(
-	                'button',
-	                { type: 'button', className: 'close', 'data-dismiss': 'alert' },
-	                '\xD7'
-	              ),
 	              _react2.default.createElement(
 	                'strong',
 	                null,
@@ -50570,7 +50607,7 @@
 	              ),
 	              ' El pedido debe tener productos'
 	            )
-	          ) : null,
+	          ),
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'col-12 form-group text-center pt-2 boton-guardar' },
@@ -50620,7 +50657,8 @@
 	function DatePicker(props) {
 	  var value = props.value,
 	      onChange = props.onChange,
-	      name = props.name;
+	      name = props.name,
+	      error = props.error;
 	
 	
 	  return _react2.default.createElement(
@@ -50628,12 +50666,17 @@
 	    { className: 'date-picker' },
 	    _react2.default.createElement(_reactTextMask2.default, {
 	      name: name,
-	      className: 'picker',
+	      className: error ? "picker form-control is-invalid" : "form-control picker",
 	      onChange: onChange,
 	      value: value ? value : "",
 	      placeholder: 'dd/mm/yyyy',
 	      mask: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]
-	    })
+	    }),
+	    error && _react2.default.createElement(
+	      'div',
+	      { className: 'invalid-feedback' },
+	      'Ingrese una fecha'
+	    )
 	  );
 	}
 
@@ -50665,7 +50708,8 @@
 	      options = props.options,
 	      name = props.name,
 	      value = props.value,
-	      onChange = props.onChange;
+	      onChange = props.onChange,
+	      error = props.error;
 	
 	
 	  var selectOptions = [];
@@ -50693,7 +50737,7 @@
 	    _react2.default.createElement(
 	      "select",
 	      {
-	        className: "select mb-2",
+	        className: error ? 'select form-control mb-2 is-invalid' : 'select form-control mb-2',
 	        name: name,
 	        value: value,
 	        onChange: onChange
@@ -50709,6 +50753,11 @@
 	        null,
 	        "Sin opciones..."
 	      )
+	    ),
+	    error && _react2.default.createElement(
+	      "div",
+	      { className: "invalid-feedback" },
+	      "Seleccione una opci\xF3n v\xE1lida..."
 	    )
 	  );
 	}

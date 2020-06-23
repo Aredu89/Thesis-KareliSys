@@ -8,6 +8,7 @@ export default class PedidosEditar extends React.Component {
     this.state={
       _id: "",
       fechaPedido: "",
+      errorFechaPedido: false,
       fechaEntrega: "",
       fechaEntregado: "",
       detalle: [],
@@ -19,7 +20,9 @@ export default class PedidosEditar extends React.Component {
       nombreProducto: "",
       errorNombreProducto: false,
       talleProducto: "",
-      cantidadProducto: ""
+      errorTalleProducto: false,
+      cantidadProducto: "",
+      errorCantidadProducto: false,
     }
     this.handleOnChange = this.handleOnChange.bind(this)
     this.agregarProducto = this.agregarProducto.bind(this)
@@ -30,9 +33,9 @@ export default class PedidosEditar extends React.Component {
     if(this.props.data){
       this.setState({
         _id: this.props.data._id,
-        fechaPedido: (this.props.data.fechaPedido).toString(),
-        fechaEntrega: (this.props.data.fechaEntrega).toString(),
-        fechaEntregado: (this.props.data.fechaEntregado).toString(),
+        fechaPedido: this.props.data.fechaPedido ? this.fechaANumeros(this.props.data.fechaPedido) : "",
+        fechaEntrega: this.props.data.fechaEntrega ? this.fechaANumeros(this.props.data.fechaEntrega) : "",
+        fechaEntregado: this.props.data.fechaEntregado ? this.fechaANumeros(this.props.data.fechaEntregado) : "",
         detalle: this.props.data.detalle,
         precioTotal: this.props.data.precioTotal,
         estado: this.props.data.estado,
@@ -51,16 +54,28 @@ export default class PedidosEditar extends React.Component {
         talleProducto: ""
       })
     }
-    //Limpio el error del precio
-    if(event.target.name === "precioTotal" && this.state.errorPrecio == true){
-      this.setState({
-        errorPrecio: false
-      })
-    }
     //Limpio el error del nombre del producto
     if(event.target.name === "nombreProducto" && this.state.errorNombreProducto == true){
       this.setState({
         errorNombreProducto: false
+      })
+    }
+    //Limpio el error del talle del producto
+    if(event.target.name === "talleProducto" && this.state.errorTalleProducto == true){
+      this.setState({
+        errorTalleProducto: false
+      })
+    }
+    //Limpio el error de cantidad del producto
+    if(event.target.name === "cantidadProducto" && this.state.errorCantidadProducto == true){
+      this.setState({
+        errorCantidadProducto: false
+      })
+    }
+    //Limpio el error de fecha del pedido
+    if(event.target.name === "fechaPedido" && this.state.errorFechaPedido == true){
+      this.setState({
+        errorFechaPedido: false
       })
     }
   }
@@ -68,7 +83,11 @@ export default class PedidosEditar extends React.Component {
   agregarProducto(){
     let productos = this.state.detalle
     //controlar que el nombre tenga un valor
-    if(this.state.nombreProducto){
+    if(
+      this.state.nombreProducto &&
+      this.state.talleProducto &&
+      this.state.cantidadProducto
+      ){
       productos.push({
         nombre: this.state.nombreProducto,
         talle: this.state.talleProducto,
@@ -79,8 +98,22 @@ export default class PedidosEditar extends React.Component {
         errorDetalle: false
       })
     } else {
+      let errorNombre = false
+      let errorTalle = false
+      let errorCantidad = false
+      if(!this.state.nombreProducto){
+        errorNombre = true
+      }
+      if(!this.state.talleProducto){
+        errorTalle = true
+      }
+      if(!this.state.cantidadProducto){
+        errorCantidad = true
+      }
       this.setState({
-        errorNombreProducto: true
+        errorNombreProducto: errorNombre,
+        errorTalleProducto: errorTalle,
+        errorCantidadProducto: errorCantidad
       })
     }
   }
@@ -94,12 +127,11 @@ export default class PedidosEditar extends React.Component {
   }
 
   onSave(){
-    if(this.state.precioTotal > 0 && this.state.detalle.length > 0){
+    if(this.state.fechaPedido && this.state.detalle.length > 0){
       this.props.onSave({
         _id: this.state._id,
-        fecha: this.state.fecha ? this.state.fecha : new Date(),
+        fechaPedido: this.state.fechaPedido ? this.numerosAFecha(this.state.fechaPedido) : new Date(),
         detalle: this.state.detalle,
-        precioTotal: this.state.precioTotal,
         estado: this.state.estado
       }, "pedidos")
       this.props.onClose()
@@ -109,9 +141,9 @@ export default class PedidosEditar extends React.Component {
           errorDetalle: true
         })
       }
-      if(this.state.precioTotal < 1){
+      if(!this.state.fechaPedido){
         this.setState({
-          errorPrecio: true
+          errorFechaPedido: true
         })
       }
     }
@@ -122,12 +154,24 @@ export default class PedidosEditar extends React.Component {
     return firstLetter[0].toUpperCase() + string.substring(1)
   }
 
-  fechaNumeros(fecha){
+  fechaANumeros(fecha){
     const date = new Date(fecha)
     const dia = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
     const mesraw = date.getMonth() + 1
     const mes = mesraw < 10 ? '0' + mesraw : mesraw
     return dia + '/' + mes + '/' + date.getFullYear()
+  }
+
+  numerosAFecha(string){
+    // Recibe un string con formato "dd/mm/yyyy"
+    if(string){
+      const numeros = string.split('/')
+      const date = numeros[2] + '-' + numeros[1] + '-' + numeros[0]
+      console.log("fecha a guardar: ", new Date(date))
+      return new Date(date)
+    } else {
+      return new Date()
+    }
   }
 
   render(){
@@ -181,8 +225,9 @@ export default class PedidosEditar extends React.Component {
             <label>Fecha del pedido</label>
             <DatePicker
               name="fechaPedido"
-              value={this.state.fechaPedido ? fechaNumeros(this.state.fechaPedido) : ""}
+              value={this.state.fechaPedido ? this.state.fechaPedido : ""}
               onChange={this.handleOnChange}
+              error={this.state.errorFechaPedido}
               />
           </div>
           {/* Precio Total */}
@@ -218,26 +263,29 @@ export default class PedidosEditar extends React.Component {
                 />
               <div className="d-flex justify-content-between">
                 <div className="text-center">
-                  <label>Talle</label>
-                  <input type="number" 
-                    className="form-control"
-                    id="talleProducto" 
-                    name="talleProducto"
-                    placeholder="Talle..."
-                    value={this.state.talleProducto}
-                    onChange={this.handleOnChange} 
-                    />
+                <FormSelect
+                  label="Talle"
+                  name="talleProducto"
+                  value={this.state.talleProducto}
+                  onChange={this.handleOnChange}
+                  error={this.state.errorTalleProducto}
+                  options={tallesOptions}
+                  />
                 </div>
                 <div className="text-center">
                   <label>Cantidad</label>
                   <input type="number" 
-                    className="form-control"
+                    className={this.state.errorCantidadProducto ? "form-control is-invalid" : "form-control"}
                     id="cantidadProducto" 
                     name="cantidadProducto"
                     placeholder="Cantidad..."
                     value={this.state.cantidadProducto}
                     onChange={this.handleOnChange} 
                     />
+                  {
+                    this.state.errorCantidadProducto &&
+                    <div className="invalid-feedback">Ingrese una cantidad</div>
+                  }
                 </div>
                 <div className="text-center d-flex align-items-end">
                   <button 
@@ -278,15 +326,15 @@ export default class PedidosEditar extends React.Component {
               </tbody>
             </table>
           </div>
-          {/* Error */}
-          {this.state.errorDetalle ?
+          {/* Errores */}
+          {this.state.errorDetalle &&
             <div className="col-12 form-group text-center pt-2">
               <div className="alert alert-dismissible alert-danger">
-                <button type="button" className="close" data-dismiss="alert">&times;</button>
+                {/* <button type="button" className="close" data-dismiss="alert">&times;</button> */}
                 <strong>Error!</strong> El pedido debe tener productos
               </div>
             </div>
-          : null}
+          }
           {/* Boton de guardar */}
           <div className="col-12 form-group text-center pt-2 boton-guardar">
             <button 
