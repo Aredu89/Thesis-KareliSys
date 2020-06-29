@@ -23,7 +23,6 @@ export default function FormSelect(props) {
       })
     }
   }
-  console.log("error: ",error)
 
   return(
     <div className="form-select">

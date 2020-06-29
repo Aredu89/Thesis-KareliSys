@@ -44,6 +44,7 @@ export default class FabricasEditar extends React.Component {
     this.handleEliminarProducto = this.handleEliminarProducto.bind(this)
     this.handleEditarPedido = this.handleEditarPedido.bind(this)
     this.handleEliminarPedido = this.handleEliminarPedido.bind(this)
+    this.onCrearPedido = this.onCrearPedido.bind(this)
   }
 
   componentDidMount(){
@@ -300,7 +301,53 @@ export default class FabricasEditar extends React.Component {
   }
   
   handleEliminarPedido(id){
-    
+    //Primero pido confirmación
+    Swal.fire({
+      title: "¿Seguro que desea eliminar?",
+      text: "Esta acción no se puede revertir",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, eliminar"
+    }).then((result)=>{
+      if(result.value){
+        //Elimino
+        fetch(`/api/fabricas/${this.state._id}/pedidos/${id}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' }
+        })
+          .then(res => {
+            if(res.ok){
+              res.json()
+                .then(data=>{
+                  Swal.fire(
+                    "Pedido Eliminado",
+                    "",
+                    "success"
+                  ).then(()=>{
+                    this.setState({
+                      pedidos: data.pedidos
+                    })
+                  })
+                })
+            } else {
+                Swal.fire(
+                  "Error al eliminar",
+                  "",
+                  "error"
+                )
+            }
+          })
+          .catch(err=> {
+            Swal.fire(
+              "Error del servidor",
+              err.message,
+              "error"
+            )
+          })
+      }
+    })
   }
 
   goToPagos(){
@@ -337,6 +384,49 @@ export default class FabricasEditar extends React.Component {
     })
   }
 
+  onCrearPedido(obj){
+    //Crear pedido
+    fetch(`/api/fabricas/${this.state._id}/pedidos`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(obj),
+    })
+      .then(res => {
+        if(res.ok) {
+          res.json()
+            .then(data => {
+              Swal.fire(
+                "Pedido creado!",
+                "",
+                "success"
+              ).then(()=>{
+                this.setState({
+                  pedidos: data.pedidos
+                })
+              })
+            })
+        } else {
+          res.json()
+          .then(err => {
+            console.log("Error al crear pedido: ",err.message)
+            Swal.fire(
+              "Error al crear el pedido",
+              "",
+              "error"
+            )
+          })
+        }
+      })
+      .catch(err => {
+        console.log("Error al crear: ",err.message)
+        Swal.fire(
+          "Error del servidor",
+          "",
+          "error"
+        )
+      })
+  }
+
   render() {
     const {
       permits
@@ -356,9 +446,8 @@ export default class FabricasEditar extends React.Component {
       ["Teléfono","telefono","String"]
     ]
     const columnsPedidos = [
-      ["Fecha","fecha","Fecha"],
+      ["Fecha del pedido","fechaPedido","Fecha"],
       ["Productos","detalle","Largo"],
-      ["Precio","precioTotal","String"],
       ["Estado","estado","String"]
     ]
     const columnsProductos = [
@@ -627,7 +716,7 @@ export default class FabricasEditar extends React.Component {
             >
               <PedidosEditar
                 data={this.state.modalPedidosEditar}
-                onSave={this.onSaveModal}
+                onSave={this.onCrearPedido}
                 onClose={()=>this.onCloseModal("modalPedidos")}
                 titulo={this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"}
                 productos={this.state.productos}

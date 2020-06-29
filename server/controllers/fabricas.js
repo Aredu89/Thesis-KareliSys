@@ -354,18 +354,19 @@ module.exports.eliminarPedido = (req,res) => {
           return
         }
         //Si no hay error, reemplazo con los datos del body
-        const pedidos = fabrica.pedidos.map(pedido=>{
-          if(pedido._id !== !req.params.idPedido){
-            return pedido
+        const pedidos = []
+        fabrica.pedidos.forEach(pedido=>{
+          if(pedido._id.toString() !== req.params.idPedido.toString()){
+            pedidos.push(pedido)
           }
         })
         fabrica.pedidos = pedidos
         //Guardo los cambios en BD
-        fabrica.save((err, fabrica) => {
+        fabrica.save((err, fabricaGuardad) => {
           if (err) {
             res.status(404).json(err)
           } else {
-            res.status(201).json(fabrica)
+            res.status(201).json(fabricaGuardad)
           }
         })
       }

@@ -45351,6 +45351,7 @@
 	    _this.handleEliminarProducto = _this.handleEliminarProducto.bind(_this);
 	    _this.handleEditarPedido = _this.handleEditarPedido.bind(_this);
 	    _this.handleEliminarPedido = _this.handleEliminarPedido.bind(_this);
+	    _this.onCrearPedido = _this.onCrearPedido.bind(_this);
 	    return _this;
 	  }
 	
@@ -45604,7 +45605,42 @@
 	    }
 	  }, {
 	    key: 'handleEliminarPedido',
-	    value: function handleEliminarPedido(id) {}
+	    value: function handleEliminarPedido(id) {
+	      var _this10 = this;
+	
+	      //Primero pido confirmación
+	      _sweetalert2.default.fire({
+	        title: "¿Seguro que desea eliminar?",
+	        text: "Esta acción no se puede revertir",
+	        icon: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#3085d6",
+	        cancelButtonColor: "#d33",
+	        confirmButtonText: "Si, eliminar"
+	      }).then(function (result) {
+	        if (result.value) {
+	          //Elimino
+	          fetch('/api/fabricas/' + _this10.state._id + '/pedidos/' + id, {
+	            method: 'DELETE',
+	            headers: { 'Content-Type': 'application/json' }
+	          }).then(function (res) {
+	            if (res.ok) {
+	              res.json().then(function (data) {
+	                _sweetalert2.default.fire("Pedido Eliminado", "", "success").then(function () {
+	                  _this10.setState({
+	                    pedidos: data.pedidos
+	                  });
+	                });
+	              });
+	            } else {
+	              _sweetalert2.default.fire("Error al eliminar", "", "error");
+	            }
+	          }).catch(function (err) {
+	            _sweetalert2.default.fire("Error del servidor", err.message, "error");
+	          });
+	        }
+	      });
+	    }
 	  }, {
 	    key: 'goToPagos',
 	    value: function goToPagos() {
@@ -45643,9 +45679,39 @@
 	      this.setState(_defineProperty({}, array, auxArray));
 	    }
 	  }, {
+	    key: 'onCrearPedido',
+	    value: function onCrearPedido(obj) {
+	      var _this11 = this;
+	
+	      //Crear pedido
+	      fetch('/api/fabricas/' + this.state._id + '/pedidos', {
+	        method: 'POST',
+	        headers: { 'Content-Type': 'application/json' },
+	        body: JSON.stringify(obj)
+	      }).then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            _sweetalert2.default.fire("Pedido creado!", "", "success").then(function () {
+	              _this11.setState({
+	                pedidos: data.pedidos
+	              });
+	            });
+	          });
+	        } else {
+	          res.json().then(function (err) {
+	            console.log("Error al crear pedido: ", err.message);
+	            _sweetalert2.default.fire("Error al crear el pedido", "", "error");
+	          });
+	        }
+	      }).catch(function (err) {
+	        console.log("Error al crear: ", err.message);
+	        _sweetalert2.default.fire("Error del servidor", "", "error");
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this10 = this;
+	      var _this12 = this;
 	
 	      var permits = this.state.permits;
 	      //Permisos
@@ -45655,7 +45721,7 @@
 	      var permitRead = permits === "MODIFICAR" || permits === "CREAR" || permits === "LEER" ? true : false;
 	      //Tabla
 	      var columnsContactos = [["Nombre", "nombre", "String"], ["Apellido", "apellido", "String"], ["Email", "email", "String"], ["Teléfono", "telefono", "String"]];
-	      var columnsPedidos = [["Fecha", "fecha", "Fecha"], ["Productos", "detalle", "Largo"], ["Precio", "precioTotal", "String"], ["Estado", "estado", "String"]];
+	      var columnsPedidos = [["Fecha del pedido", "fechaPedido", "Fecha"], ["Productos", "detalle", "Largo"], ["Estado", "estado", "String"]];
 	      var columnsProductos = [["Nombre", "nombre", "String"], ["Talles", "talles", "Largo"]];
 	      return _react2.default.createElement(
 	        'div',
@@ -45687,7 +45753,7 @@
 	                  { type: 'button',
 	                    className: 'btn btn-success',
 	                    onClick: function onClick() {
-	                      return _this10.onClickGuardar();
+	                      return _this12.onClickGuardar();
 	                    }
 	                  },
 	                  '+ Guardar'
@@ -45697,7 +45763,7 @@
 	                  { type: 'button',
 	                    className: 'btn btn-secondary ml-2',
 	                    onClick: function onClick() {
-	                      return _this10.goToPagos();
+	                      return _this12.goToPagos();
 	                    }
 	                  },
 	                  'Ir a Pagos $'
@@ -45815,7 +45881,7 @@
 	                    { type: 'button',
 	                      className: 'btn btn-outline-success',
 	                      onClick: function onClick() {
-	                        return _this10.onOpenModal("modalContactos");
+	                        return _this12.onOpenModal("modalContactos");
 	                      }
 	                    },
 	                    '+ Agregar Contacto'
@@ -45877,7 +45943,7 @@
 	                    { type: 'button',
 	                      className: 'btn btn-outline-success',
 	                      onClick: function onClick() {
-	                        return _this10.onOpenModal("modalProductos");
+	                        return _this12.onOpenModal("modalProductos");
 	                      }
 	                    },
 	                    '+ Agregar Producto'
@@ -45939,7 +46005,7 @@
 	                    { type: 'button',
 	                      className: 'btn btn-outline-success',
 	                      onClick: function onClick() {
-	                        return _this10.onOpenModal("modalPedidos");
+	                        return _this12.onOpenModal("modalPedidos");
 	                      }
 	                    },
 	                    '+ Agregar Pedido'
@@ -45973,7 +46039,7 @@
 	            {
 	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
 	              onClose: function onClose() {
-	                return _this10.onCloseModal("modalContactos");
+	                return _this12.onCloseModal("modalContactos");
 	              },
 	              showCloseIcon: false,
 	              open: this.state.modalContactos,
@@ -45983,7 +46049,7 @@
 	              data: this.state.modalContactosEditar,
 	              onSave: this.onSaveModal,
 	              onClose: function onClose() {
-	                return _this10.onCloseModal("modalContactos");
+	                return _this12.onCloseModal("modalContactos");
 	              },
 	              titulo: this.state.modalContactosEditar ? "EDITAR CONTACTO" : "CREAR CONTACTO"
 	            })
@@ -45993,7 +46059,7 @@
 	            {
 	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
 	              onClose: function onClose() {
-	                return _this10.onCloseModal("modalPedidos");
+	                return _this12.onCloseModal("modalPedidos");
 	              },
 	              showCloseIcon: false,
 	              open: this.state.modalPedidos,
@@ -46001,9 +46067,9 @@
 	            },
 	            _react2.default.createElement(_PedidosEditar2.default, {
 	              data: this.state.modalPedidosEditar,
-	              onSave: this.onSaveModal,
+	              onSave: this.onCrearPedido,
 	              onClose: function onClose() {
-	                return _this10.onCloseModal("modalPedidos");
+	                return _this12.onCloseModal("modalPedidos");
 	              },
 	              titulo: this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO",
 	              productos: this.state.productos
@@ -46014,7 +46080,7 @@
 	            {
 	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
 	              onClose: function onClose() {
-	                return _this10.onCloseModal("modalProductos");
+	                return _this12.onCloseModal("modalProductos");
 	              },
 	              showCloseIcon: false,
 	              open: this.state.modalProductos,
@@ -46024,7 +46090,7 @@
 	              data: this.state.modalProductosEditar,
 	              onSave: this.onSaveModal,
 	              onClose: function onClose() {
-	                return _this10.onCloseModal("modalProductos");
+	                return _this12.onCloseModal("modalProductos");
 	              },
 	              titulo: this.state.modalProductosEditar ? "EDITAR PRODUCTO" : "CREAR PRODUCTO"
 	            })
@@ -50250,7 +50316,7 @@
 	      //controlar que el nombre tenga un valor
 	      if (this.state.nombreProducto && this.state.talleProducto && this.state.cantidadProducto) {
 	        productos.push({
-	          nombre: this.state.nombreProducto,
+	          producto: this.state.nombreProducto,
 	          talle: this.state.talleProducto,
 	          cantidad: this.state.cantidadProducto
 	        });
@@ -50296,7 +50362,7 @@
 	          fechaPedido: this.state.fechaPedido ? this.numerosAFecha(this.state.fechaPedido) : new Date(),
 	          detalle: this.state.detalle,
 	          estado: this.state.estado
-	        }, "pedidos");
+	        });
 	        this.props.onClose();
 	      } else {
 	        if (this.state.detalle.length < 1) {
@@ -50333,7 +50399,6 @@
 	      if (string) {
 	        var numeros = string.split('/');
 	        var date = numeros[2] + '-' + numeros[1] + '-' + numeros[0];
-	        console.log("fecha a guardar: ", new Date(date));
 	        return new Date(date);
 	      } else {
 	        return new Date();
@@ -50562,7 +50627,7 @@
 	                    _react2.default.createElement(
 	                      'td',
 	                      null,
-	                      producto.nombre
+	                      producto.producto
 	                    ),
 	                    _react2.default.createElement(
 	                      'td',
@@ -50725,7 +50790,6 @@
 	      });
 	    }
 	  }
-	  console.log("error: ", error);
 	
 	  return _react2.default.createElement(
 	    "div",

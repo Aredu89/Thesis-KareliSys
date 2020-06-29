@@ -89,7 +89,7 @@ export default class PedidosEditar extends React.Component {
       this.state.cantidadProducto
       ){
       productos.push({
-        nombre: this.state.nombreProducto,
+        producto: this.state.nombreProducto,
         talle: this.state.talleProducto,
         cantidad: this.state.cantidadProducto
       })
@@ -133,7 +133,7 @@ export default class PedidosEditar extends React.Component {
         fechaPedido: this.state.fechaPedido ? this.numerosAFecha(this.state.fechaPedido) : new Date(),
         detalle: this.state.detalle,
         estado: this.state.estado
-      }, "pedidos")
+      })
       this.props.onClose()
     } else {
       if(this.state.detalle.length < 1){
@@ -167,7 +167,6 @@ export default class PedidosEditar extends React.Component {
     if(string){
       const numeros = string.split('/')
       const date = numeros[2] + '-' + numeros[1] + '-' + numeros[0]
-      console.log("fecha a guardar: ", new Date(date))
       return new Date(date)
     } else {
       return new Date()
@@ -310,7 +309,7 @@ export default class PedidosEditar extends React.Component {
                 {
                   this.state.detalle.map((producto, i)=>{
                     return <tr className="table-default" key={i}>
-                      <td>{producto.nombre}</td>
+                      <td>{producto.producto}</td>
                       <td>{producto.talle}</td>
                       <td>{producto.cantidad}</td>
                       <td>
