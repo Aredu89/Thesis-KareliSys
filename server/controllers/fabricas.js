@@ -42,9 +42,9 @@ module.exports.getEgresosMes = (req, res) => {
         if(results.length > 0){
           results.forEach(fabrica=>{
             if(fabrica.pedidos.length > 0){
-              fabrica.pedidos.forEacht(pedido=>{
+              fabrica.pedidos.forEach(pedido=>{
                 if(pedido.pagos.length > 0){
-                  pedido.pagos.forEacht(pago=>{
+                  pedido.pagos.forEach(pago=>{
                     if(pago.fecha > desde && pago.fecha < hasta){
                       egresos = egresos + pago.monto
                     }
@@ -274,9 +274,11 @@ module.exports.modificarPedido = (req,res) => {
           estadoAux = "aprobado"
         }
         const sum = 0
-        pedidoBody.pagos.forEach(pago=>{
-          sum = sum + pago.monto
-        })
+        if(pedidoBody.pagos){
+          pedidoBody.pagos.forEach(pago=>{
+            sum = sum + pago.monto
+          })
+        }
         if(
           sum === pedidoBody.precioTotal
         ){
@@ -294,9 +296,10 @@ module.exports.modificarPedido = (req,res) => {
           estadoAux = "finalizado"
         }
         //Si no hay error, reemplazo con los datos del body
-        const pedidos = fabrica.pedidos.map(ped=>{
-          if(ped._id === req.params.idPedido){
-            return {
+        const pedidos = []
+        fabrica.pedidos.forEach(ped=>{
+          if(ped._id.toString() === req.params.idPedido.toString()){
+            pedidos.push({
               fechaPedido: pedidoBody.fechaPedido,
               fechaEntrega: pedidoBody.fechaEntrega ? pedidoBody.fechaEntrega : null,
               fechaEntregado: pedidoBody.fechaEntregado ? pedidoBody.fechaEntregado : null,
@@ -317,9 +320,9 @@ module.exports.modificarPedido = (req,res) => {
                 }
               }),
               estado: estadoAux,
-            }
+            })
           } else {
-            return ped
+            pedidos.push(ped)
           }
         })
         fabrica.pedidos = pedidos

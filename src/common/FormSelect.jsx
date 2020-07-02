@@ -48,7 +48,7 @@ export default function FormSelect(props) {
       </select>
       {
         error &&
-        <div className="invalid-feedback">Seleccione una opción válida...</div>
+        <div className="invalid-feedback">Seleccione una opción...</div>
       }
     </div>
   )

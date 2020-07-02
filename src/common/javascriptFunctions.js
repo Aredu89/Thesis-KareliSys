@@ -40,3 +40,20 @@ module.exports.getDeuda = data => {
   }
   return deudaFinal
 }
+
+// Obtener deuda de un pedido
+// data: objeto --> pedido { precioTotal: xx, pagos: [{ monto: xxx }]}
+module.exports.getDeudaPedido = data => {
+  let sumaPagos = 0
+  data.pagos.forEach(pago=>{
+    sumaPagos = sumaPagos + pago.monto
+  })
+  const deuda = (data.precioTotal - sumaPagos) > 0 ? data.precioTotal - sumaPagos : 0
+  return deuda
+}
+
+//Obtener deuda de una fábrica
+// data: objeto --> Fabrica { pedidos: [{ precioTotal: xx, pagos: [{ monto: xxx }]}] }
+module.exports.getDeudaFabrica = data => {
+  
+}

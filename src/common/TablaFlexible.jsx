@@ -11,7 +11,9 @@ export default class TablaFlexible extends React.Component {
   // Props:
   // columns: Array de arrays con la siguiente estructura
   // [ ["Titulo de la columna","clave del objeto data","tipo"] ] 
-  // El tipo puede ser: "String, Largo, Largo pendiente, Fecha, Money, Boolean (Muetra si / no )"
+  // El tipo puede ser:
+  // -- String, Largo, Largo pendiente, Fecha, Money, Boolean (Muetra si / no )
+  // -- Pedido Adeudado, Fabrica Adeudado
   // data: Array de objetos con los datos para completar la tabla
   // ---------- botones -------------
   // handleEditar: función para el botón editar. Parametro: _id
@@ -71,6 +73,10 @@ export default class TablaFlexible extends React.Component {
                         return <td key={i}>{funciones.booleanFormatter(data[col[1]])}</td>
                       } else if(col[2] === "Deuda"){
                         return <td key={i}>{funciones.moneyFormatter(funciones.getDeuda(data))}</td>
+                      } else if(col[2] === "Pedido Adeudado"){
+                        return <td key={i}>{funciones.moneyFormatter(funciones.getDeudaPedido(data))}</td>
+                      } else if(col[2] === "Fabrica Adeudado"){
+                        return <td key={i}>{funciones.moneyFormatter(funciones.getDeudaFabrica(data))}</td>
                       } else {
                         return <td key={i}>{data[col[1]]}</td>
                       }

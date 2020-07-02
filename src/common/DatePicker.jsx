@@ -12,6 +12,7 @@ export default function DatePicker(props) {
   return(
     <div className="date-picker">
       <MaskedInput
+        {...props}
         name={name}
         className={error ? "picker form-control is-invalid" : "form-control picker"}
         onChange={onChange}

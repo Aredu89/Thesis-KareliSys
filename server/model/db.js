@@ -9,7 +9,10 @@ const gracefulShutdown = (msg, callback) => {
 
 let dbURI = 'mongodb://localhost/karelisys'
 // URL para la base en el servidor
-dbURI = 'mongodb://u0haubzbiwyypyf1u8mj:4oEskTsSYoIIVJ2kyvKb@bvoayqrxz5wsvwp-mongodb.services.clever-cloud.com:27017/bvoayqrxz5wsvwp'
+// Clever Cloud (de repente dejó de funcionar)
+// dbURI = 'mongodb://u0haubzbiwyypyf1u8mj:4oEskTsSYoIIVJ2kyvKb@bvoayqrxz5wsvwp-mongodb.services.clever-cloud.com:27017/bvoayqrxz5wsvwp'
+// Mongo DB Atlas
+dbURI = 'mongodb+srv://Aredu89:Karelisys@cluster0.rdw6i.mongodb.net/Karelisys?retryWrites=true&w=majority&authSource=admin'
 
 mongoose.connect(dbURI,{ useNewUrlParser: true })
 

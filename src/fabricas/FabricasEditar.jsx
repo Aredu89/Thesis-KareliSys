@@ -385,46 +385,89 @@ export default class FabricasEditar extends React.Component {
   }
 
   onCrearPedido(obj){
-    //Crear pedido
-    fetch(`/api/fabricas/${this.state._id}/pedidos`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(obj),
-    })
-      .then(res => {
-        if(res.ok) {
-          res.json()
-            .then(data => {
-              Swal.fire(
-                "Pedido creado!",
-                "",
-                "success"
-              ).then(()=>{
-                this.setState({
-                  pedidos: data.pedidos
+    if(obj._id){
+      //Modifico un pedido existente
+      fetch(`/api/fabricas/${this.state._id}/pedidos/${obj._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(obj),
+      })
+        .then(res => {
+          if(res.ok) {
+            res.json()
+              .then(data => {
+                Swal.fire(
+                  "Pedido modificado!",
+                  "",
+                  "success"
+                ).then(()=>{
+                  this.setState({
+                    pedidos: data.pedidos
+                  })
                 })
               })
+          } else {
+            res.json()
+            .then(err => {
+              console.log("Error al modificar pedido: ",err.message)
+              Swal.fire(
+                "Error al modificar el pedido",
+                err.message,
+                "error"
+              )
             })
-        } else {
-          res.json()
-          .then(err => {
-            console.log("Error al crear pedido: ",err.message)
-            Swal.fire(
-              "Error al crear el pedido",
-              "",
-              "error"
-            )
-          })
-        }
+          }
+        })
+        .catch(err => {
+          console.log("Error al crear: ",err.message)
+          Swal.fire(
+            "Error del servidor",
+            err.message,
+            "error"
+          )
+        })
+    } else {
+      //Crear pedido
+      fetch(`/api/fabricas/${this.state._id}/pedidos`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(obj),
       })
-      .catch(err => {
-        console.log("Error al crear: ",err.message)
-        Swal.fire(
-          "Error del servidor",
-          "",
-          "error"
-        )
-      })
+        .then(res => {
+          if(res.ok) {
+            res.json()
+              .then(data => {
+                Swal.fire(
+                  "Pedido creado!",
+                  "",
+                  "success"
+                ).then(()=>{
+                  this.setState({
+                    pedidos: data.pedidos
+                  })
+                })
+              })
+          } else {
+            res.json()
+            .then(err => {
+              console.log("Error al crear pedido: ",err.message)
+              Swal.fire(
+                "Error al crear el pedido",
+                "",
+                "error"
+              )
+            })
+          }
+        })
+        .catch(err => {
+          console.log("Error al crear: ",err.message)
+          Swal.fire(
+            "Error del servidor",
+            "",
+            "error"
+          )
+        })
+    }
   }
 
   render() {
@@ -447,6 +490,9 @@ export default class FabricasEditar extends React.Component {
     ]
     const columnsPedidos = [
       ["Fecha del pedido","fechaPedido","Fecha"],
+      ["Fecha de entrega","fechaEntrega","Fecha"],
+      ["Precio total", "precioTotal", "Money"],
+      ["Adeudado", "data", "Pedido Adeudado"],
       ["Productos","detalle","Largo"],
       ["Estado","estado","String"]
     ]

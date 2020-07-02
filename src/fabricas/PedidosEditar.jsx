@@ -39,7 +39,7 @@ export default class PedidosEditar extends React.Component {
         detalle: this.props.data.detalle,
         precioTotal: this.props.data.precioTotal,
         estado: this.props.data.estado,
-        pagos: this.props.data.pagos,
+        pagos: this.props.data.pagos ? this.props.data.pagos : [],
       })
     }
   }
@@ -131,7 +131,11 @@ export default class PedidosEditar extends React.Component {
       this.props.onSave({
         _id: this.state._id,
         fechaPedido: this.state.fechaPedido ? this.numerosAFecha(this.state.fechaPedido) : new Date(),
+        fechaEntrega: this.state.fechaEntrega ? this.numerosAFecha(this.state.fechaEntrega) : null,
+        fechaEntregado: this.state.fechaEntregado ? this.numerosAFecha(this.state.fechaEntregado) : null,
         detalle: this.state.detalle,
+        pagos: this.state.pagos ? this.state.pagos : [],
+        precioTotal: this.state.precioTotal ? Number(this.state.precioTotal) : null,
         estado: this.state.estado
       })
       this.props.onClose()
@@ -220,15 +224,27 @@ export default class PedidosEditar extends React.Component {
           }
           {/* Fecha del pedido */}
           <div className="col-12 form-group text-center pt-2">
-            {/* <label className="mb-0">{`Fecha: ${funciones.formatearDate(this.state.fecha)}`}</label> */}
             <label>Fecha del pedido</label>
             <DatePicker
               name="fechaPedido"
               value={this.state.fechaPedido ? this.state.fechaPedido : ""}
               onChange={this.handleOnChange}
               error={this.state.errorFechaPedido}
+              disabled={this.state._id ? true : false}
               />
           </div>
+          {/* Fecha de entrega */}
+          {
+            this.state._id &&
+            <div className="col-12 form-group text-center pt-2">
+              <label>Fecha de entrega</label>
+              <DatePicker
+                name="fechaEntrega"
+                value={this.state.fechaEntrega ? this.state.fechaEntrega : ""}
+                onChange={this.handleOnChange}
+                />
+            </div>
+          }
           {/* Precio Total */}
           {
             this.state._id &&

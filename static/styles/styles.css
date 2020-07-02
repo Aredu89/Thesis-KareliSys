@@ -205,6 +205,9 @@
   border-color: #DF691A;
   outline: 0;
 }
+.date-picker .picker:disabled{
+  color: #fff;
+}
 /* Form Select */
 .form-select .select{
   width: 100%;

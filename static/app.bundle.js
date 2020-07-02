@@ -30602,6 +30602,23 @@
 	  }
 	  return deudaFinal
 	}
+	
+	// Obtener deuda de un pedido
+	// data: objeto --> pedido { precioTotal: xx, pagos: [{ monto: xxx }]}
+	module.exports.getDeudaPedido = data => {
+	  let sumaPagos = 0
+	  data.pagos.forEach(pago=>{
+	    sumaPagos = sumaPagos + pago.monto
+	  })
+	  const deuda = (data.precioTotal - sumaPagos) > 0 ? data.precioTotal - sumaPagos : 0
+	  return deuda
+	}
+	
+	//Obtener deuda de una fábrica
+	// data: objeto --> Fabrica { pedidos: [{ precioTotal: xx, pagos: [{ monto: xxx }]}] }
+	module.exports.getDeudaFabrica = data => {
+	  
+	}
 
 /***/ },
 /* 282 */
@@ -34474,7 +34491,9 @@
 	  // Props:
 	  // columns: Array de arrays con la siguiente estructura
 	  // [ ["Titulo de la columna","clave del objeto data","tipo"] ] 
-	  // El tipo puede ser: "String, Largo, Largo pendiente, Fecha, Money, Boolean (Muetra si / no )"
+	  // El tipo puede ser:
+	  // -- String, Largo, Largo pendiente, Fecha, Money, Boolean (Muetra si / no )
+	  // -- Pedido Adeudado, Fabrica Adeudado
 	  // data: Array de objetos con los datos para completar la tabla
 	  // ---------- botones -------------
 	  // handleEditar: función para el botón editar. Parametro: _id
@@ -34582,6 +34601,18 @@
 	                      'td',
 	                      { key: i },
 	                      _javascriptFunctions2.default.moneyFormatter(_javascriptFunctions2.default.getDeuda(data))
+	                    );
+	                  } else if (col[2] === "Pedido Adeudado") {
+	                    return _react2.default.createElement(
+	                      'td',
+	                      { key: i },
+	                      _javascriptFunctions2.default.moneyFormatter(_javascriptFunctions2.default.getDeudaPedido(data))
+	                    );
+	                  } else if (col[2] === "Fabrica Adeudado") {
+	                    return _react2.default.createElement(
+	                      'td',
+	                      { key: i },
+	                      _javascriptFunctions2.default.moneyFormatter(_javascriptFunctions2.default.getDeudaFabrica(data))
 	                    );
 	                  } else {
 	                    return _react2.default.createElement(
@@ -45683,30 +45714,57 @@
 	    value: function onCrearPedido(obj) {
 	      var _this11 = this;
 	
-	      //Crear pedido
-	      fetch('/api/fabricas/' + this.state._id + '/pedidos', {
-	        method: 'POST',
-	        headers: { 'Content-Type': 'application/json' },
-	        body: JSON.stringify(obj)
-	      }).then(function (res) {
-	        if (res.ok) {
-	          res.json().then(function (data) {
-	            _sweetalert2.default.fire("Pedido creado!", "", "success").then(function () {
-	              _this11.setState({
-	                pedidos: data.pedidos
+	      if (obj._id) {
+	        //Modifico un pedido existente
+	        fetch('/api/fabricas/' + this.state._id + '/pedidos/' + obj._id, {
+	          method: 'PUT',
+	          headers: { 'Content-Type': 'application/json' },
+	          body: JSON.stringify(obj)
+	        }).then(function (res) {
+	          if (res.ok) {
+	            res.json().then(function (data) {
+	              _sweetalert2.default.fire("Pedido modificado!", "", "success").then(function () {
+	                _this11.setState({
+	                  pedidos: data.pedidos
+	                });
 	              });
 	            });
-	          });
-	        } else {
-	          res.json().then(function (err) {
-	            console.log("Error al crear pedido: ", err.message);
-	            _sweetalert2.default.fire("Error al crear el pedido", "", "error");
-	          });
-	        }
-	      }).catch(function (err) {
-	        console.log("Error al crear: ", err.message);
-	        _sweetalert2.default.fire("Error del servidor", "", "error");
-	      });
+	          } else {
+	            res.json().then(function (err) {
+	              console.log("Error al modificar pedido: ", err.message);
+	              _sweetalert2.default.fire("Error al modificar el pedido", err.message, "error");
+	            });
+	          }
+	        }).catch(function (err) {
+	          console.log("Error al crear: ", err.message);
+	          _sweetalert2.default.fire("Error del servidor", err.message, "error");
+	        });
+	      } else {
+	        //Crear pedido
+	        fetch('/api/fabricas/' + this.state._id + '/pedidos', {
+	          method: 'POST',
+	          headers: { 'Content-Type': 'application/json' },
+	          body: JSON.stringify(obj)
+	        }).then(function (res) {
+	          if (res.ok) {
+	            res.json().then(function (data) {
+	              _sweetalert2.default.fire("Pedido creado!", "", "success").then(function () {
+	                _this11.setState({
+	                  pedidos: data.pedidos
+	                });
+	              });
+	            });
+	          } else {
+	            res.json().then(function (err) {
+	              console.log("Error al crear pedido: ", err.message);
+	              _sweetalert2.default.fire("Error al crear el pedido", "", "error");
+	            });
+	          }
+	        }).catch(function (err) {
+	          console.log("Error al crear: ", err.message);
+	          _sweetalert2.default.fire("Error del servidor", "", "error");
+	        });
+	      }
 	    }
 	  }, {
 	    key: 'render',
@@ -45721,7 +45779,7 @@
 	      var permitRead = permits === "MODIFICAR" || permits === "CREAR" || permits === "LEER" ? true : false;
 	      //Tabla
 	      var columnsContactos = [["Nombre", "nombre", "String"], ["Apellido", "apellido", "String"], ["Email", "email", "String"], ["Teléfono", "telefono", "String"]];
-	      var columnsPedidos = [["Fecha del pedido", "fechaPedido", "Fecha"], ["Productos", "detalle", "Largo"], ["Estado", "estado", "String"]];
+	      var columnsPedidos = [["Fecha del pedido", "fechaPedido", "Fecha"], ["Fecha de entrega", "fechaEntrega", "Fecha"], ["Precio total", "precioTotal", "Money"], ["Adeudado", "data", "Pedido Adeudado"], ["Productos", "detalle", "Largo"], ["Estado", "estado", "String"]];
 	      var columnsProductos = [["Nombre", "nombre", "String"], ["Talles", "talles", "Largo"]];
 	      return _react2.default.createElement(
 	        'div',
@@ -50270,7 +50328,7 @@
 	          detalle: this.props.data.detalle,
 	          precioTotal: this.props.data.precioTotal,
 	          estado: this.props.data.estado,
-	          pagos: this.props.data.pagos
+	          pagos: this.props.data.pagos ? this.props.data.pagos : []
 	        });
 	      }
 	    }
@@ -50360,7 +50418,11 @@
 	        this.props.onSave({
 	          _id: this.state._id,
 	          fechaPedido: this.state.fechaPedido ? this.numerosAFecha(this.state.fechaPedido) : new Date(),
+	          fechaEntrega: this.state.fechaEntrega ? this.numerosAFecha(this.state.fechaEntrega) : null,
+	          fechaEntregado: this.state.fechaEntregado ? this.numerosAFecha(this.state.fechaEntregado) : null,
 	          detalle: this.state.detalle,
+	          pagos: this.state.pagos ? this.state.pagos : [],
+	          precioTotal: this.state.precioTotal ? Number(this.state.precioTotal) : null,
 	          estado: this.state.estado
 	        });
 	        this.props.onClose();
@@ -50488,7 +50550,22 @@
 	              name: 'fechaPedido',
 	              value: this.state.fechaPedido ? this.state.fechaPedido : "",
 	              onChange: this.handleOnChange,
-	              error: this.state.errorFechaPedido
+	              error: this.state.errorFechaPedido,
+	              disabled: this.state._id ? true : false
+	            })
+	          ),
+	          this.state._id && _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Fecha de entrega'
+	            ),
+	            _react2.default.createElement(_DatePicker2.default, {
+	              name: 'fechaEntrega',
+	              value: this.state.fechaEntrega ? this.state.fechaEntrega : "",
+	              onChange: this.handleOnChange
 	            })
 	          ),
 	          this.state._id && _react2.default.createElement(
@@ -50707,6 +50784,9 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	exports.default = DatePicker;
 	
 	var _react = __webpack_require__(1);
@@ -50729,14 +50809,14 @@
 	  return _react2.default.createElement(
 	    'div',
 	    { className: 'date-picker' },
-	    _react2.default.createElement(_reactTextMask2.default, {
+	    _react2.default.createElement(_reactTextMask2.default, _extends({}, props, {
 	      name: name,
 	      className: error ? "picker form-control is-invalid" : "form-control picker",
 	      onChange: onChange,
 	      value: value ? value : "",
 	      placeholder: 'dd/mm/yyyy',
 	      mask: [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]
-	    }),
+	    })),
 	    error && _react2.default.createElement(
 	      'div',
 	      { className: 'invalid-feedback' },
@@ -50822,7 +50902,7 @@
 	    error && _react2.default.createElement(
 	      "div",
 	      { className: "invalid-feedback" },
-	      "Seleccione una opci\xF3n v\xE1lida..."
+	      "Seleccione una opci\xF3n..."
 	    )
 	  );
 	}
