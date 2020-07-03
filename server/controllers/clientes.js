@@ -10,7 +10,7 @@ module.exports.listaClientes = (req, res) => {
     .find(filter)
     .exec((err, results, status) => {
       if(!results || results.length < 1){
-        res.status(404).json({ message: "No se encontraron clientes"})
+        res.status(200).json([])
       } else if (err) {
         res.status(404).json(err)
       } else {
@@ -28,7 +28,7 @@ module.exports.getIngresosMes = (req, res) => {
     .find(filter)
     .exec((err, results, status) => {
       if(!results || results.length < 1){
-        res.status(404).json({ message: "No se encontraron clientes"})
+        res.status(200).json({ ingresosMes: 0 })
       } else if (err) {
         res.status(404).json(err)
       } else {

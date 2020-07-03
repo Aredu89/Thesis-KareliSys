@@ -10,7 +10,7 @@ module.exports.listaStock = (req, res) => {
     .find(filter)
     .exec((err, results, status) => {
       if(!results || results.length < 1){
-        res.status(404).json({ message: "No se encontro stock"})
+        res.status(200).json([])
       } else if (err) {
         res.status(404).json(err)
       } else {
@@ -28,7 +28,7 @@ module.exports.getCantidadStock = (req, res) => {
     .find(filter)
     .exec((err, results, status) => {
       if(!results || results.length < 1){
-        res.status(404).json({ message: "No se encontro stock"})
+        res.status(200).json({ cantidadStock: 0 })
       } else if (err) {
         res.status(404).json(err)
       } else {

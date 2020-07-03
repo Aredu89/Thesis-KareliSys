@@ -30617,7 +30617,12 @@
 	//Obtener deuda de una fábrica
 	// data: objeto --> Fabrica { pedidos: [{ precioTotal: xx, pagos: [{ monto: xxx }]}] }
 	module.exports.getDeudaFabrica = data => {
-	  
+	  let deudaTotal = 0
+	  data.pedidos.forEach(pedido=>{
+	    const deuda = getDeudaPedido(pedido)
+	    deudaTotal = deudaTotal + deuda
+	  })
+	  return deudaTotal
 	}
 
 /***/ },

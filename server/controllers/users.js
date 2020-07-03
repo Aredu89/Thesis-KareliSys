@@ -12,7 +12,7 @@ module.exports.listaUsuarios = (req, res) => {
     .find({})
     .exec((err, results, status) => {
       if(!results || results.length < 1){
-        res.status(404).json({ message: "No se encontraron usuarios"})
+        res.status(200).json([])
       } else if (err) {
         res.status(404).json(err)
       } else {
