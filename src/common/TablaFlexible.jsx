@@ -42,7 +42,12 @@ export default class TablaFlexible extends React.Component {
   render() {
     return (
       <div className="tabla-flexible table-responsive-md">
-        <input className="form-control buscador-tabla" id={`myInput${this.props.lista}`} type="text" placeholder="Buscar en la tabla..." />
+        <input
+          className="form-control buscador-tabla"
+          id={`myInput${this.props.lista}`}
+          type="text"
+          placeholder="Buscar en la tabla..."
+          />
         <br></br>
         <table className="table">
           <thead>
@@ -64,11 +69,11 @@ export default class TablaFlexible extends React.Component {
                       if(col[2] === "Largo"){
                         return <td key={i}>{data[col[1]].length}</td>
                       } else if (col[2] === "Fecha"){
-                        return <td key={i}>{funciones.formatearDate(data[col[1]])}</td>
+                        return <td key={i}>{data[col[1]] ? funciones.formatearDate(data[col[1]]) : "-"}</td>
                       } else if (col[2] === "Largo pendiente"){
                         return <td key={i}>{this.largoPendiente(data[col[1]])}</td>
                       } else if(col[2] === "Money"){
-                        return <td key={i}>{funciones.moneyFormatter(data[col[1]])}</td>
+                        return <td key={i}>{data[col[1]] ? funciones.moneyFormatter(data[col[1]]) : "-"}</td>
                       } else if(col[2] === "Boolean"){
                         return <td key={i}>{funciones.booleanFormatter(data[col[1]])}</td>
                       } else if(col[2] === "Deuda"){

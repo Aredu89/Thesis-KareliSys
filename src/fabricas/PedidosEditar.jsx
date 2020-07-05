@@ -1,6 +1,7 @@
 import React from 'react'
 import DatePicker from '../common/DatePicker.jsx'
 import FormSelect from '../common/FormSelect.jsx'
+import funciones from '../common/javascriptFunctions.js'
 
 export default class PedidosEditar extends React.Component {
   constructor() {
@@ -199,6 +200,7 @@ export default class PedidosEditar extends React.Component {
         })
       }
     }
+    const deudaPedido = this.props.data ? funciones.getDeudaPedido(this.props.data) : 0
     return(
       <div className="contactos-editar">
         {/* Header */}
@@ -242,6 +244,7 @@ export default class PedidosEditar extends React.Component {
                 name="fechaEntrega"
                 value={this.state.fechaEntrega ? this.state.fechaEntrega : ""}
                 onChange={this.handleOnChange}
+                disabled={this.state.pagos.length > 0 || this.state.fechaEntregado ? true : false}
                 />
             </div>
           }
@@ -256,12 +259,27 @@ export default class PedidosEditar extends React.Component {
                 name="precioTotal"
                 placeholder="Precio Total..."
                 value={this.state.precioTotal}
-                onChange={this.handleOnChange} 
+                onChange={this.handleOnChange}
+                disabled={this.state.pagos.length > 0 ? true : false}
                 />
               {
-                this.state.errorPrecio &&
-                <div className="invalid-feedback">Se debe ingresar un precio</div>
+                (deudaPedido > 0) &&
+                <div className="alerta-feedback">{`Adeudado: ${funciones.moneyFormatter(deudaPedido)}`}</div>
               }
+            </div>
+          }
+          {/* Fecha Entregado */}
+          {
+            this.state._id &&
+            this.state.fechaEntrega &&
+            this.state.precioTotal &&
+            <div className="col-12 form-group text-center pt-2">
+              <label>Fecha Entregado</label>
+              <DatePicker
+                name="fechaEntregado"
+                value={this.state.fechaEntregado ? this.state.fechaEntregado : ""}
+                onChange={this.handleOnChange}
+                />
             </div>
           }
           {/* Productos */}

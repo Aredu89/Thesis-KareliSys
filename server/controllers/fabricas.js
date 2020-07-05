@@ -315,6 +315,7 @@ module.exports.modificarPedido = (req,res) => {
                 return {
                   fecha: pago.fecha,
                   monto: pago.monto,
+                  factura: pago.factura,
                   formaPago: pago.formaPago,
                   observaciones: pago.observaciones
                 }

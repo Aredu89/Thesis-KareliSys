@@ -194,17 +194,11 @@ export default class FabricasPagos extends React.Component {
     //Permisos
     const permitUpdate = permits === "MODIFICAR" ? true : false
     //Tabla
-    const deuda = Funciones.getDeuda(this.state.fabrica)
+    const deuda = this.state.fabrica.pedidos ? Funciones.getDeudaFabrica(this.state.fabrica) : 0
     const columnsPagos = [
       ["Fecha","fecha","Fecha"],
       ["Monto","monto","Money"],
       ["Forma de Pago","formaPago","String"]
-    ]
-    const columnsPedidos = [
-      ["Fecha","fecha","Fecha"],
-      ["Productos","detalle","Largo"],
-      ["Precio","precioTotal","String"],
-      ["Estado","estado","String"]
     ]
     const pagosLength = this.state.fabrica.pagos ? this.state.fabrica.pagos.length : 0
     const pedidosLength = this.state.fabrica.pedidos ? this.state.fabrica.pedidos.length : 0
@@ -219,6 +213,17 @@ export default class FabricasPagos extends React.Component {
               {/* Deuda */}
               <div className="mensaje-deuda">
                 <h4>La deuda es de: {Funciones.moneyFormatter(deuda)}</h4>
+              </div>
+            </div>
+            {/* Pedidos Adeudados */}
+            <div>
+              <div className="card border-primary" id="card">
+                <div className="card-header d-flex justify-content-between">
+                  <h5>Pedidos pendientes de pago:</h5>
+                </div>
+                <div className="card-body contenedor-tabla">
+                  Tabla
+                </div>
               </div>
             </div>
             {/* Pagos */}
@@ -236,14 +241,13 @@ export default class FabricasPagos extends React.Component {
                         <i className="material-icons ml-3">keyboard_arrow_down</i>
                       </h5>
                     </button>
-                  {
+                  {/* {
                     permitUpdate &&
                     <button type="button" 
                       className="btn btn-outline-success"
                       onClick={() => this.onOpenModal("modalPagos")}
                       >+ Agregar Pago</button>
-                  }
-                  
+                  } */}
                 </div>
                 <div id="collapseOne" 
                   className="collapse" 
@@ -258,36 +262,6 @@ export default class FabricasPagos extends React.Component {
                       handleEliminar={this.handleEliminarPago}
                       blockRead={!permitUpdate}
                       blockDelete={!permitUpdate}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* Pedidos */}
-            <div className="mt-3">
-              <div className="card border-primary" id="card">
-                <div className="card-header d-flex justify-content-between" id="headingOne">
-                  <button type="button"
-                    className="btn btn-link collapsed col-sm-8 col-6"
-                    data-toggle="collapse"
-                    data-target="#collapseTwo"
-                    aria-expanded="false" 
-                    aria-controls="collapseTwo">
-                      <h5 className="d-flex align-items-center mb-0">
-                        Pedidos: {pedidosLength}
-                        <i className="material-icons ml-3">keyboard_arrow_down</i>
-                      </h5>
-                    </button>
-                </div>
-                <div id="collapseTwo" 
-                  className="collapse" 
-                  aria-labelledby="headingOne" 
-                  data-parent="#card">
-                  <div className="card-body contenedor-tabla">
-                    <TablaFlexible
-                      lista={"pedidos"}
-                      columns={columnsPedidos}
-                      data={this.state.fabrica.pedidos ? this.state.fabrica.pedidos : []}
                     />
                   </div>
                 </div>

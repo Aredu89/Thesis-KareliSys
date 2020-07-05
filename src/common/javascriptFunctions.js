@@ -42,23 +42,32 @@ module.exports.getDeuda = data => {
 }
 
 // Obtener deuda de un pedido
+// Función local
+const getDeudaPedidoLocal = data => {
+  let sumaPagos = 0
+  const precio = data.precioTotal ? data.precioTotal : 0
+  if(data.pagos){
+    data.pagos.forEach(pago=>{
+      sumaPagos = sumaPagos + pago.monto
+    })
+  }
+  const deuda = (precio - sumaPagos) > 0 ? precio - sumaPagos : 0
+  return deuda
+}
 // data: objeto --> pedido { precioTotal: xx, pagos: [{ monto: xxx }]}
 module.exports.getDeudaPedido = data => {
-  let sumaPagos = 0
-  data.pagos.forEach(pago=>{
-    sumaPagos = sumaPagos + pago.monto
-  })
-  const deuda = (data.precioTotal - sumaPagos) > 0 ? data.precioTotal - sumaPagos : 0
-  return deuda
+  return getDeudaPedidoLocal(data)
 }
 
 //Obtener deuda de una fábrica
 // data: objeto --> Fabrica { pedidos: [{ precioTotal: xx, pagos: [{ monto: xxx }]}] }
 module.exports.getDeudaFabrica = data => {
   let deudaTotal = 0
-  data.pedidos.forEach(pedido=>{
-    const deuda = getDeudaPedido(pedido)
-    deudaTotal = deudaTotal + deuda
-  })
+  if(data.pedidos){
+    data.pedidos.forEach(pedido=>{
+      const deuda = getDeudaPedidoLocal(pedido)
+      deudaTotal = deudaTotal + deuda
+    })
+  }
   return deudaTotal
 }

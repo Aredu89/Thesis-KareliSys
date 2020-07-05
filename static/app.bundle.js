@@ -30604,24 +30604,33 @@
 	}
 	
 	// Obtener deuda de un pedido
+	// Función local
+	const getDeudaPedidoLocal = data => {
+	  let sumaPagos = 0
+	  const precio = data.precioTotal ? data.precioTotal : 0
+	  if(data.pagos){
+	    data.pagos.forEach(pago=>{
+	      sumaPagos = sumaPagos + pago.monto
+	    })
+	  }
+	  const deuda = (precio - sumaPagos) > 0 ? precio - sumaPagos : 0
+	  return deuda
+	}
 	// data: objeto --> pedido { precioTotal: xx, pagos: [{ monto: xxx }]}
 	module.exports.getDeudaPedido = data => {
-	  let sumaPagos = 0
-	  data.pagos.forEach(pago=>{
-	    sumaPagos = sumaPagos + pago.monto
-	  })
-	  const deuda = (data.precioTotal - sumaPagos) > 0 ? data.precioTotal - sumaPagos : 0
-	  return deuda
+	  return getDeudaPedidoLocal(data)
 	}
 	
 	//Obtener deuda de una fábrica
 	// data: objeto --> Fabrica { pedidos: [{ precioTotal: xx, pagos: [{ monto: xxx }]}] }
 	module.exports.getDeudaFabrica = data => {
 	  let deudaTotal = 0
-	  data.pedidos.forEach(pedido=>{
-	    const deuda = getDeudaPedido(pedido)
-	    deudaTotal = deudaTotal + deuda
-	  })
+	  if(data.pedidos){
+	    data.pedidos.forEach(pedido=>{
+	      const deuda = getDeudaPedidoLocal(pedido)
+	      deudaTotal = deudaTotal + deuda
+	    })
+	  }
 	  return deudaTotal
 	}
 
@@ -34367,7 +34376,7 @@
 	      var permitCreate = permits === "MODIFICAR" || permits === "CREAR" ? true : false;
 	      var permitRead = permits === "MODIFICAR" || permits === "CREAR" || permits === "LEER" ? true : false;
 	      //Tabla
-	      var columns = [["Nombre", "nombre", "String"], ["Ciudad", "ciudad", "String"], ["Dirección", "direccion", "String"], ["Pedidos pendientes", "pedidos", "Largo pendiente"], ["A pagar", "", "Deuda"]];
+	      var columns = [["Nombre", "nombre", "String"], ["Ciudad", "ciudad", "String"], ["Dirección", "direccion", "String"], ["Pedidos pendientes", "pedidos", "Largo pendiente"], ["A pagar", "", "Fabrica Adeudado"]];
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fabricas-lista' },
@@ -34538,7 +34547,12 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'tabla-flexible table-responsive-md' },
-	        _react2.default.createElement('input', { className: 'form-control buscador-tabla', id: 'myInput' + this.props.lista, type: 'text', placeholder: 'Buscar en la tabla...' }),
+	        _react2.default.createElement('input', {
+	          className: 'form-control buscador-tabla',
+	          id: 'myInput' + this.props.lista,
+	          type: 'text',
+	          placeholder: 'Buscar en la tabla...'
+	        }),
 	        _react2.default.createElement('br', null),
 	        _react2.default.createElement(
 	          'table',
@@ -34581,7 +34595,7 @@
 	                    return _react2.default.createElement(
 	                      'td',
 	                      { key: i },
-	                      _javascriptFunctions2.default.formatearDate(data[col[1]])
+	                      data[col[1]] ? _javascriptFunctions2.default.formatearDate(data[col[1]]) : "-"
 	                    );
 	                  } else if (col[2] === "Largo pendiente") {
 	                    return _react2.default.createElement(
@@ -34593,7 +34607,7 @@
 	                    return _react2.default.createElement(
 	                      'td',
 	                      { key: i },
-	                      _javascriptFunctions2.default.moneyFormatter(data[col[1]])
+	                      data[col[1]] ? _javascriptFunctions2.default.moneyFormatter(data[col[1]]) : "-"
 	                    );
 	                  } else if (col[2] === "Boolean") {
 	                    return _react2.default.createElement(
@@ -50278,6 +50292,10 @@
 	
 	var _FormSelect2 = _interopRequireDefault(_FormSelect);
 	
+	var _javascriptFunctions = __webpack_require__(281);
+	
+	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -50499,6 +50517,7 @@
 	          });
 	        }
 	      }
+	      var deudaPedido = this.props.data ? _javascriptFunctions2.default.getDeudaPedido(this.props.data) : 0;
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'contactos-editar' },
@@ -50570,7 +50589,8 @@
 	            _react2.default.createElement(_DatePicker2.default, {
 	              name: 'fechaEntrega',
 	              value: this.state.fechaEntrega ? this.state.fechaEntrega : "",
-	              onChange: this.handleOnChange
+	              onChange: this.handleOnChange,
+	              disabled: this.state.pagos.length > 0 || this.state.fechaEntregado ? true : false
 	            })
 	          ),
 	          this.state._id && _react2.default.createElement(
@@ -50587,13 +50607,28 @@
 	              name: 'precioTotal',
 	              placeholder: 'Precio Total...',
 	              value: this.state.precioTotal,
-	              onChange: this.handleOnChange
+	              onChange: this.handleOnChange,
+	              disabled: this.state.pagos.length > 0 ? true : false
 	            }),
-	            this.state.errorPrecio && _react2.default.createElement(
+	            deudaPedido > 0 && _react2.default.createElement(
 	              'div',
-	              { className: 'invalid-feedback' },
-	              'Se debe ingresar un precio'
+	              { className: 'alerta-feedback' },
+	              'Adeudado: ' + _javascriptFunctions2.default.moneyFormatter(deudaPedido)
 	            )
+	          ),
+	          this.state._id && this.state.fechaEntrega && this.state.precioTotal && _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Fecha Entregado'
+	            ),
+	            _react2.default.createElement(_DatePicker2.default, {
+	              name: 'fechaEntregado',
+	              value: this.state.fechaEntregado ? this.state.fechaEntregado : "",
+	              onChange: this.handleOnChange
+	            })
 	          ),
 	          _react2.default.createElement(
 	            'div',
@@ -51532,9 +51567,8 @@
 	
 	      var permitUpdate = permits === "MODIFICAR" ? true : false;
 	      //Tabla
-	      var deuda = _javascriptFunctions2.default.getDeuda(this.state.fabrica);
+	      var deuda = this.state.fabrica.pedidos ? _javascriptFunctions2.default.getDeudaFabrica(this.state.fabrica) : 0;
 	      var columnsPagos = [["Fecha", "fecha", "Fecha"], ["Monto", "monto", "Money"], ["Forma de Pago", "formaPago", "String"]];
-	      var columnsPedidos = [["Fecha", "fecha", "Fecha"], ["Productos", "detalle", "Largo"], ["Precio", "precioTotal", "String"], ["Estado", "estado", "String"]];
 	      var pagosLength = this.state.fabrica.pagos ? this.state.fabrica.pagos.length : 0;
 	      var pedidosLength = this.state.fabrica.pedidos ? this.state.fabrica.pedidos.length : 0;
 	      return _react2.default.createElement(
@@ -51569,6 +51603,28 @@
 	          ),
 	          _react2.default.createElement(
 	            'div',
+	            null,
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'card border-primary', id: 'card' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-header d-flex justify-content-between' },
+	                _react2.default.createElement(
+	                  'h5',
+	                  null,
+	                  'Pedidos pendientes de pago:'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-body contenedor-tabla' },
+	                'Tabla'
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
 	            { className: 'mt-3' },
 	            _react2.default.createElement(
 	              'div',
@@ -51595,16 +51651,6 @@
 	                      'keyboard_arrow_down'
 	                    )
 	                  )
-	                ),
-	                permitUpdate && _react2.default.createElement(
-	                  'button',
-	                  { type: 'button',
-	                    className: 'btn btn-outline-success',
-	                    onClick: function onClick() {
-	                      return _this5.onOpenModal("modalPagos");
-	                    }
-	                  },
-	                  '+ Agregar Pago'
 	                )
 	              ),
 	              _react2.default.createElement(
@@ -51624,54 +51670,6 @@
 	                    handleEliminar: this.handleEliminarPago,
 	                    blockRead: !permitUpdate,
 	                    blockDelete: !permitUpdate
-	                  })
-	                )
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'mt-3' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'card border-primary', id: 'card' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'card-header d-flex justify-content-between', id: 'headingOne' },
-	                _react2.default.createElement(
-	                  'button',
-	                  { type: 'button',
-	                    className: 'btn btn-link collapsed col-sm-8 col-6',
-	                    'data-toggle': 'collapse',
-	                    'data-target': '#collapseTwo',
-	                    'aria-expanded': 'false',
-	                    'aria-controls': 'collapseTwo' },
-	                  _react2.default.createElement(
-	                    'h5',
-	                    { className: 'd-flex align-items-center mb-0' },
-	                    'Pedidos: ',
-	                    pedidosLength,
-	                    _react2.default.createElement(
-	                      'i',
-	                      { className: 'material-icons ml-3' },
-	                      'keyboard_arrow_down'
-	                    )
-	                  )
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { id: 'collapseTwo',
-	                  className: 'collapse',
-	                  'aria-labelledby': 'headingOne',
-	                  'data-parent': '#card' },
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'card-body contenedor-tabla' },
-	                  _react2.default.createElement(_TablaFlexible2.default, {
-	                    lista: "pedidos",
-	                    columns: columnsPedidos,
-	                    data: this.state.fabrica.pedidos ? this.state.fabrica.pedidos : []
 	                  })
 	                )
 	              )

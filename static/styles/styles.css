@@ -214,3 +214,10 @@
   height: 38px;
   padding-left: 8px;
 }
+/* Alerta */
+.alerta-feedback{
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 80%;
+  color: #d9534f;
+}

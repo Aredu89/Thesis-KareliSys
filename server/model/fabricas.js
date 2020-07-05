@@ -16,6 +16,7 @@ const pagos = new mongoose.Schema({
   fecha: {type: Date, default: Date.now},
   monto: Number,
   formaPago: String,
+  factura: Number,
   observaciones: String
 })
 
