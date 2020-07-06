@@ -101,3 +101,23 @@ module.exports.getPagosFabrica = data => {
   }
   return pagos
 }
+
+//Convertir de números a fecha (Recibe un string en formato dd/mm/yyyy)
+module.exports.numerosAFecha = string => {
+  if(string){
+    const numeros = string.split('/')
+    const date = numeros[2] + '-' + numeros[1] + '-' + numeros[0]
+    return new Date(date)
+  } else {
+    return null
+  }
+}
+
+//Convertir de fecha a numeros dd/mm/yyyy
+module.exports.fechaANumeros = fecha => {
+  const date = new Date(fecha)
+  const dia = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+  const mesraw = date.getMonth() + 1
+  const mes = mesraw < 10 ? '0' + mesraw : mesraw
+  return dia + '/' + mes + '/' + date.getFullYear()
+}

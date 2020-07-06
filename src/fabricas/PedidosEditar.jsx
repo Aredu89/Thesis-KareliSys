@@ -34,9 +34,9 @@ export default class PedidosEditar extends React.Component {
     if(this.props.data){
       this.setState({
         _id: this.props.data._id,
-        fechaPedido: this.props.data.fechaPedido ? this.fechaANumeros(this.props.data.fechaPedido) : "",
-        fechaEntrega: this.props.data.fechaEntrega ? this.fechaANumeros(this.props.data.fechaEntrega) : "",
-        fechaEntregado: this.props.data.fechaEntregado ? this.fechaANumeros(this.props.data.fechaEntregado) : "",
+        fechaPedido: this.props.data.fechaPedido ? funciones.fechaANumeros(this.props.data.fechaPedido) : "",
+        fechaEntrega: this.props.data.fechaEntrega ? funciones.fechaANumeros(this.props.data.fechaEntrega) : "",
+        fechaEntregado: this.props.data.fechaEntregado ? funciones.fechaANumeros(this.props.data.fechaEntregado) : "",
         detalle: this.props.data.detalle,
         precioTotal: this.props.data.precioTotal,
         estado: this.props.data.estado,
@@ -131,9 +131,9 @@ export default class PedidosEditar extends React.Component {
     if(this.state.fechaPedido && this.state.detalle.length > 0){
       this.props.onSave({
         _id: this.state._id,
-        fechaPedido: this.state.fechaPedido ? this.numerosAFecha(this.state.fechaPedido) : new Date(),
-        fechaEntrega: this.state.fechaEntrega ? this.numerosAFecha(this.state.fechaEntrega) : null,
-        fechaEntregado: this.state.fechaEntregado ? this.numerosAFecha(this.state.fechaEntregado) : null,
+        fechaPedido: this.state.fechaPedido ? funciones.numerosAFecha(this.state.fechaPedido) : new Date(),
+        fechaEntrega: this.state.fechaEntrega ? funciones.numerosAFecha(this.state.fechaEntrega) : null,
+        fechaEntregado: this.state.fechaEntregado ? funciones.numerosAFecha(this.state.fechaEntregado) : null,
         detalle: this.state.detalle,
         pagos: this.state.pagos ? this.state.pagos : [],
         precioTotal: this.state.precioTotal ? Number(this.state.precioTotal) : null,
@@ -157,25 +157,6 @@ export default class PedidosEditar extends React.Component {
   primeraUpperCase(string){
     let firstLetter = string.slice(0,1)
     return firstLetter[0].toUpperCase() + string.substring(1)
-  }
-
-  fechaANumeros(fecha){
-    const date = new Date(fecha)
-    const dia = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
-    const mesraw = date.getMonth() + 1
-    const mes = mesraw < 10 ? '0' + mesraw : mesraw
-    return dia + '/' + mes + '/' + date.getFullYear()
-  }
-
-  numerosAFecha(string){
-    // Recibe un string con formato "dd/mm/yyyy"
-    if(string){
-      const numeros = string.split('/')
-      const date = numeros[2] + '-' + numeros[1] + '-' + numeros[0]
-      return new Date(date)
-    } else {
-      return new Date()
-    }
   }
 
   render(){

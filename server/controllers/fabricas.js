@@ -273,7 +273,7 @@ module.exports.modificarPedido = (req,res) => {
         ){
           estadoAux = "aprobado"
         }
-        const sum = 0
+        let sum = 0
         if(pedidoBody.pagos){
           pedidoBody.pagos.forEach(pago=>{
             sum = sum + pago.monto

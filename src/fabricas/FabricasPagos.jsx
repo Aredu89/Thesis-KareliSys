@@ -81,45 +81,52 @@ export default class FabricasPagos extends React.Component {
     }
   }
 
-  onClickGuardar(fabrica){
-    fetch(`/api/fabricas/${this.props.params.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(fabrica),
-    })
-      .then(res => {
-        if(res.ok) {
-          res.json()
-            .then(data => {
-              this.setState({
-                fabrica: data
+  onClickGuardar(pedido){
+    console.log("Pedido a guardar: ",pedido)
+    if(pedido._id){
+      fetch(`/api/fabricas/${this.props.params.id}/pedidos/${pedido._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pedido),
+      })
+        .then(res => {
+          if(res.ok) {
+            res.json()
+              .then(data => {
+                this.cargarFabrica()
+                Swal.fire(
+                  "Pago guardado correctamente!",
+                  "",
+                  "success"
+                )
               })
+          } else {
+            res.json()
+            .then(err => {
+              console.log("Error al insertar o modificar pago: ",err.message)
               Swal.fire(
-                "Cambios Guardados!",
+                "Error al insertar o modificar pago",
                 "",
-                "success"
+                "error"
               )
             })
-        } else {
-          res.json()
-          .then(err => {
-            console.log("Error al insertar o modificar pago: ",err.message)
-            Swal.fire(
-              "Error al insertar o modificar pago",
-              "",
-              "error"
-            )
-          })
-        }
-      })
-      .catch(err => {
-        console.log("Error del servidor: ",err.message)
-        Swal.fire(
-          "Error del servidor",
-          "",
-          "error"
-        )
-      })
+          }
+        })
+        .catch(err => {
+          console.log("Error del servidor: ",err.message)
+          Swal.fire(
+            "Error del servidor",
+            "",
+            "error"
+          )
+        })
+    } else {
+      Swal.fire(
+        "Error. No se recibió el id del pedido",
+        "",
+        "error"
+      )
+    }
   }
 
   //Modal
@@ -136,19 +143,50 @@ export default class FabricasPagos extends React.Component {
     })
   }
   onSaveModal(pago){
+    console.log("Pago a guardar: ",pago)
     let fabrica = this.state.fabrica
-    let pagos = fabrica.pagos
-    if(pago._id){
-      pagos.forEach((p, i) =>{
-        if(p._id === pago._id){
-          pagos.splice(i,1,pago)
+    let pedidoModificar = {}
+    fabrica.pedidos.forEach(pedidoFabrica=>{
+      if(pedidoFabrica._id.toString() === pago.pedidoId.toString()){
+        let existe = false
+        pedidoModificar = pedidoFabrica
+        let pagosAux = []
+        pedidoFabrica.pagos.forEach(pagoPedido=>{
+          if(pagoPedido._id.toString() === pago._id.toString()){
+            existe = true
+            pagosAux.push({
+              _id: pago._id,
+              fecha: pago.fecha,
+              monto: pago.monto,
+              factura: pago.factura,
+              formaPago: pago.formaPago,
+              observaciones: pago.observaciones,
+            })
+          } else {
+            pagosAux.push({
+              _id: pagoPedido._id,
+              fecha: pagoPedido.fecha,
+              monto: pagoPedido.monto,
+              factura: pagoPedido.factura,
+              formaPago: pagoPedido.formaPago,
+              observaciones: pagoPedido.observaciones,
+            })
+          }
+        })
+        if(!existe){
+          pagosAux.push({
+            _id: pago._id,
+            fecha: pago.fecha,
+            monto: pago.monto,
+            factura: pago.factura,
+            formaPago: pago.formaPago,
+            observaciones: pago.observaciones,
+          })
         }
-      })
-    } else {
-      pagos.push(pago)
-    }
-    fabrica.pagos = pagos
-    this.onClickGuardar(fabrica)
+        pedidoModificar.pagos = pagosAux
+      }
+    })
+    this.onClickGuardar(pedidoModificar)
   }
 
   handleEditarPago(id){
@@ -179,13 +217,7 @@ export default class FabricasPagos extends React.Component {
     }).then((result)=>{
       if(result.value){
         // Elimino el pago
-        pagos.forEach((p,i)=>{
-          if(id === p._id){
-            pagos.splice(i,1)
-          }
-        })
-        fabrica.pagos = pagos
-        this.onClickGuardar(fabrica)
+        // Pendiente
       }
     })
   }
