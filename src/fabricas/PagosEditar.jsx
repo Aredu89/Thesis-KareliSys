@@ -1,15 +1,19 @@
 import React from 'react'
 import funciones from '../common/javascriptFunctions.js'
+import DatePicker from '../common/DatePicker.jsx'
 
 export default class PagosEditar extends React.Component {
   constructor() {
     super()
     this.state={
       _id: "",
+      errorFecha: false,
       fecha: "",
       errorMonto: "",
       monto: "",
+      montoAdeudado: 0,
       formaPago: "",
+      factura: null,
       observaciones: ""
     }
     this.handleOnChange = this.handleOnChange.bind(this)
@@ -21,7 +25,13 @@ export default class PagosEditar extends React.Component {
         fecha: this.props.data.fecha,
         monto: this.props.data.monto,
         formaPago: this.props.data.formaPago,
+        factura: this.props.data.factura,
         observaciones: this.props.data.observaciones
+      })
+    }
+    if(this.props.pedidoAPagar){
+      this.setState({
+        montoAdeudado: funciones.getDeudaPedido(this.props.pedidoAPagar)
       })
     }
   }
@@ -73,8 +83,14 @@ export default class PagosEditar extends React.Component {
         <div className="formulario pt-2">
           {/* Fecha */}
           <div className="col-12 form-group text-center pt-2">
-            <label className="d-block">Fecha</label>
-            <span>{funciones.formatearDate(this.state.fecha ? this.state.fecha : new Date())}</span>
+            <label>Fecha</label>
+            <DatePicker
+              name="fecha"
+              value={this.state.fecha ? this.state.fecha : ""}
+              onChange={this.handleOnChange}
+              error={this.state.errorFecha}
+              disabled={this.state._id ? true : false}
+              />
           </div>
           {/* Monto */}
           <div className="col-12 form-group text-center pt-2">
@@ -103,6 +119,18 @@ export default class PagosEditar extends React.Component {
               name="formaPago"
               placeholder="Forma de Pago..."
               value={this.state.formaPago}
+              onChange={this.handleOnChange} 
+              />
+          </div>
+          {/* Factura */}
+          <div className="col-12 form-group text-center pt-2">
+            <label>Factura N°</label>
+            <input type="text" 
+              className="form-control"
+              id="factura" 
+              name="factura"
+              placeholder="Factura N°..."
+              value={this.state.factura}
               onChange={this.handleOnChange} 
               />
           </div>

@@ -71,3 +71,33 @@ module.exports.getDeudaFabrica = data => {
   }
   return deudaTotal
 }
+
+//Obtener pedidos pendientes de pago de una fábrica
+module.exports.getPedidosAdeudados = data => {
+  let pedidosAdeudados = []
+  if(data.pedidos){
+    data.pedidos.forEach(pedido=>{
+      const deuda = getDeudaPedidoLocal(pedido)
+      if(deuda > 0){
+        pedidosAdeudados.push(pedido)
+      }
+    })
+  }
+  return pedidosAdeudados
+}
+
+//Obtener pagos realizados a una fábrica
+module.exports.getPagosFabrica = data => {
+  let pagos = []
+  if(data.pedidos){
+    data.pedidos.forEach(pedido=>{
+      if(pedido.pagos){
+        pedido.pagos.forEach(pago=>{
+          pago.pedido = pedido
+          pagos.push(pago)
+        })
+      }
+    })
+  }
+  return pagos
+}

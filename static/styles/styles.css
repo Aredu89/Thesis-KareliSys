@@ -56,6 +56,10 @@
   height: 38px;
   width: 48px;
 }
+.tabla-flexible .btn-outline-primary.pagar{
+  height: 38px;
+  width: 86px;
+}
 .tabla-flexible .btn-outline-danger{
   height: 38px;
   width: 48px;

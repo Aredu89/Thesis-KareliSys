@@ -116,6 +116,15 @@ export default class TablaFlexible extends React.Component {
                           ><i className="material-icons">clear</i></button>
                       : null
                     }
+                    {
+                      this.props.onPagarPedido && !this.blockRead ?
+                        <button type="button" 
+                          className="btn btn-outline-primary pagar"
+                          title="Pagos"
+                          onClick={() => this.props.onPagarPedido(data)}
+                          >PAGAR</button>
+                      : null
+                    }
                   </td>
                 </tr>
               })

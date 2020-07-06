@@ -30633,6 +30633,36 @@
 	  }
 	  return deudaTotal
 	}
+	
+	//Obtener pedidos pendientes de pago de una fábrica
+	module.exports.getPedidosAdeudados = data => {
+	  let pedidosAdeudados = []
+	  if(data.pedidos){
+	    data.pedidos.forEach(pedido=>{
+	      const deuda = getDeudaPedidoLocal(pedido)
+	      if(deuda > 0){
+	        pedidosAdeudados.push(pedido)
+	      }
+	    })
+	  }
+	  return pedidosAdeudados
+	}
+	
+	//Obtener pagos realizados a una fábrica
+	module.exports.getPagosFabrica = data => {
+	  let pagos = []
+	  if(data.pedidos){
+	    data.pedidos.forEach(pedido=>{
+	      if(pedido.pagos){
+	        pedido.pagos.forEach(pago=>{
+	          pago.pedido = pedido
+	          pagos.push(pago)
+	        })
+	      }
+	    })
+	  }
+	  return pagos
+	}
 
 /***/ },
 /* 282 */
@@ -34688,6 +34718,17 @@
 	                      { className: 'material-icons' },
 	                      'clear'
 	                    )
+	                  ) : null,
+	                  _this2.props.onPagarPedido && !_this2.blockRead ? _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-outline-primary pagar',
+	                      title: 'Pagos',
+	                      onClick: function onClick() {
+	                        return _this2.props.onPagarPedido(data);
+	                      }
+	                    },
+	                    'PAGAR'
 	                  ) : null
 	                )
 	              );
@@ -51388,6 +51429,7 @@
 	      error: "",
 	      modalPagos: false,
 	      modalPagosEditar: null,
+	      pedidoAPagar: null,
 	      //Permisos
 	      permits: ""
 	    };
@@ -51397,6 +51439,7 @@
 	    _this.onSaveModal = _this.onSaveModal.bind(_this);
 	    _this.handleEditarPago = _this.handleEditarPago.bind(_this);
 	    _this.handleEliminarPago = _this.handleEliminarPago.bind(_this);
+	    _this.handleOnPagar = _this.handleOnPagar.bind(_this);
 	    return _this;
 	  }
 	
@@ -51495,7 +51538,7 @@
 	    value: function onCloseModal(cual) {
 	      var _setState2;
 	
-	      this.setState((_setState2 = {}, _defineProperty(_setState2, cual, false), _defineProperty(_setState2, cual + "Editar", null), _setState2));
+	      this.setState((_setState2 = {}, _defineProperty(_setState2, cual, false), _defineProperty(_setState2, cual + "Editar", null), _defineProperty(_setState2, 'pedidoAPagar', {}), _setState2));
 	    }
 	  }, {
 	    key: 'onSaveModal',
@@ -51558,9 +51601,20 @@
 	      });
 	    }
 	  }, {
+	    key: 'handleOnPagar',
+	    value: function handleOnPagar(pedido) {
+	      var _this5 = this;
+	
+	      this.setState({
+	        pedidoAPagar: pedido
+	      }, function () {
+	        _this5.onOpenModal("modalPagos");
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this5 = this;
+	      var _this6 = this;
 	
 	      var permits = this.state.permits;
 	      //Permisos
@@ -51568,9 +51622,10 @@
 	      var permitUpdate = permits === "MODIFICAR" ? true : false;
 	      //Tabla
 	      var deuda = this.state.fabrica.pedidos ? _javascriptFunctions2.default.getDeudaFabrica(this.state.fabrica) : 0;
-	      var columnsPagos = [["Fecha", "fecha", "Fecha"], ["Monto", "monto", "Money"], ["Forma de Pago", "formaPago", "String"]];
-	      var pagosLength = this.state.fabrica.pagos ? this.state.fabrica.pagos.length : 0;
-	      var pedidosLength = this.state.fabrica.pedidos ? this.state.fabrica.pedidos.length : 0;
+	      var pedidosAdeudados = this.state.fabrica.pedidos ? _javascriptFunctions2.default.getPedidosAdeudados(this.state.fabrica) : [];
+	      var pagosRealizados = this.state.fabrica.pedidos ? _javascriptFunctions2.default.getPagosFabrica(this.state.fabrica) : [];
+	      var columnsPagos = [["Fecha", "fecha", "Fecha"], ["Monto", "monto", "Money"], ["Forma de Pago", "formaPago", "String"], ["Factura N°", "factura", "String"]];
+	      var columnsPedidos = [["Fecha del pedido", "fechaPedido", "Fecha"], ["Fecha de entrega", "fechaEntrega", "Fecha"], ["Precio total", "precioTotal", "Money"], ["Adeudado", "data", "Pedido Adeudado"], ["Estado", "estado", "String"]];
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fabricas-pagos text-center' },
@@ -51619,7 +51674,14 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'card-body contenedor-tabla' },
-	                'Tabla'
+	                _react2.default.createElement(_TablaFlexible2.default, {
+	                  lista: "pedidosAdeudados",
+	                  columns: columnsPedidos,
+	                  data: pedidosAdeudados,
+	                  onPagarPedido: this.handleOnPagar,
+	                  blockRead: !permitUpdate,
+	                  blockDelete: !permitUpdate
+	                })
 	              )
 	            )
 	          ),
@@ -51644,7 +51706,7 @@
 	                    'h5',
 	                    { className: 'd-flex align-items-center mb-0' },
 	                    'Pagos: ',
-	                    pagosLength,
+	                    pagosRealizados.length,
 	                    _react2.default.createElement(
 	                      'i',
 	                      { className: 'material-icons ml-3' },
@@ -51665,7 +51727,7 @@
 	                  _react2.default.createElement(_TablaFlexible2.default, {
 	                    lista: "pagos",
 	                    columns: columnsPagos,
-	                    data: this.state.fabrica.pagos ? this.state.fabrica.pagos : [],
+	                    data: pagosRealizados,
 	                    handleEditar: this.handleEditarPago,
 	                    handleEliminar: this.handleEliminarPago,
 	                    blockRead: !permitUpdate,
@@ -51680,7 +51742,7 @@
 	            {
 	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
 	              onClose: function onClose() {
-	                return _this5.onCloseModal("modalPagos");
+	                return _this6.onCloseModal("modalPagos");
 	              },
 	              showCloseIcon: false,
 	              open: this.state.modalPagos,
@@ -51688,9 +51750,10 @@
 	            },
 	            _react2.default.createElement(_PagosEditar2.default, {
 	              data: this.state.modalPagosEditar,
+	              pedidoAPagar: this.state.pedidoAPagar,
 	              onSave: this.onSaveModal,
 	              onClose: function onClose() {
-	                return _this5.onCloseModal("modalPagos");
+	                return _this6.onCloseModal("modalPagos");
 	              },
 	              titulo: this.state.modalPedidosEditar ? "EDITAR PAGO" : "CARGAR PAGO",
 	              deudaTotal: deuda
@@ -51753,6 +51816,10 @@
 	
 	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
 	
+	var _DatePicker = __webpack_require__(315);
+	
+	var _DatePicker2 = _interopRequireDefault(_DatePicker);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -51773,10 +51840,13 @@
 	
 	    _this.state = {
 	      _id: "",
+	      errorFecha: false,
 	      fecha: "",
 	      errorMonto: "",
 	      monto: "",
+	      montoAdeudado: 0,
 	      formaPago: "",
+	      factura: null,
 	      observaciones: ""
 	    };
 	    _this.handleOnChange = _this.handleOnChange.bind(_this);
@@ -51792,7 +51862,13 @@
 	          fecha: this.props.data.fecha,
 	          monto: this.props.data.monto,
 	          formaPago: this.props.data.formaPago,
+	          factura: this.props.data.factura,
 	          observaciones: this.props.data.observaciones
+	        });
+	      }
+	      if (this.props.pedidoAPagar) {
+	        this.setState({
+	          montoAdeudado: _javascriptFunctions2.default.getDeudaPedido(this.props.pedidoAPagar)
 	        });
 	      }
 	    }
@@ -51868,14 +51944,16 @@
 	            { className: 'col-12 form-group text-center pt-2' },
 	            _react2.default.createElement(
 	              'label',
-	              { className: 'd-block' },
+	              null,
 	              'Fecha'
 	            ),
-	            _react2.default.createElement(
-	              'span',
-	              null,
-	              _javascriptFunctions2.default.formatearDate(this.state.fecha ? this.state.fecha : new Date())
-	            )
+	            _react2.default.createElement(_DatePicker2.default, {
+	              name: 'fecha',
+	              value: this.state.fecha ? this.state.fecha : "",
+	              onChange: this.handleOnChange,
+	              error: this.state.errorFecha,
+	              disabled: this.state._id ? true : false
+	            })
 	          ),
 	          _react2.default.createElement(
 	            'div',
@@ -51913,6 +51991,23 @@
 	              name: 'formaPago',
 	              placeholder: 'Forma de Pago...',
 	              value: this.state.formaPago,
+	              onChange: this.handleOnChange
+	            })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Factura N\xB0'
+	            ),
+	            _react2.default.createElement('input', { type: 'text',
+	              className: 'form-control',
+	              id: 'factura',
+	              name: 'factura',
+	              placeholder: 'Factura N\xB0...',
+	              value: this.state.factura,
 	              onChange: this.handleOnChange
 	            })
 	          ),

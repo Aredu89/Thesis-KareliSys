@@ -14,6 +14,7 @@ export default class FabricasPagos extends React.Component {
       error: "",
       modalPagos: false,
       modalPagosEditar: null,
+      pedidoAPagar: null,
       //Permisos
       permits: ""
     }
@@ -23,6 +24,7 @@ export default class FabricasPagos extends React.Component {
     this.onSaveModal = this.onSaveModal.bind(this)
     this.handleEditarPago = this.handleEditarPago.bind(this)
     this.handleEliminarPago = this.handleEliminarPago.bind(this)
+    this.handleOnPagar = this.handleOnPagar.bind(this)
   }
 
   componentDidMount(){
@@ -129,7 +131,8 @@ export default class FabricasPagos extends React.Component {
   onCloseModal(cual){
     this.setState({
       [cual]: false,
-      [cual+"Editar"]: null
+      [cual+"Editar"]: null,
+      pedidoAPagar: {}
     })
   }
   onSaveModal(pago){
@@ -187,6 +190,14 @@ export default class FabricasPagos extends React.Component {
     })
   }
 
+  handleOnPagar(pedido){
+    this.setState({
+      pedidoAPagar: pedido
+    }, ()=>{
+      this.onOpenModal("modalPagos")
+    })
+  }
+
   render() {
     const {
       permits
@@ -195,13 +206,21 @@ export default class FabricasPagos extends React.Component {
     const permitUpdate = permits === "MODIFICAR" ? true : false
     //Tabla
     const deuda = this.state.fabrica.pedidos ? Funciones.getDeudaFabrica(this.state.fabrica) : 0
+    const pedidosAdeudados = this.state.fabrica.pedidos ? Funciones.getPedidosAdeudados(this.state.fabrica) : []
+    const pagosRealizados = this.state.fabrica.pedidos ? Funciones.getPagosFabrica(this.state.fabrica) : []
     const columnsPagos = [
       ["Fecha","fecha","Fecha"],
       ["Monto","monto","Money"],
-      ["Forma de Pago","formaPago","String"]
+      ["Forma de Pago","formaPago","String"],
+      ["Factura N°", "factura", "String"]
     ]
-    const pagosLength = this.state.fabrica.pagos ? this.state.fabrica.pagos.length : 0
-    const pedidosLength = this.state.fabrica.pedidos ? this.state.fabrica.pedidos.length : 0
+    const columnsPedidos = [
+      ["Fecha del pedido","fechaPedido","Fecha"],
+      ["Fecha de entrega","fechaEntrega","Fecha"],
+      ["Precio total", "precioTotal", "Money"],
+      ["Adeudado", "data", "Pedido Adeudado"],
+      ["Estado","estado","String"]
+    ]
     return (
       <div className="fabricas-pagos text-center">
         {!this.state.cargando ?
@@ -222,7 +241,14 @@ export default class FabricasPagos extends React.Component {
                   <h5>Pedidos pendientes de pago:</h5>
                 </div>
                 <div className="card-body contenedor-tabla">
-                  Tabla
+                  <TablaFlexible
+                    lista={"pedidosAdeudados"}
+                    columns={columnsPedidos}
+                    data={pedidosAdeudados}
+                    onPagarPedido={this.handleOnPagar}
+                    blockRead={!permitUpdate}
+                    blockDelete={!permitUpdate}
+                  />
                 </div>
               </div>
             </div>
@@ -237,17 +263,10 @@ export default class FabricasPagos extends React.Component {
                     aria-expanded="false" 
                     aria-controls="collapseOne">
                       <h5 className="d-flex align-items-center mb-0">
-                        Pagos: {pagosLength}
+                        Pagos: {pagosRealizados.length}
                         <i className="material-icons ml-3">keyboard_arrow_down</i>
                       </h5>
                     </button>
-                  {/* {
-                    permitUpdate &&
-                    <button type="button" 
-                      className="btn btn-outline-success"
-                      onClick={() => this.onOpenModal("modalPagos")}
-                      >+ Agregar Pago</button>
-                  } */}
                 </div>
                 <div id="collapseOne" 
                   className="collapse" 
@@ -257,7 +276,7 @@ export default class FabricasPagos extends React.Component {
                     <TablaFlexible
                       lista={"pagos"}
                       columns={columnsPagos}
-                      data={this.state.fabrica.pagos ? this.state.fabrica.pagos : []}
+                      data={pagosRealizados}
                       handleEditar={this.handleEditarPago}
                       handleEliminar={this.handleEliminarPago}
                       blockRead={!permitUpdate}
@@ -277,6 +296,7 @@ export default class FabricasPagos extends React.Component {
               >
                 <PagosEditar
                   data={this.state.modalPagosEditar}
+                  pedidoAPagar={this.state.pedidoAPagar}
                   onSave={this.onSaveModal}
                   onClose={()=>this.onCloseModal("modalPagos")}
                   titulo={this.state.modalPedidosEditar ? "EDITAR PAGO" : "CARGAR PAGO"}
