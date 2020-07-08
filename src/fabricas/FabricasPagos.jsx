@@ -82,7 +82,6 @@ export default class FabricasPagos extends React.Component {
   }
 
   onClickGuardar(pedido){
-    console.log("Pedido a guardar: ",pedido)
     if(pedido._id){
       fetch(`/api/fabricas/${this.props.params.id}/pedidos/${pedido._id}`, {
         method: 'PUT',
@@ -138,12 +137,11 @@ export default class FabricasPagos extends React.Component {
   onCloseModal(cual){
     this.setState({
       [cual]: false,
-      [cual+"Editar"]: null,
+      [cual+"Editar"]: {},
       pedidoAPagar: {}
     })
   }
   onSaveModal(pago){
-    console.log("Pago a guardar: ",pago)
     let fabrica = this.state.fabrica
     let pedidoModificar = {}
     fabrica.pedidos.forEach(pedidoFabrica=>{
@@ -190,21 +188,16 @@ export default class FabricasPagos extends React.Component {
   }
 
   handleEditarPago(id){
-    let pago = {}
-    this.state.fabrica.pagos.forEach(p=>{
-      if(id === p._id){
-        pago = p
-      }
-    })
+    const pagoAux = Funciones.getPagoFabrica(this.state.fabrica, id)
     this.setState({
-      modalPagosEditar: pago,
+      pedidoAPagar: pagoAux.pedido,
+      modalPagosEditar: pagoAux,
       modalPagos: true
     })
   }
 
   handleEliminarPago(id){
     let fabrica = this.state.fabrica
-    let pagos = fabrica.pagos
     //Primero pido confirmación
     Swal.fire({
       title: "¿Seguro que desea eliminar?",

@@ -276,7 +276,7 @@ module.exports.modificarPedido = (req,res) => {
         let sum = 0
         if(pedidoBody.pagos){
           pedidoBody.pagos.forEach(pago=>{
-            sum = sum + pago.monto
+            sum = sum + Number(pago.monto)
           })
         }
         if(

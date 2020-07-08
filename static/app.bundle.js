@@ -30664,6 +30664,24 @@
 	  return pagos
 	}
 	
+	// Obtener un pago realizado a una fábrica
+	module.exports.getPagoFabrica = (data, idPago) => {
+	  let pagoAux = {}
+	  if(data.pedidos){
+	    data.pedidos.forEach(pedido=>{
+	      if(pedido.pagos){
+	        pedido.pagos.forEach(pago=>{
+	          if(pago._id.toString() === idPago.toString()){
+	            pago.pedido = pedido
+	            pagoAux = pago
+	          }
+	        })
+	      }
+	    })
+	  }
+	  return pagoAux
+	}
+	
 	//Convertir de números a fecha (Recibe un string en formato dd/mm/yyyy)
 	module.exports.numerosAFecha = string => {
 	  if(string){
@@ -51501,7 +51519,6 @@
 	    value: function onClickGuardar(pedido) {
 	      var _this3 = this;
 	
-	      console.log("Pedido a guardar: ", pedido);
 	      if (pedido._id) {
 	        fetch('/api/fabricas/' + this.props.params.id + '/pedidos/' + pedido._id, {
 	          method: 'PUT',
@@ -51540,12 +51557,11 @@
 	    value: function onCloseModal(cual) {
 	      var _setState2;
 	
-	      this.setState((_setState2 = {}, _defineProperty(_setState2, cual, false), _defineProperty(_setState2, cual + "Editar", null), _defineProperty(_setState2, 'pedidoAPagar', {}), _setState2));
+	      this.setState((_setState2 = {}, _defineProperty(_setState2, cual, false), _defineProperty(_setState2, cual + "Editar", {}), _defineProperty(_setState2, 'pedidoAPagar', {}), _setState2));
 	    }
 	  }, {
 	    key: 'onSaveModal',
 	    value: function onSaveModal(pago) {
-	      console.log("Pago a guardar: ", pago);
 	      var fabrica = this.state.fabrica;
 	      var pedidoModificar = {};
 	      fabrica.pedidos.forEach(function (pedidoFabrica) {
@@ -51593,14 +51609,10 @@
 	  }, {
 	    key: 'handleEditarPago',
 	    value: function handleEditarPago(id) {
-	      var pago = {};
-	      this.state.fabrica.pagos.forEach(function (p) {
-	        if (id === p._id) {
-	          pago = p;
-	        }
-	      });
+	      var pagoAux = _javascriptFunctions2.default.getPagoFabrica(this.state.fabrica, id);
 	      this.setState({
-	        modalPagosEditar: pago,
+	        pedidoAPagar: pagoAux.pedido,
+	        modalPagosEditar: pagoAux,
 	        modalPagos: true
 	      });
 	    }
@@ -51608,7 +51620,6 @@
 	    key: 'handleEliminarPago',
 	    value: function handleEliminarPago(id) {
 	      var fabrica = this.state.fabrica;
-	      var pagos = fabrica.pagos;
 	      //Primero pido confirmación
 	      _sweetalert2.default.fire({
 	        title: "¿Seguro que desea eliminar?",
@@ -51896,8 +51907,12 @@
 	        });
 	      }
 	      if (this.props.pedidoAPagar) {
+	        var auxMontoAdeudado = _javascriptFunctions2.default.getDeudaPedido(this.props.pedidoAPagar);
+	        if (this.props.data._id) {
+	          auxMontoAdeudado = auxMontoAdeudado + this.props.data.monto;
+	        }
 	        this.setState({
-	          montoAdeudado: _javascriptFunctions2.default.getDeudaPedido(this.props.pedidoAPagar)
+	          montoAdeudado: auxMontoAdeudado
 	        });
 	        console.log("Pedido a pagar: ", this.props.pedidoAPagar);
 	      }

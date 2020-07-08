@@ -34,8 +34,12 @@ export default class PagosEditar extends React.Component {
       })
     }
     if(this.props.pedidoAPagar){
+      let auxMontoAdeudado = funciones.getDeudaPedido(this.props.pedidoAPagar)
+      if(this.props.data._id){
+        auxMontoAdeudado = auxMontoAdeudado + this.props.data.monto
+      }
       this.setState({
-        montoAdeudado: funciones.getDeudaPedido(this.props.pedidoAPagar)
+        montoAdeudado: auxMontoAdeudado
       })
       console.log("Pedido a pagar: ",this.props.pedidoAPagar)
     }

@@ -102,6 +102,24 @@ module.exports.getPagosFabrica = data => {
   return pagos
 }
 
+// Obtener un pago realizado a una fábrica
+module.exports.getPagoFabrica = (data, idPago) => {
+  let pagoAux = {}
+  if(data.pedidos){
+    data.pedidos.forEach(pedido=>{
+      if(pedido.pagos){
+        pedido.pagos.forEach(pago=>{
+          if(pago._id.toString() === idPago.toString()){
+            pago.pedido = pedido
+            pagoAux = pago
+          }
+        })
+      }
+    })
+  }
+  return pagoAux
+}
+
 //Convertir de números a fecha (Recibe un string en formato dd/mm/yyyy)
 module.exports.numerosAFecha = string => {
   if(string){
