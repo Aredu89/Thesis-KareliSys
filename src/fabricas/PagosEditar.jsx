@@ -24,6 +24,7 @@ export default class PagosEditar extends React.Component {
   }
   componentDidMount(){
     if(this.props.data){
+      //Cargo los datos recibidos por props
       this.setState({
         _id: this.props.data._id,
         fecha: this.props.data.fecha ? funciones.fechaANumeros(this.props.data.fecha) : "",
@@ -33,10 +34,13 @@ export default class PagosEditar extends React.Component {
         observaciones: this.props.data.observaciones
       })
     }
+    //Calculo el monto adeudado del pedido
     if(this.props.pedidoAPagar){
       let auxMontoAdeudado = funciones.getDeudaPedido(this.props.pedidoAPagar)
-      if(this.props.data._id){
-        auxMontoAdeudado = auxMontoAdeudado + this.props.data.monto
+      if(this.props.data){
+        if(this.props.data._id){
+          auxMontoAdeudado = auxMontoAdeudado + this.props.data.monto
+        }
       }
       this.setState({
         montoAdeudado: auxMontoAdeudado

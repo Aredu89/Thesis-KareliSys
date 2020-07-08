@@ -51528,11 +51528,11 @@
 	          if (res.ok) {
 	            res.json().then(function (data) {
 	              _this3.cargarFabrica();
-	              _sweetalert2.default.fire("Pago guardado correctamente!", "", "success");
+	              _sweetalert2.default.fire("Cambios guardados correctamente!", "", "success");
 	            });
 	          } else {
 	            res.json().then(function (err) {
-	              console.log("Error al insertar o modificar pago: ", err.message);
+	              console.log("Error al realizar cambios: ", err.message);
 	              _sweetalert2.default.fire("Error al insertar o modificar pago", "", "error");
 	            });
 	          }
@@ -51619,6 +51619,8 @@
 	  }, {
 	    key: 'handleEliminarPago',
 	    value: function handleEliminarPago(id) {
+	      var _this4 = this;
+	
 	      var fabrica = this.state.fabrica;
 	      //Primero pido confirmación
 	      _sweetalert2.default.fire({
@@ -51632,25 +51634,42 @@
 	      }).then(function (result) {
 	        if (result.value) {
 	          // Elimino el pago
-	          // Pendiente
+	          var pagoAux = _javascriptFunctions2.default.getPagoFabrica(_this4.state.fabrica, id);
+	          var pedidoAux = pagoAux.pedido;
+	          var pagosAux = [];
+	          pedidoAux.pagos.forEach(function (pagoPedido) {
+	            if (pagoPedido._id.toString() !== id.toString()) {
+	              pagosAux.push({
+	                _id: pagoPedido._id,
+	                fecha: pagoPedido.fecha,
+	                monto: pagoPedido.monto,
+	                factura: pagoPedido.factura,
+	                formaPago: pagoPedido.formaPago,
+	                observaciones: pagoPedido.observaciones
+	              });
+	            }
+	          });
+	          pedidoAux.pagos = pagosAux;
+	          //Guardo los cambios
+	          _this4.onClickGuardar(pedidoAux);
 	        }
 	      });
 	    }
 	  }, {
 	    key: 'handleOnPagar',
 	    value: function handleOnPagar(pedido) {
-	      var _this4 = this;
+	      var _this5 = this;
 	
 	      this.setState({
 	        pedidoAPagar: pedido
 	      }, function () {
-	        _this4.onOpenModal("modalPagos");
+	        _this5.onOpenModal("modalPagos");
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this5 = this;
+	      var _this6 = this;
 	
 	      var permits = this.state.permits;
 	      //Permisos
@@ -51778,7 +51797,7 @@
 	            {
 	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
 	              onClose: function onClose() {
-	                return _this5.onCloseModal("modalPagos");
+	                return _this6.onCloseModal("modalPagos");
 	              },
 	              showCloseIcon: false,
 	              open: this.state.modalPagos,
@@ -51789,7 +51808,7 @@
 	              pedidoAPagar: this.state.pedidoAPagar,
 	              onSave: this.onSaveModal,
 	              onClose: function onClose() {
-	                return _this5.onCloseModal("modalPagos");
+	                return _this6.onCloseModal("modalPagos");
 	              },
 	              titulo: this.state.modalPedidosEditar ? "EDITAR PAGO" : "CARGAR PAGO",
 	              deudaTotal: deuda
@@ -51897,6 +51916,7 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      if (this.props.data) {
+	        //Cargo los datos recibidos por props
 	        this.setState({
 	          _id: this.props.data._id,
 	          fecha: this.props.data.fecha ? _javascriptFunctions2.default.fechaANumeros(this.props.data.fecha) : "",
@@ -51906,10 +51926,13 @@
 	          observaciones: this.props.data.observaciones
 	        });
 	      }
+	      //Calculo el monto adeudado del pedido
 	      if (this.props.pedidoAPagar) {
 	        var auxMontoAdeudado = _javascriptFunctions2.default.getDeudaPedido(this.props.pedidoAPagar);
-	        if (this.props.data._id) {
-	          auxMontoAdeudado = auxMontoAdeudado + this.props.data.monto;
+	        if (this.props.data) {
+	          if (this.props.data._id) {
+	            auxMontoAdeudado = auxMontoAdeudado + this.props.data.monto;
+	          }
 	        }
 	        this.setState({
 	          montoAdeudado: auxMontoAdeudado

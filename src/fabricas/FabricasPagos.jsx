@@ -94,7 +94,7 @@ export default class FabricasPagos extends React.Component {
               .then(data => {
                 this.cargarFabrica()
                 Swal.fire(
-                  "Pago guardado correctamente!",
+                  "Cambios guardados correctamente!",
                   "",
                   "success"
                 )
@@ -102,7 +102,7 @@ export default class FabricasPagos extends React.Component {
           } else {
             res.json()
             .then(err => {
-              console.log("Error al insertar o modificar pago: ",err.message)
+              console.log("Error al realizar cambios: ",err.message)
               Swal.fire(
                 "Error al insertar o modificar pago",
                 "",
@@ -210,7 +210,24 @@ export default class FabricasPagos extends React.Component {
     }).then((result)=>{
       if(result.value){
         // Elimino el pago
-        // Pendiente
+        const pagoAux = Funciones.getPagoFabrica(this.state.fabrica, id)
+        const pedidoAux = pagoAux.pedido
+        let pagosAux = []
+        pedidoAux.pagos.forEach(pagoPedido=>{
+          if(pagoPedido._id.toString() !== id.toString()){
+            pagosAux.push({
+              _id: pagoPedido._id,
+              fecha: pagoPedido.fecha,
+              monto: pagoPedido.monto,
+              factura: pagoPedido.factura,
+              formaPago: pagoPedido.formaPago,
+              observaciones: pagoPedido.observaciones,
+            })
+          }
+        })
+        pedidoAux.pagos = pagosAux
+        //Guardo los cambios
+        this.onClickGuardar(pedidoAux)
       }
     })
   }
