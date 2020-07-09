@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Fabricas = mongoose.model('Fabricas')
+const Stock = mongoose.model('Stock')
 
 //Obtengo el listado de fabricas
 module.exports.listaFabricas = (req, res) => {
@@ -272,6 +273,24 @@ module.exports.modificarPedido = (req,res) => {
           pedidoBody.precioTotal
         ){
           estadoAux = "aprobado"
+          //Agrego los productos del pedido a Stock
+          const pedidoAModificar = fabrica.pedidos.find(pedido=> pedido._id.toString() === pedidoBody._id.toString())
+          if(pedidoAModificar){
+            if(!pedidoAModificar.enStock){
+              pedidoBody.enStock = true
+              pedidoBody.detalle.forEach(det=>{
+                Stock
+                  .create({
+                    producto: det.producto,
+                    estado: "pendiente",
+                    talle: det.talle,
+                    cantidad: det.cantidad
+                  }, (err, stock) => {
+                    console.log("Stock agregado")
+                  })
+              })
+            }
+          }
         }
         let sum = 0
         if(pedidoBody.pagos){
@@ -321,6 +340,7 @@ module.exports.modificarPedido = (req,res) => {
                 }
               }),
               estado: estadoAux,
+              enStock: pedidoBody.enStock ? true : false
             })
           } else {
             pedidos.push(ped)

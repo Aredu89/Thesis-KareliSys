@@ -24,6 +24,9 @@ router.get('/ingresos', clientes.getIngresosMes)
 router.put('/clientes/:id', clientes.modificarCliente)
 router.post('/clientes', clientes.crearCliente)
 router.delete('/clientes/:id', clientes.eliminarCliente)
+router.post('/clientes/:id/pedidos', clientes.crearPedido)
+router.put('/clientes/:id/pedidos/:idPedido', clientes.modificarPedido)
+router.delete('/clientes/:id/pedidos/:idPedido', clientes.eliminarPedido)
 
 //stock
 router.get('/stock', stock.listaStock)

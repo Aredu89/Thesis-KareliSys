@@ -7,24 +7,30 @@ const contactos = new mongoose.Schema({
   telefono: Number
 })
 
-const productosRef = new mongoose.Schema({
-  nombre: String,
-  talle: Number,
-  cantidad: Number
-})
-
 const pagos = new mongoose.Schema({
   fecha: {type: Date, default: Date.now},
   monto: Number,
   formaPago: String,
+  factura: Number,
   observaciones: String
 })
 
+const detalle = new mongoose.Schema({
+  producto: String,
+  talle: Number,
+  cantidad: Number
+})
+
 const pedidos = new mongoose.Schema({
-  fecha: {type: Date, default: Date.now},
-  detalle: [productosRef],
+  fechaPedido: {type: Date, default: Date.now},
+  fechaEntrega: Date,
+  fechaEntregado: Date,
+  detalle: [detalle],
   precioTotal: Number,
-  estado: {type: String, enum:["pendiente","entregado"], default: "pendiente"}
+  pagos: [pagos],
+  estado: {type: String,
+    enum:["pendiente","aprobado","pagado","entregado","finalizado","cancelado"],
+    default: "pendiente"}
 })
 
 const clientes = new mongoose.Schema({
@@ -34,8 +40,7 @@ const clientes = new mongoose.Schema({
   telefono: Number,
   contactos: [contactos],
   pedidos: [pedidos],
-  creada: {type: Date, default: Date.now},
-  pagos: [pagos]
+  creada: {type: Date, default: Date.now}
 })
 
 mongoose.model('Clientes', clientes)

@@ -67,7 +67,6 @@ module.exports.getStock = (req, res) => {
 //Crear un stock
 module.exports.crearStock = (req, res) => {
   const newStock = req.body
-  newStock.creada = new Date()
   Stock
     .create(newStock, (err, stock) => {
       if(err) {
@@ -99,6 +98,7 @@ module.exports.modificarStock = (req,res) => {
         }
         //Si no hay error, reemplazo con los datos del body
         stock._id = auxStock._id
+        stock.estado = auxStock.estado
         stock.producto = auxStock.producto
         stock.tipo = auxStock.tipo
         stock.material = auxStock.material

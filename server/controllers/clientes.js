@@ -40,13 +40,21 @@ module.exports.getIngresosMes = (req, res) => {
         const desde = new Date(año, mes, 1)
         const hasta = new Date(año, mesSiguiente, 1)
         let ingresos = 0
-        results.forEach(cliente=>{
-          cliente.pagos.forEach(pago=>{
-            if(pago.fecha > desde && pago.fecha < hasta){
-              ingresos = ingresos + pago.monto
+        if(results.length > 0){
+          results.forEach(cliente=>{
+            if(cliente.pedidos.length > 0){
+              cliente.pedidos.forEach(pedido=>{
+                if(pedido.pagos.length > 0){
+                  pedido.pagos.forEach(pago=>{
+                    if(pago.fecha > desde && pago.fecha < hasta){
+                      ingresos = ingresos + pago.monto
+                    }
+                  })
+                }
+              })
             }
           })
-        })
+        }
         res.status(200).json({ ingresosMes: ingresos })
       }
     })
@@ -92,22 +100,7 @@ module.exports.crearCliente = (req, res) => {
       telefono: contacto.telefono
     }
   }) : []
-  newCliente.pedidos = auxBody.pedidos ? auxBody.pedidos.map(pedido=>{
-    return {
-      fecha: pedido.fecha,
-      detalle: pedido.detalle,
-      precioTotal: pedido.precioTotal,
-      estado: pedido.estado
-    }
-  }) : []
-  newCliente.pagos = auxBody.pagos ? auxBody.pagos.map(pago=>{
-    return {
-      fecha: pago.fecha,
-      monto: pago.monto,
-      formaPago: pago.formaPago,
-      observaciones: pago.observaciones
-    }
-  }) : []
+  newCliente.pedidos = []
   Clientes
     .create(newCliente, (err, cliente) => {
       if(err) {
@@ -150,22 +143,6 @@ module.exports.modificarCliente = (req,res) => {
             telefono: contacto.telefono
           }
         }) : []
-        cliente.pedidos = auxCliente.pedidos ? auxCliente.pedidos.map(pedido=>{
-          return {
-            fecha: pedido.fecha,
-            detalle: pedido.detalle,
-            precioTotal: pedido.precioTotal,
-            estado: pedido.estado
-          }
-        }) : []
-        cliente.pagos = auxCliente.pagos ? auxCliente.pagos.map(pago=>{
-          return {
-            fecha: pago.fecha,
-            monto: pago.monto,
-            formaPago: pago.formaPago,
-            observaciones: pago.observaciones
-          }
-        }) : []
         cliente.save((err, cliente) => {
           if (err) {
             res.status(404).json(err)
@@ -183,15 +160,208 @@ module.exports.eliminarCliente = (req,res) => {
     res.status(404).json({ message: "Se requiere el id del cliente"})
     return
   }
+  //Controlo si hay pedidos asociados al cliente
   Clientes
-    .findByIdAndRemove(req.params.id)
-    .exec(
-      (err, cliente) => {
-        if(err){
-          res.status(404).json(err)
+    .findById(req.params.id)
+    .exec((err, cliente) => {
+      //Si el id específico no existe en la BD
+      if (!cliente) {
+        res.status(404).json({ message: "Id de cliente no encontrado"})
+      //Si la BD devuelve un error
+      } else if (err) {
+        res.status(404).json(err)
+      } else {
+        if(cliente.pedidos.length > 0){
+          res.status(404).json({ message: "No se puede eliminar un cliente con pedidos"})
         } else {
-          res.status(204).json(null)
+          //Elimino la fábrica
+          Clientes
+            .findByIdAndRemove(req.params.id)
+            .exec(
+              (err, cliente) => {
+                if(err){
+                  res.status(404).json(err)
+                } else {
+                  res.status(204).json(null)
+                }
+              }
+            )
         }
+      }
+    })
+}
+
+//Crear pedido
+module.exports.crearPedido = (req,res) => {
+  if (!req.params.id) {
+    res.status(404).json({ message: "Se requiere el id del cliente"})
+    return
+  }
+  const pedidoBody = req.body
+  Clientes
+    .findById(req.params.id)
+    .select('-creada')
+    .exec(
+      (err,cliente) => {
+        if (!cliente) {
+          res.status(404).json({ message: "No se encontró el id del cliente"})
+          return
+        } else if (err) {
+          res.status(404).json(err)
+          return
+        }
+        //Si no hay error, reemplazo con los datos del body
+        cliente.pedidos.push({
+          fechaPedido: pedidoBody.fechaPedido,
+          detalle: pedidoBody.detalle.map(det=>{
+            return {
+              producto: det.producto,
+              talle: det.talle,
+              cantidad: det.cantidad
+            }
+          }),
+          pagos: [],
+          estado: "pendiente"
+        })
+        //Guardo los cambios en BD
+        cliente.save((err, cliente) => {
+          if (err) {
+            res.status(404).json(err)
+          } else {
+            res.status(201).json(cliente)
+          }
+        })
+      }
+    )
+}
+
+//Modificar pedido
+module.exports.modificarPedido = (req,res) => {
+  if (!req.params.id || !req.params.idPedido) {
+    res.status(404).json({ message: "Se requiere el id del cliente y del pedido"})
+    return
+  }
+  const pedidoBody = req.body
+  Clientes
+    .findById(req.params.id)
+    .select('-creada')
+    .exec(
+      (err,cliente) => {
+        if (!cliente) {
+          res.status(404).json({ message: "No se encontró el id del cliente"})
+          return
+        } else if (err) {
+          res.status(404).json(err)
+          return
+        }
+        //Defino si cambia el estado
+        let estadoAux = "pendiente"
+        if(
+          pedidoBody.fechaEntrega &&
+          pedidoBody.precioTotal
+        ){
+          estadoAux = "aprobado"
+        }
+        let sum = 0
+        if(pedidoBody.pagos){
+          pedidoBody.pagos.forEach(pago=>{
+            sum = sum + Number(pago.monto)
+          })
+        }
+        if(
+          sum === pedidoBody.precioTotal
+        ){
+          estadoAux = "pagado"
+        }
+        if(
+          pedidoBody.fechaEntregado
+        ){
+          estadoAux = "entregado"
+        }
+        if(
+          sum === pedidoBody.precioTotal &&
+          pedidoBody.fechaEntregado
+        ){
+          estadoAux = "finalizado"
+        }
+        //Si no hay error, reemplazo con los datos del body
+        const pedidos = []
+        cliente.pedidos.forEach(ped=>{
+          if(ped._id.toString() === req.params.idPedido.toString()){
+            pedidos.push({
+              fechaPedido: pedidoBody.fechaPedido,
+              fechaEntrega: pedidoBody.fechaEntrega ? pedidoBody.fechaEntrega : null,
+              fechaEntregado: pedidoBody.fechaEntregado ? pedidoBody.fechaEntregado : null,
+              detalle: pedidoBody.detalle.map(det=>{
+                return {
+                  producto: det.producto,
+                  talle: det.talle,
+                  cantidad: det.cantidad
+                }
+              }),
+              precioTotal: pedidoBody.precioTotal,
+              pagos: pedidoBody.pagos.map(pago=>{
+                return {
+                  fecha: pago.fecha,
+                  monto: pago.monto,
+                  factura: pago.factura,
+                  formaPago: pago.formaPago,
+                  observaciones: pago.observaciones
+                }
+              }),
+              estado: estadoAux,
+            })
+          } else {
+            pedidos.push(ped)
+          }
+        })
+        cliente.pedidos = pedidos
+        //Guardo los cambios en BD
+        cliente.save((err, cliente) => {
+          if (err) {
+            res.status(404).json(err)
+          } else {
+            res.status(201).json(cliente)
+          }
+        })
+      }
+    )
+}
+
+//Eliminar pedido
+module.exports.eliminarPedido = (req,res) => {
+  if (!req.params.id || !req.params.idPedido) {
+    res.status(404).json({ message: "Se requiere el id del cliente y del pedido"})
+    return
+  }
+  Clientes
+    .findById(req.params.id)
+    .select('-creada')
+    .exec(
+      (err,cliente) => {
+        if (!cliente) {
+          res.status(404).json({ message: "No se encontró el id del cliente"})
+          return
+        } else if (err) {
+          res.status(404).json(err)
+          return
+        }
+        //Si no hay error, reemplazo con los datos del body
+        const pedidos = []
+        cliente.pedidos.forEach(pedido=>{
+          if(pedido._id.toString() !== req.params.idPedido.toString()){
+            pedidos.push(pedido)
+          }
+        })
+        cliente.pedidos = pedidos
+        //Guardo los cambios en BD
+        cliente.save((err, clienteGuardado) => {
+          if (err) {
+            res.status(404).json(err)
+          } else {
+            res.status(201).json(clienteGuardado)
+          }
+        })
       }
     )
 }
