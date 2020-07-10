@@ -1,7 +1,7 @@
 const mongoose = require( 'mongoose' )
 
 const stock = new mongoose.Schema({
-  producto: {type: String, required: true},
+  producto: String,
   estado: {
     type: String,
     enum:["pendiente","fisico"],

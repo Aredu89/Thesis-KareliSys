@@ -52391,7 +52391,7 @@
 	      var permitCreate = permits === "MODIFICAR" || permits === "CREAR" ? true : false;
 	      var permitRead = permits === "MODIFICAR" || permits === "CREAR" || permits === "LEER" ? true : false;
 	      //Tabla
-	      var columns = [["Nombre", "nombre", "String"], ["Ciudad", "ciudad", "String"], ["Dirección", "direccion", "String"], ["Pedidos pendientes", "pedidos", "Largo pendiente"], ["A cobrar", "", "Deuda"]];
+	      var columns = [["Nombre", "nombre", "String"], ["Ciudad", "ciudad", "String"], ["Dirección", "direccion", "String"], ["Pedidos pendientes", "pedidos", "Largo pendiente"], ["A cobrar", "", "Fabrica Adeudado"]];
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fabricas-lista' },
@@ -52558,6 +52558,7 @@
 	    _this.handleEliminarContacto = _this.handleEliminarContacto.bind(_this);
 	    _this.handleEditarPedido = _this.handleEditarPedido.bind(_this);
 	    _this.handleEliminarPedido = _this.handleEliminarPedido.bind(_this);
+	    _this.onCrearPedido = _this.onCrearPedido.bind(_this);
 	    return _this;
 	  }
 	
@@ -52781,15 +52782,36 @@
 	    value: function handleEliminarPedido(id) {
 	      var _this8 = this;
 	
-	      var auxPedidos = this.state.pedidos;
-	      //Elimino el contacto del state
-	      auxPedidos.forEach(function (pedido, i) {
-	        if (pedido._id === id) {
-	          auxPedidos.splice(i, 1);
-	          _this8.setState({
-	            pedidos: auxPedidos
+	      //Primero pido confirmación
+	      _sweetalert2.default.fire({
+	        title: "¿Seguro que desea eliminar?",
+	        text: "Esta acción no se puede revertir",
+	        icon: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#3085d6",
+	        cancelButtonColor: "#d33",
+	        confirmButtonText: "Si, eliminar"
+	      }).then(function (result) {
+	        if (result.value) {
+	          //Elimino
+	          fetch('/api/clientes/' + _this8.state._id + '/pedidos/' + id, {
+	            method: 'DELETE',
+	            headers: { 'Content-Type': 'application/json' }
+	          }).then(function (res) {
+	            if (res.ok) {
+	              res.json().then(function (data) {
+	                _sweetalert2.default.fire("Pedido Eliminado", "", "success").then(function () {
+	                  _this8.setState({
+	                    pedidos: data.pedidos
+	                  });
+	                });
+	              });
+	            } else {
+	              _sweetalert2.default.fire("Error al eliminar", "", "error");
+	            }
+	          }).catch(function (err) {
+	            _sweetalert2.default.fire("Error del servidor", err.message, "error");
 	          });
-	          return;
 	        }
 	      });
 	    }
@@ -52831,9 +52853,66 @@
 	      this.setState(_defineProperty({}, array, auxArray));
 	    }
 	  }, {
+	    key: 'onCrearPedido',
+	    value: function onCrearPedido(obj) {
+	      var _this9 = this;
+	
+	      if (obj._id) {
+	        //Modifico un pedido existente
+	        fetch('/api/clientes/' + this.state._id + '/pedidos/' + obj._id, {
+	          method: 'PUT',
+	          headers: { 'Content-Type': 'application/json' },
+	          body: JSON.stringify(obj)
+	        }).then(function (res) {
+	          if (res.ok) {
+	            res.json().then(function (data) {
+	              _sweetalert2.default.fire("Pedido modificado!", "", "success").then(function () {
+	                _this9.setState({
+	                  pedidos: data.pedidos
+	                });
+	              });
+	            });
+	          } else {
+	            res.json().then(function (err) {
+	              console.log("Error al modificar pedido: ", err.message);
+	              _sweetalert2.default.fire("Error al modificar el pedido", err.message, "error");
+	            });
+	          }
+	        }).catch(function (err) {
+	          console.log("Error al crear: ", err.message);
+	          _sweetalert2.default.fire("Error del servidor", err.message, "error");
+	        });
+	      } else {
+	        //Crear pedido
+	        fetch('/api/clientes/' + this.state._id + '/pedidos', {
+	          method: 'POST',
+	          headers: { 'Content-Type': 'application/json' },
+	          body: JSON.stringify(obj)
+	        }).then(function (res) {
+	          if (res.ok) {
+	            res.json().then(function (data) {
+	              _sweetalert2.default.fire("Pedido creado!", "", "success").then(function () {
+	                _this9.setState({
+	                  pedidos: data.pedidos
+	                });
+	              });
+	            });
+	          } else {
+	            res.json().then(function (err) {
+	              console.log("Error al crear pedido: ", err.message);
+	              _sweetalert2.default.fire("Error al crear el pedido", "", "error");
+	            });
+	          }
+	        }).catch(function (err) {
+	          console.log("Error al crear: ", err.message);
+	          _sweetalert2.default.fire("Error del servidor", "", "error");
+	        });
+	      }
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this9 = this;
+	      var _this10 = this;
 	
 	      var permits = this.state.permits;
 	      //Permisos
@@ -52843,7 +52922,7 @@
 	      var permitRead = permits === "MODIFICAR" || permits === "CREAR" || permits === "LEER" ? true : false;
 	      //Tabla
 	      var columnsContactos = [["Nombre", "nombre", "String"], ["Apellido", "apellido", "String"], ["Email", "email", "String"], ["Teléfono", "telefono", "String"]];
-	      var columnsPedidos = [["Fecha", "fecha", "Fecha"], ["Productos", "detalle", "Largo"], ["Precio", "precioTotal", "String"], ["Estado", "estado", "String"]];
+	      var columnsPedidos = [["Fecha del pedido", "fechaPedido", "Fecha"], ["Fecha de entrega", "fechaEntrega", "Fecha"], ["Precio total", "precioTotal", "Money"], ["Adeudado", "data", "Pedido Adeudado"], ["Productos", "detalle", "Largo"], ["Estado", "estado", "String"]];
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fabricas-editar text-center' },
@@ -52874,7 +52953,7 @@
 	                  { type: 'button',
 	                    className: 'btn btn-success',
 	                    onClick: function onClick() {
-	                      return _this9.onClickGuardar();
+	                      return _this10.onClickGuardar();
 	                    }
 	                  },
 	                  '+ Guardar'
@@ -52884,7 +52963,7 @@
 	                  { type: 'button',
 	                    className: 'btn btn-secondary ml-2',
 	                    onClick: function onClick() {
-	                      return _this9.goToPagos();
+	                      return _this10.goToPagos();
 	                    }
 	                  },
 	                  'Ir a Pagos $'
@@ -53002,7 +53081,7 @@
 	                    { type: 'button',
 	                      className: 'btn btn-outline-success',
 	                      onClick: function onClick() {
-	                        return _this9.onOpenModal("modalContactos");
+	                        return _this10.onOpenModal("modalContactos");
 	                      }
 	                    },
 	                    '+ Agregar Contacto'
@@ -53030,7 +53109,7 @@
 	                )
 	              )
 	            ),
-	            _react2.default.createElement(
+	            !this.state.nuevo && _react2.default.createElement(
 	              'div',
 	              { className: 'col-12 mt-3' },
 	              _react2.default.createElement(
@@ -53064,7 +53143,7 @@
 	                    { type: 'button',
 	                      className: 'btn btn-outline-success',
 	                      onClick: function onClick() {
-	                        return _this9.onOpenModal("modalPedidos");
+	                        return _this10.onOpenModal("modalPedidos");
 	                      }
 	                    },
 	                    '+ Agregar Pedido'
@@ -53098,7 +53177,7 @@
 	            {
 	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
 	              onClose: function onClose() {
-	                return _this9.onCloseModal("modalContactos");
+	                return _this10.onCloseModal("modalContactos");
 	              },
 	              showCloseIcon: false,
 	              open: this.state.modalContactos,
@@ -53108,7 +53187,7 @@
 	              data: this.state.modalContactosEditar,
 	              onSave: this.onSaveModal,
 	              onClose: function onClose() {
-	                return _this9.onCloseModal("modalContactos");
+	                return _this10.onCloseModal("modalContactos");
 	              },
 	              titulo: this.state.modalContactosEditar ? "EDITAR CONTACTO" : "CREAR CONTACTO"
 	            })
@@ -53118,7 +53197,7 @@
 	            {
 	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
 	              onClose: function onClose() {
-	                return _this9.onCloseModal("modalPedidos");
+	                return _this10.onCloseModal("modalPedidos");
 	              },
 	              showCloseIcon: false,
 	              open: this.state.modalPedidos,
@@ -53128,7 +53207,7 @@
 	              data: this.state.modalPedidosEditar,
 	              onSave: this.onSaveModal,
 	              onClose: function onClose() {
-	                return _this9.onCloseModal("modalPedidos");
+	                return _this10.onCloseModal("modalPedidos");
 	              },
 	              titulo: this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"
 	            })
@@ -53406,6 +53485,14 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _DatePicker = __webpack_require__(315);
+	
+	var _DatePicker2 = _interopRequireDefault(_DatePicker);
+	
+	var _FormSelect = __webpack_require__(317);
+	
+	var _FormSelect2 = _interopRequireDefault(_FormSelect);
+	
 	var _javascriptFunctions = __webpack_require__(281);
 	
 	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
@@ -53420,34 +53507,32 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var estados = [{
-	  label: "Pendiente",
-	  value: "pendiente"
-	}, {
-	  label: "Entregado",
-	  value: "entregado"
-	}];
+	var PedidosEditar = function (_React$Component) {
+	  _inherits(PedidosEditar, _React$Component);
 	
-	var ContactosEditar = function (_React$Component) {
-	  _inherits(ContactosEditar, _React$Component);
+	  function PedidosEditar() {
+	    _classCallCheck(this, PedidosEditar);
 	
-	  function ContactosEditar() {
-	    _classCallCheck(this, ContactosEditar);
-	
-	    var _this = _possibleConstructorReturn(this, (ContactosEditar.__proto__ || Object.getPrototypeOf(ContactosEditar)).call(this));
+	    var _this = _possibleConstructorReturn(this, (PedidosEditar.__proto__ || Object.getPrototypeOf(PedidosEditar)).call(this));
 	
 	    _this.state = {
 	      _id: "",
-	      fecha: "",
+	      fechaPedido: "",
+	      errorFechaPedido: false,
+	      fechaEntrega: "",
+	      fechaEntregado: "",
 	      detalle: [],
 	      errorDetalle: false,
 	      precioTotal: "",
 	      errorPrecio: false,
-	      estado: estados[0].value,
+	      estado: "pendiente",
+	      pagos: [],
 	      nombreProducto: "",
 	      errorNombreProducto: false,
 	      talleProducto: "",
-	      cantidadProducto: ""
+	      errorTalleProducto: false,
+	      cantidadProducto: "",
+	      errorCantidadProducto: false
 	    };
 	    _this.handleOnChange = _this.handleOnChange.bind(_this);
 	    _this.agregarProducto = _this.agregarProducto.bind(_this);
@@ -53455,16 +53540,19 @@
 	    return _this;
 	  }
 	
-	  _createClass(ContactosEditar, [{
+	  _createClass(PedidosEditar, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      if (this.props.data) {
 	        this.setState({
 	          _id: this.props.data._id,
-	          fecha: this.props.data.fecha.toString(),
+	          fechaPedido: this.props.data.fechaPedido ? _javascriptFunctions2.default.fechaANumeros(this.props.data.fechaPedido) : "",
+	          fechaEntrega: this.props.data.fechaEntrega ? _javascriptFunctions2.default.fechaANumeros(this.props.data.fechaEntrega) : "",
+	          fechaEntregado: this.props.data.fechaEntregado ? _javascriptFunctions2.default.fechaANumeros(this.props.data.fechaEntregado) : "",
 	          detalle: this.props.data.detalle,
 	          precioTotal: this.props.data.precioTotal,
-	          estado: this.props.data.estado
+	          estado: this.props.data.estado,
+	          pagos: this.props.data.pagos ? this.props.data.pagos : []
 	        });
 	      }
 	    }
@@ -53472,10 +53560,10 @@
 	    key: 'handleOnChange',
 	    value: function handleOnChange(event) {
 	      this.setState(_defineProperty({}, event.target.name, event.target.value));
-	      //Limpio el error del precio
-	      if (event.target.name === "precioTotal" && this.state.errorPrecio == true) {
+	      //Limpio el talle seleccionado
+	      if (event.target.name === "nombreProducto") {
 	        this.setState({
-	          errorPrecio: false
+	          talleProducto: ""
 	        });
 	      }
 	      //Limpio el error del nombre del producto
@@ -53484,15 +53572,33 @@
 	          errorNombreProducto: false
 	        });
 	      }
+	      //Limpio el error del talle del producto
+	      if (event.target.name === "talleProducto" && this.state.errorTalleProducto == true) {
+	        this.setState({
+	          errorTalleProducto: false
+	        });
+	      }
+	      //Limpio el error de cantidad del producto
+	      if (event.target.name === "cantidadProducto" && this.state.errorCantidadProducto == true) {
+	        this.setState({
+	          errorCantidadProducto: false
+	        });
+	      }
+	      //Limpio el error de fecha del pedido
+	      if (event.target.name === "fechaPedido" && this.state.errorFechaPedido == true) {
+	        this.setState({
+	          errorFechaPedido: false
+	        });
+	      }
 	    }
 	  }, {
 	    key: 'agregarProducto',
 	    value: function agregarProducto() {
 	      var productos = this.state.detalle;
 	      //controlar que el nombre tenga un valor
-	      if (this.state.nombreProducto) {
+	      if (this.state.nombreProducto && this.state.talleProducto && this.state.cantidadProducto) {
 	        productos.push({
-	          nombre: this.state.nombreProducto,
+	          producto: this.state.nombreProducto,
 	          talle: this.state.talleProducto,
 	          cantidad: this.state.cantidadProducto
 	        });
@@ -53501,8 +53607,22 @@
 	          errorDetalle: false
 	        });
 	      } else {
+	        var errorNombre = false;
+	        var errorTalle = false;
+	        var errorCantidad = false;
+	        if (!this.state.nombreProducto) {
+	          errorNombre = true;
+	        }
+	        if (!this.state.talleProducto) {
+	          errorTalle = true;
+	        }
+	        if (!this.state.cantidadProducto) {
+	          errorCantidad = true;
+	        }
 	        this.setState({
-	          errorNombreProducto: true
+	          errorNombreProducto: errorNombre,
+	          errorTalleProducto: errorTalle,
+	          errorCantidadProducto: errorCantidad
 	        });
 	      }
 	    }
@@ -53518,14 +53638,17 @@
 	  }, {
 	    key: 'onSave',
 	    value: function onSave() {
-	      if (this.state.precioTotal > 0 && this.state.detalle.length > 0) {
+	      if (this.state.fechaPedido && this.state.detalle.length > 0) {
 	        this.props.onSave({
 	          _id: this.state._id,
-	          fecha: this.state.fecha ? this.state.fecha : new Date(),
+	          fechaPedido: this.state.fechaPedido ? _javascriptFunctions2.default.numerosAFecha(this.state.fechaPedido) : new Date(),
+	          fechaEntrega: this.state.fechaEntrega ? _javascriptFunctions2.default.numerosAFecha(this.state.fechaEntrega) : null,
+	          fechaEntregado: this.state.fechaEntregado ? _javascriptFunctions2.default.numerosAFecha(this.state.fechaEntregado) : null,
 	          detalle: this.state.detalle,
-	          precioTotal: this.state.precioTotal,
+	          pagos: this.state.pagos ? this.state.pagos : [],
+	          precioTotal: this.state.precioTotal ? Number(this.state.precioTotal) : null,
 	          estado: this.state.estado
-	        }, "pedidos");
+	        });
 	        this.props.onClose();
 	      } else {
 	        if (this.state.detalle.length < 1) {
@@ -53533,18 +53656,48 @@
 	            errorDetalle: true
 	          });
 	        }
-	        if (this.state.precioTotal < 1) {
+	        if (!this.state.fechaPedido) {
 	          this.setState({
-	            errorPrecio: true
+	            errorFechaPedido: true
 	          });
 	        }
 	      }
+	    }
+	  }, {
+	    key: 'primeraUpperCase',
+	    value: function primeraUpperCase(string) {
+	      var firstLetter = string.slice(0, 1);
+	      return firstLetter[0].toUpperCase() + string.substring(1);
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _this2 = this;
 	
+	      var productosOptions = [];
+	      if (this.props.productos) {
+	        this.props.productos.forEach(function (prod) {
+	          productosOptions.push({
+	            id: prod.nombre,
+	            value: prod.nombre
+	          });
+	        });
+	      }
+	      var tallesOptions = [];
+	      if (this.state.nombreProducto && this.props.productos) {
+	        var producto = this.props.productos.find(function (prod) {
+	          return prod.nombre === _this2.state.nombreProducto;
+	        });
+	        if (producto) {
+	          producto.talles.forEach(function (talle) {
+	            tallesOptions.push({
+	              id: talle,
+	              value: talle
+	            });
+	          });
+	        }
+	      }
+	      var deudaPedido = this.props.data ? _javascriptFunctions2.default.getDeudaPedido(this.props.data) : 0;
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'contactos-editar' },
@@ -53575,16 +53728,52 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'formulario pt-2' },
-	          this.state.fecha ? _react2.default.createElement(
+	          this.state.estado && _react2.default.createElement(
 	            'div',
 	            { className: 'col-12 form-group text-center pt-2' },
 	            _react2.default.createElement(
 	              'label',
-	              { className: 'mb-0' },
-	              'Fecha: ' + _javascriptFunctions2.default.formatearDate(this.state.fecha)
+	              null,
+	              'Estado:'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              this.primeraUpperCase(this.state.estado)
 	            )
-	          ) : null,
+	          ),
 	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Fecha del pedido'
+	            ),
+	            _react2.default.createElement(_DatePicker2.default, {
+	              name: 'fechaPedido',
+	              value: this.state.fechaPedido ? this.state.fechaPedido : "",
+	              onChange: this.handleOnChange,
+	              error: this.state.errorFechaPedido,
+	              disabled: this.state._id ? true : false
+	            })
+	          ),
+	          this.state._id && _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Fecha de entrega'
+	            ),
+	            _react2.default.createElement(_DatePicker2.default, {
+	              name: 'fechaEntrega',
+	              value: this.state.fechaEntrega ? this.state.fechaEntrega : "",
+	              onChange: this.handleOnChange,
+	              disabled: this.state.pagos.length > 0 || this.state.fechaEntregado ? true : false
+	            })
+	          ),
+	          this.state._id && _react2.default.createElement(
 	            'div',
 	            { className: 'col-12 form-group text-center pt-2' },
 	            _react2.default.createElement(
@@ -53598,42 +53787,28 @@
 	              name: 'precioTotal',
 	              placeholder: 'Precio Total...',
 	              value: this.state.precioTotal,
-	              onChange: this.handleOnChange
+	              onChange: this.handleOnChange,
+	              disabled: this.state.pagos.length > 0 ? true : false
 	            }),
-	            this.state.errorPrecio && _react2.default.createElement(
+	            deudaPedido > 0 && _react2.default.createElement(
 	              'div',
-	              { className: 'invalid-feedback' },
-	              'Se debe ingresar un precio'
+	              { className: 'alerta-feedback' },
+	              'Adeudado: ' + _javascriptFunctions2.default.moneyFormatter(deudaPedido)
 	            )
 	          ),
-	          _react2.default.createElement(
+	          this.state._id && this.state.fechaEntrega && this.state.precioTotal && _react2.default.createElement(
 	            'div',
 	            { className: 'col-12 form-group text-center pt-2' },
 	            _react2.default.createElement(
 	              'label',
 	              null,
-	              'Estado'
+	              'Fecha Entregado'
 	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'form-group' },
-	              _react2.default.createElement(
-	                'select',
-	                { className: 'custom-select',
-	                  id: 'estado',
-	                  name: 'estado',
-	                  value: this.state.estado,
-	                  onChange: this.handleOnChange
-	                },
-	                estados.map(function (estado, i) {
-	                  return _react2.default.createElement(
-	                    'option',
-	                    { value: estado.value, key: i },
-	                    estado.label
-	                  );
-	                })
-	              )
-	            )
+	            _react2.default.createElement(_DatePicker2.default, {
+	              name: 'fechaEntregado',
+	              value: this.state.fechaEntregado ? this.state.fechaEntregado : "",
+	              onChange: this.handleOnChange
+	            })
 	          ),
 	          _react2.default.createElement(
 	            'div',
@@ -53646,18 +53821,13 @@
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'contenedor-productos' },
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                'Nombre'
-	              ),
-	              _react2.default.createElement('input', { type: 'text',
-	                className: this.state.errorNombreProducto ? "form-control is-invalid" : "form-control",
-	                id: 'nombreProducto',
+	              _react2.default.createElement(_FormSelect2.default, {
+	                label: 'Nombre',
 	                name: 'nombreProducto',
-	                placeholder: 'Nombre del producto...',
 	                value: this.state.nombreProducto,
-	                onChange: this.handleOnChange
+	                onChange: this.handleOnChange,
+	                error: this.state.errorNombreProducto,
+	                options: productosOptions
 	              }),
 	              _react2.default.createElement(
 	                'div',
@@ -53665,18 +53835,13 @@
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'text-center' },
-	                  _react2.default.createElement(
-	                    'label',
-	                    null,
-	                    'Talle'
-	                  ),
-	                  _react2.default.createElement('input', { type: 'number',
-	                    className: 'form-control',
-	                    id: 'talleProducto',
+	                  _react2.default.createElement(_FormSelect2.default, {
+	                    label: 'Talle',
 	                    name: 'talleProducto',
-	                    placeholder: 'Talle...',
 	                    value: this.state.talleProducto,
-	                    onChange: this.handleOnChange
+	                    onChange: this.handleOnChange,
+	                    error: this.state.errorTalleProducto,
+	                    options: tallesOptions
 	                  })
 	                ),
 	                _react2.default.createElement(
@@ -53688,13 +53853,18 @@
 	                    'Cantidad'
 	                  ),
 	                  _react2.default.createElement('input', { type: 'number',
-	                    className: 'form-control',
+	                    className: this.state.errorCantidadProducto ? "form-control is-invalid" : "form-control",
 	                    id: 'cantidadProducto',
 	                    name: 'cantidadProducto',
 	                    placeholder: 'Cantidad...',
 	                    value: this.state.cantidadProducto,
 	                    onChange: this.handleOnChange
-	                  })
+	                  }),
+	                  this.state.errorCantidadProducto && _react2.default.createElement(
+	                    'div',
+	                    { className: 'invalid-feedback' },
+	                    'Ingrese una cantidad'
+	                  )
 	                ),
 	                _react2.default.createElement(
 	                  'div',
@@ -53754,7 +53924,7 @@
 	                    _react2.default.createElement(
 	                      'td',
 	                      null,
-	                      producto.nombre
+	                      producto.producto
 	                    ),
 	                    _react2.default.createElement(
 	                      'td',
@@ -53786,17 +53956,12 @@
 	              )
 	            )
 	          ),
-	          this.state.errorDetalle ? _react2.default.createElement(
+	          this.state.errorDetalle && _react2.default.createElement(
 	            'div',
 	            { className: 'col-12 form-group text-center pt-2' },
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'alert alert-dismissible alert-danger' },
-	              _react2.default.createElement(
-	                'button',
-	                { type: 'button', className: 'close', 'data-dismiss': 'alert' },
-	                '\xD7'
-	              ),
 	              _react2.default.createElement(
 	                'strong',
 	                null,
@@ -53804,7 +53969,7 @@
 	              ),
 	              ' El pedido debe tener productos'
 	            )
-	          ) : null,
+	          ),
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'col-12 form-group text-center pt-2 boton-guardar' },
@@ -53825,10 +53990,10 @@
 	    }
 	  }]);
 	
-	  return ContactosEditar;
+	  return PedidosEditar;
 	}(_react2.default.Component);
 	
-	exports.default = ContactosEditar;
+	exports.default = PedidosEditar;
 
 /***/ },
 /* 325 */

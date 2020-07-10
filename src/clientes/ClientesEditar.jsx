@@ -38,6 +38,7 @@ export default class ClientesEditar extends React.Component {
     this.handleEliminarContacto = this.handleEliminarContacto.bind(this)
     this.handleEditarPedido = this.handleEditarPedido.bind(this)
     this.handleEliminarPedido = this.handleEliminarPedido.bind(this)
+    this.onCrearPedido = this.onCrearPedido.bind(this)
   }
 
   componentDidMount(){
@@ -267,15 +268,51 @@ export default class ClientesEditar extends React.Component {
   }
   
   handleEliminarPedido(id){
-    let auxPedidos = this.state.pedidos
-    //Elimino el contacto del state
-    auxPedidos.forEach((pedido, i) => {
-      if(pedido._id === id){
-        auxPedidos.splice(i,1)
-        this.setState({
-          pedidos: auxPedidos
+    //Primero pido confirmación
+    Swal.fire({
+      title: "¿Seguro que desea eliminar?",
+      text: "Esta acción no se puede revertir",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, eliminar"
+    }).then((result)=>{
+      if(result.value){
+        //Elimino
+        fetch(`/api/clientes/${this.state._id}/pedidos/${id}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' }
         })
-        return
+          .then(res => {
+            if(res.ok){
+              res.json()
+                .then(data=>{
+                  Swal.fire(
+                    "Pedido Eliminado",
+                    "",
+                    "success"
+                  ).then(()=>{
+                    this.setState({
+                      pedidos: data.pedidos
+                    })
+                  })
+                })
+            } else {
+                Swal.fire(
+                  "Error al eliminar",
+                  "",
+                  "error"
+                )
+            }
+          })
+          .catch(err=> {
+            Swal.fire(
+              "Error del servidor",
+              err.message,
+              "error"
+            )
+          })
       }
     })
   }
@@ -314,6 +351,92 @@ export default class ClientesEditar extends React.Component {
     })
   }
 
+  onCrearPedido(obj){
+    if(obj._id){
+      //Modifico un pedido existente
+      fetch(`/api/clientes/${this.state._id}/pedidos/${obj._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(obj),
+      })
+        .then(res => {
+          if(res.ok) {
+            res.json()
+              .then(data => {
+                Swal.fire(
+                  "Pedido modificado!",
+                  "",
+                  "success"
+                ).then(()=>{
+                  this.setState({
+                    pedidos: data.pedidos
+                  })
+                })
+              })
+          } else {
+            res.json()
+            .then(err => {
+              console.log("Error al modificar pedido: ",err.message)
+              Swal.fire(
+                "Error al modificar el pedido",
+                err.message,
+                "error"
+              )
+            })
+          }
+        })
+        .catch(err => {
+          console.log("Error al crear: ",err.message)
+          Swal.fire(
+            "Error del servidor",
+            err.message,
+            "error"
+          )
+        })
+    } else {
+      //Crear pedido
+      fetch(`/api/clientes/${this.state._id}/pedidos`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(obj),
+      })
+        .then(res => {
+          if(res.ok) {
+            res.json()
+              .then(data => {
+                Swal.fire(
+                  "Pedido creado!",
+                  "",
+                  "success"
+                ).then(()=>{
+                  this.setState({
+                    pedidos: data.pedidos
+                  })
+                })
+              })
+          } else {
+            res.json()
+            .then(err => {
+              console.log("Error al crear pedido: ",err.message)
+              Swal.fire(
+                "Error al crear el pedido",
+                "",
+                "error"
+              )
+            })
+          }
+        })
+        .catch(err => {
+          console.log("Error al crear: ",err.message)
+          Swal.fire(
+            "Error del servidor",
+            "",
+            "error"
+          )
+        })
+    }
+  }
+
   render() {
     const {
       permits
@@ -333,9 +456,11 @@ export default class ClientesEditar extends React.Component {
       ["Teléfono","telefono","String"]
     ]
     const columnsPedidos = [
-      ["Fecha","fecha","Fecha"],
+      ["Fecha del pedido","fechaPedido","Fecha"],
+      ["Fecha de entrega","fechaEntrega","Fecha"],
+      ["Precio total", "precioTotal", "Money"],
+      ["Adeudado", "data", "Pedido Adeudado"],
       ["Productos","detalle","Largo"],
-      ["Precio","precioTotal","String"],
       ["Estado","estado","String"]
     ]
     return (
@@ -480,51 +605,54 @@ export default class ClientesEditar extends React.Component {
               </div>
             </div>
             {/* Pedidos */}
-            <div className="col-12 mt-3">
-              <div className="card border-primary" id="card">
-                <div className="card-header d-flex justify-content-between" id="headingOne">
-                  <button type="button"
-                    className="btn btn-link collapsed col-sm-8 col-6"
-                    data-toggle="collapse"
-                    data-target="#collapseTwo"
-                    aria-expanded="false" 
-                    aria-controls="collapseTwo">
-                      <h5 className="d-flex align-items-center mb-0">
-                        Pedidos: {this.state.pedidos.length}
-                        <i className="material-icons ml-3">keyboard_arrow_down</i>
-                      </h5>
-                    </button>
-                  {
-                    (
-                      this.state.nuevo && permitCreate ||
-                      !this.state.nuevo && permitUpdate
-                    ) && 
-                    <button type="button" 
-                      className="btn btn-outline-success"
-                      onClick={() => this.onOpenModal("modalPedidos")}
-                      >+ Agregar Pedido</button>
-                  }
-                </div>
-                <div id="collapseTwo" 
-                  className="collapse" 
-                  aria-labelledby="headingTwo" 
-                  data-parent="#card">
-                  <div className="card-body contenedor-tabla">
-                    <TablaFlexible
-                      lista={"pedidos"}
-                      columns={columnsPedidos}
-                      data={this.state.pedidos}
-                      handleEditar={this.handleEditarPedido}
-                      handleEliminar={this.handleEliminarPedido}
-                      blockRead={this.state.nuevo && permitCreate ||
-                        !this.state.nuevo && permitUpdate ? false : true}
-                      blockDelete={this.state.nuevo && permitCreate ||
-                        !this.state.nuevo && permitUpdate ? false : true}
-                    />
+            {
+              !this.state.nuevo &&
+              <div className="col-12 mt-3">
+                <div className="card border-primary" id="card">
+                  <div className="card-header d-flex justify-content-between" id="headingOne">
+                    <button type="button"
+                      className="btn btn-link collapsed col-sm-8 col-6"
+                      data-toggle="collapse"
+                      data-target="#collapseTwo"
+                      aria-expanded="false" 
+                      aria-controls="collapseTwo">
+                        <h5 className="d-flex align-items-center mb-0">
+                          Pedidos: {this.state.pedidos.length}
+                          <i className="material-icons ml-3">keyboard_arrow_down</i>
+                        </h5>
+                      </button>
+                    {
+                      (
+                        this.state.nuevo && permitCreate ||
+                        !this.state.nuevo && permitUpdate
+                      ) && 
+                      <button type="button" 
+                        className="btn btn-outline-success"
+                        onClick={() => this.onOpenModal("modalPedidos")}
+                        >+ Agregar Pedido</button>
+                    }
+                  </div>
+                  <div id="collapseTwo" 
+                    className="collapse" 
+                    aria-labelledby="headingTwo" 
+                    data-parent="#card">
+                    <div className="card-body contenedor-tabla">
+                      <TablaFlexible
+                        lista={"pedidos"}
+                        columns={columnsPedidos}
+                        data={this.state.pedidos}
+                        handleEditar={this.handleEditarPedido}
+                        handleEliminar={this.handleEliminarPedido}
+                        blockRead={this.state.nuevo && permitCreate ||
+                          !this.state.nuevo && permitUpdate ? false : true}
+                        blockDelete={this.state.nuevo && permitCreate ||
+                          !this.state.nuevo && permitUpdate ? false : true}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            }
           </div>
           {/* Modal contactos */}
           <Modal

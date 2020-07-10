@@ -279,14 +279,19 @@ module.exports.modificarPedido = (req,res) => {
             if(!pedidoAModificar.enStock){
               pedidoBody.enStock = true
               pedidoBody.detalle.forEach(det=>{
+                const productoAux ={
+                  producto: det.producto,
+                  estado: "pendiente",
+                  talle: det.talle,
+                  cantidad: det.cantidad
+                }
                 Stock
-                  .create({
-                    producto: det.producto,
-                    estado: "pendiente",
-                    talle: det.talle,
-                    cantidad: det.cantidad
-                  }, (err, stock) => {
-                    console.log("Stock agregado")
+                  .create(productoAux, (err, stock) => {
+                    if(err) {
+                      console.log("Error al agregar stock ", err)
+                    } else {
+                      console.log("Stock agregado ", stock)
+                    }
                   })
               })
             }
