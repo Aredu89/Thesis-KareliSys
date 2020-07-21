@@ -26,6 +26,7 @@ export default class ClientesEditar extends React.Component {
       modalContactosEditar: null,
       modalPedidos: false,
       modalPedidosEditar: null,
+      productosDisponibles: [],
       //Permisos
       permits: ""
     }
@@ -39,11 +40,13 @@ export default class ClientesEditar extends React.Component {
     this.handleEditarPedido = this.handleEditarPedido.bind(this)
     this.handleEliminarPedido = this.handleEliminarPedido.bind(this)
     this.onCrearPedido = this.onCrearPedido.bind(this)
+    this.obtenerProductos = this.obtenerProductos.bind(this)
   }
 
   componentDidMount(){
     if(this.props.params.id){
       this.obtenerCliente()
+      this.obtenerProductos()
     } else {
       this.setState({
         cargando: false
@@ -97,6 +100,29 @@ export default class ClientesEditar extends React.Component {
           cargando: false,
           error: error.message
         })
+      })
+  }
+
+  //Obtengo los productos disponibles para los pedidos
+  obtenerProductos(){
+    fetch('/api/stock')
+      .then(res => {
+        if(res.ok) {
+          res.json()
+          .then(data => {
+            this.setState({
+              productosDisponibles: data
+            })
+          })
+        } else {
+          res.json()
+          .then(error => {
+            console.log("Error al obtener productos. ", error.message)
+          })
+        }
+      })
+      .catch(error => {
+        console.log("Error del servidor al obtener productos: ",error.message)
       })
   }
 
@@ -682,6 +708,7 @@ export default class ClientesEditar extends React.Component {
                 onSave={this.onSaveModal}
                 onClose={()=>this.onCloseModal("modalPedidos")}
                 titulo={this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"}
+                productos={this.state.productosDisponibles}
               />
             </Modal>
         </div>

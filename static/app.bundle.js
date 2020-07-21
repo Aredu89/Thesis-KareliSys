@@ -52546,6 +52546,7 @@
 	      modalContactosEditar: null,
 	      modalPedidos: false,
 	      modalPedidosEditar: null,
+	      productosDisponibles: [],
 	      //Permisos
 	      permits: ""
 	    };
@@ -52559,6 +52560,7 @@
 	    _this.handleEditarPedido = _this.handleEditarPedido.bind(_this);
 	    _this.handleEliminarPedido = _this.handleEliminarPedido.bind(_this);
 	    _this.onCrearPedido = _this.onCrearPedido.bind(_this);
+	    _this.obtenerProductos = _this.obtenerProductos.bind(_this);
 	    return _this;
 	  }
 	
@@ -52567,6 +52569,7 @@
 	    value: function componentDidMount() {
 	      if (this.props.params.id) {
 	        this.obtenerCliente();
+	        this.obtenerProductos();
 	      } else {
 	        this.setState({
 	          cargando: false
@@ -52622,6 +52625,30 @@
 	      });
 	    }
 	
+	    //Obtengo los productos disponibles para los pedidos
+	
+	  }, {
+	    key: 'obtenerProductos',
+	    value: function obtenerProductos() {
+	      var _this3 = this;
+	
+	      fetch('/api/stock').then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            _this3.setState({
+	              productosDisponibles: data
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener productos. ", error.message);
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.log("Error del servidor al obtener productos: ", error.message);
+	      });
+	    }
+	
 	    //Manejo de cambios en el formulario
 	
 	  }, {
@@ -52641,7 +52668,7 @@
 	  }, {
 	    key: 'crearCliente',
 	    value: function crearCliente(nuevoCliente) {
-	      var _this3 = this;
+	      var _this4 = this;
 	
 	      fetch('/api/clientes', {
 	        method: 'POST',
@@ -52652,7 +52679,7 @@
 	          res.json().then(function (data) {
 	            console.log("Cliente creado: ", data);
 	            _sweetalert2.default.fire("Cliente creado!", "", "success").then(function () {
-	              _this3.props.history.push("/clientes");
+	              _this4.props.history.push("/clientes");
 	            });
 	          });
 	        } else {
@@ -52672,7 +52699,7 @@
 	  }, {
 	    key: 'modificarCliente',
 	    value: function modificarCliente(nuevoCliente, id) {
-	      var _this4 = this;
+	      var _this5 = this;
 	
 	      fetch('/api/clientes/' + id, {
 	        method: 'PUT',
@@ -52683,7 +52710,7 @@
 	          res.json().then(function (data) {
 	            console.log("Cliente modificado: ", data);
 	            _sweetalert2.default.fire("Cliente modificado!", "", "success").then(function () {
-	              _this4.props.history.push("/clientes");
+	              _this5.props.history.push("/clientes");
 	            });
 	          });
 	        } else {
@@ -52733,14 +52760,14 @@
 	  }, {
 	    key: 'handleEditarContacto',
 	    value: function handleEditarContacto(id) {
-	      var _this5 = this;
+	      var _this6 = this;
 	
 	      //Busco el id
 	      this.state.contactos.forEach(function (contacto) {
 	        if (contacto._id === id) {
-	          _this5.setState({
+	          _this6.setState({
 	            modalContactosEditar: contacto
-	          }, _this5.onOpenModal("modalContactos"));
+	          }, _this6.onOpenModal("modalContactos"));
 	          return;
 	        }
 	      });
@@ -52748,14 +52775,14 @@
 	  }, {
 	    key: 'handleEliminarContacto',
 	    value: function handleEliminarContacto(id) {
-	      var _this6 = this;
+	      var _this7 = this;
 	
 	      var auxContactos = this.state.contactos;
 	      //Elimino el contacto del state
 	      auxContactos.forEach(function (contacto, i) {
 	        if (contacto._id === id) {
 	          auxContactos.splice(i, 1);
-	          _this6.setState({
+	          _this7.setState({
 	            contactos: auxContactos
 	          });
 	          return;
@@ -52765,14 +52792,14 @@
 	  }, {
 	    key: 'handleEditarPedido',
 	    value: function handleEditarPedido(id) {
-	      var _this7 = this;
+	      var _this8 = this;
 	
 	      //Busco el id
 	      this.state.pedidos.forEach(function (pedido) {
 	        if (pedido._id === id) {
-	          _this7.setState({
+	          _this8.setState({
 	            modalPedidosEditar: pedido
-	          }, _this7.onOpenModal("modalPedidos"));
+	          }, _this8.onOpenModal("modalPedidos"));
 	          return;
 	        }
 	      });
@@ -52780,7 +52807,7 @@
 	  }, {
 	    key: 'handleEliminarPedido',
 	    value: function handleEliminarPedido(id) {
-	      var _this8 = this;
+	      var _this9 = this;
 	
 	      //Primero pido confirmación
 	      _sweetalert2.default.fire({
@@ -52794,14 +52821,14 @@
 	      }).then(function (result) {
 	        if (result.value) {
 	          //Elimino
-	          fetch('/api/clientes/' + _this8.state._id + '/pedidos/' + id, {
+	          fetch('/api/clientes/' + _this9.state._id + '/pedidos/' + id, {
 	            method: 'DELETE',
 	            headers: { 'Content-Type': 'application/json' }
 	          }).then(function (res) {
 	            if (res.ok) {
 	              res.json().then(function (data) {
 	                _sweetalert2.default.fire("Pedido Eliminado", "", "success").then(function () {
-	                  _this8.setState({
+	                  _this9.setState({
 	                    pedidos: data.pedidos
 	                  });
 	                });
@@ -52855,7 +52882,7 @@
 	  }, {
 	    key: 'onCrearPedido',
 	    value: function onCrearPedido(obj) {
-	      var _this9 = this;
+	      var _this10 = this;
 	
 	      if (obj._id) {
 	        //Modifico un pedido existente
@@ -52867,7 +52894,7 @@
 	          if (res.ok) {
 	            res.json().then(function (data) {
 	              _sweetalert2.default.fire("Pedido modificado!", "", "success").then(function () {
-	                _this9.setState({
+	                _this10.setState({
 	                  pedidos: data.pedidos
 	                });
 	              });
@@ -52892,7 +52919,7 @@
 	          if (res.ok) {
 	            res.json().then(function (data) {
 	              _sweetalert2.default.fire("Pedido creado!", "", "success").then(function () {
-	                _this9.setState({
+	                _this10.setState({
 	                  pedidos: data.pedidos
 	                });
 	              });
@@ -52912,7 +52939,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this10 = this;
+	      var _this11 = this;
 	
 	      var permits = this.state.permits;
 	      //Permisos
@@ -52953,7 +52980,7 @@
 	                  { type: 'button',
 	                    className: 'btn btn-success',
 	                    onClick: function onClick() {
-	                      return _this10.onClickGuardar();
+	                      return _this11.onClickGuardar();
 	                    }
 	                  },
 	                  '+ Guardar'
@@ -52963,7 +52990,7 @@
 	                  { type: 'button',
 	                    className: 'btn btn-secondary ml-2',
 	                    onClick: function onClick() {
-	                      return _this10.goToPagos();
+	                      return _this11.goToPagos();
 	                    }
 	                  },
 	                  'Ir a Pagos $'
@@ -53081,7 +53108,7 @@
 	                    { type: 'button',
 	                      className: 'btn btn-outline-success',
 	                      onClick: function onClick() {
-	                        return _this10.onOpenModal("modalContactos");
+	                        return _this11.onOpenModal("modalContactos");
 	                      }
 	                    },
 	                    '+ Agregar Contacto'
@@ -53143,7 +53170,7 @@
 	                    { type: 'button',
 	                      className: 'btn btn-outline-success',
 	                      onClick: function onClick() {
-	                        return _this10.onOpenModal("modalPedidos");
+	                        return _this11.onOpenModal("modalPedidos");
 	                      }
 	                    },
 	                    '+ Agregar Pedido'
@@ -53177,7 +53204,7 @@
 	            {
 	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
 	              onClose: function onClose() {
-	                return _this10.onCloseModal("modalContactos");
+	                return _this11.onCloseModal("modalContactos");
 	              },
 	              showCloseIcon: false,
 	              open: this.state.modalContactos,
@@ -53187,7 +53214,7 @@
 	              data: this.state.modalContactosEditar,
 	              onSave: this.onSaveModal,
 	              onClose: function onClose() {
-	                return _this10.onCloseModal("modalContactos");
+	                return _this11.onCloseModal("modalContactos");
 	              },
 	              titulo: this.state.modalContactosEditar ? "EDITAR CONTACTO" : "CREAR CONTACTO"
 	            })
@@ -53197,7 +53224,7 @@
 	            {
 	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
 	              onClose: function onClose() {
-	                return _this10.onCloseModal("modalPedidos");
+	                return _this11.onCloseModal("modalPedidos");
 	              },
 	              showCloseIcon: false,
 	              open: this.state.modalPedidos,
@@ -53207,9 +53234,10 @@
 	              data: this.state.modalPedidosEditar,
 	              onSave: this.onSaveModal,
 	              onClose: function onClose() {
-	                return _this10.onCloseModal("modalPedidos");
+	                return _this11.onCloseModal("modalPedidos");
 	              },
-	              titulo: this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"
+	              titulo: this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO",
+	              productos: this.state.productosDisponibles
 	            })
 	          )
 	        ) : this.state.error ?
@@ -53532,7 +53560,8 @@
 	      talleProducto: "",
 	      errorTalleProducto: false,
 	      cantidadProducto: "",
-	      errorCantidadProducto: false
+	      errorCantidadProducto: false,
+	      productosDisponibles: []
 	    };
 	    _this.handleOnChange = _this.handleOnChange.bind(_this);
 	    _this.agregarProducto = _this.agregarProducto.bind(_this);
@@ -53553,6 +53582,11 @@
 	          precioTotal: this.props.data.precioTotal,
 	          estado: this.props.data.estado,
 	          pagos: this.props.data.pagos ? this.props.data.pagos : []
+	        });
+	      }
+	      if (this.props.productos) {
+	        this.setState({
+	          productosDisponibles: this.props.productos
 	        });
 	      }
 	    }
@@ -53674,28 +53708,35 @@
 	    value: function render() {
 	      var _this2 = this;
 	
+	      //Cargo productos disponibles en el select
 	      var productosOptions = [];
-	      if (this.props.productos) {
-	        this.props.productos.forEach(function (prod) {
+	      this.state.productosDisponibles.forEach(function (prod) {
+	        var existeProducto = productosOptions.find(function (pr) {
+	          return pr.value === prod.producto;
+	        });
+	        if (!existeProducto) {
 	          productosOptions.push({
-	            id: prod.nombre,
-	            value: prod.nombre
-	          });
-	        });
-	      }
-	      var tallesOptions = [];
-	      if (this.state.nombreProducto && this.props.productos) {
-	        var producto = this.props.productos.find(function (prod) {
-	          return prod.nombre === _this2.state.nombreProducto;
-	        });
-	        if (producto) {
-	          producto.talles.forEach(function (talle) {
-	            tallesOptions.push({
-	              id: talle,
-	              value: talle
-	            });
+	            id: prod.producto,
+	            value: prod.producto
 	          });
 	        }
+	      });
+	      //Cargo talles disponibles
+	      var tallesOptions = [];
+	      if (this.state.nombreProducto) {
+	        this.state.productosDisponibles.forEach(function (prod) {
+	          if (prod.producto === _this2.state.nombreProducto) {
+	            var existeTalle = tallesOptions.find(function (tll) {
+	              return tll.value === prod.talle;
+	            });
+	            if (!existeTalle) {
+	              tallesOptions.push({
+	                id: prod.talle,
+	                value: prod.talle
+	              });
+	            }
+	          }
+	        });
 	      }
 	      var deudaPedido = this.props.data ? _javascriptFunctions2.default.getDeudaPedido(this.props.data) : 0;
 	      return _react2.default.createElement(

@@ -24,6 +24,7 @@ export default class PedidosEditar extends React.Component {
       errorTalleProducto: false,
       cantidadProducto: "",
       errorCantidadProducto: false,
+      productosDisponibles: [],
     }
     this.handleOnChange = this.handleOnChange.bind(this)
     this.agregarProducto = this.agregarProducto.bind(this)
@@ -40,7 +41,12 @@ export default class PedidosEditar extends React.Component {
         detalle: this.props.data.detalle,
         precioTotal: this.props.data.precioTotal,
         estado: this.props.data.estado,
-        pagos: this.props.data.pagos ? this.props.data.pagos : [],
+        pagos: this.props.data.pagos ? this.props.data.pagos : []
+      })
+    }
+    if(this.props.productos){
+      this.setState({
+        productosDisponibles: this.props.productos
       })
     }
   }
@@ -160,26 +166,31 @@ export default class PedidosEditar extends React.Component {
   }
 
   render(){
+    //Cargo productos disponibles en el select
     let productosOptions = []
-    if(this.props.productos){
-      this.props.productos.forEach(prod=>{
+    this.state.productosDisponibles.forEach(prod=>{
+      const existeProducto = productosOptions.find(pr=>pr.value === prod.producto)
+      if(!existeProducto){
         productosOptions.push({
-          id: prod.nombre,
-          value: prod.nombre
-        })
-      })
-    }
-    let tallesOptions = []
-    if(this.state.nombreProducto && this.props.productos){
-      const producto = this.props.productos.find(prod=>prod.nombre === this.state.nombreProducto)
-      if(producto){
-        producto.talles.forEach(talle=>{
-          tallesOptions.push({
-            id: talle,
-            value: talle
-          })
+          id: prod.producto,
+          value: prod.producto
         })
       }
+    })
+    //Cargo talles disponibles
+    let tallesOptions = []
+    if(this.state.nombreProducto){
+      this.state.productosDisponibles.forEach(prod=>{
+        if(prod.producto === this.state.nombreProducto){
+          const existeTalle = tallesOptions.find(tll=>tll.value === prod.talle)
+          if(!existeTalle){
+            tallesOptions.push({
+              id: prod.talle,
+              value: prod.talle
+            })
+          }
+        }
+      })
     }
     const deudaPedido = this.props.data ? funciones.getDeudaPedido(this.props.data) : 0
     return(
