@@ -53561,6 +53561,7 @@
 	      errorTalleProducto: false,
 	      cantidadProducto: "",
 	      errorCantidadProducto: false,
+	      errorCantidadStock: false,
 	      productosDisponibles: []
 	    };
 	    _this.handleOnChange = _this.handleOnChange.bind(_this);
@@ -53615,7 +53616,8 @@
 	      //Limpio el error de cantidad del producto
 	      if (event.target.name === "cantidadProducto" && this.state.errorCantidadProducto == true) {
 	        this.setState({
-	          errorCantidadProducto: false
+	          errorCantidadProducto: false,
+	          errorCantidadStock: false
 	        });
 	      }
 	      //Limpio el error de fecha del pedido
@@ -53628,18 +53630,49 @@
 	  }, {
 	    key: 'agregarProducto',
 	    value: function agregarProducto() {
+	      var _this2 = this;
+	
 	      var productos = this.state.detalle;
 	      //controlar que el nombre tenga un valor
 	      if (this.state.nombreProducto && this.state.talleProducto && this.state.cantidadProducto) {
-	        productos.push({
-	          producto: this.state.nombreProducto,
-	          talle: this.state.talleProducto,
-	          cantidad: this.state.cantidadProducto
+	        //Controlo la cantidad según stock
+	        var stock = null;
+	        this.state.productosDisponibles.forEach(function (pr) {
+	          if (pr.producto === _this2.state.nombreProducto && Number(pr.talle) === Number(_this2.state.talleProducto)) {
+	            stock = pr;
+	          }
 	        });
-	        this.setState({
-	          detalle: productos,
-	          errorDetalle: false
-	        });
+	        if (stock) {
+	          var cantidadProductos = this.state.cantidadProducto;
+	          //Sumo los productos que ya están en el pedido
+	          productos.forEach(function (produc) {
+	            if (produc.producto === stock.producto && Number(produc.talle) === Number(stock.talle)) {
+	              cantidadProductos = cantidadProductos + produc.cantidad;
+	            }
+	          });
+	          if (cantidadProductos > stock.cantidad) {
+	            this.setState({
+	              errorCantidadProducto: true,
+	              errorCantidadStock: true
+	            });
+	          } else {
+	            //Si hay cantidad suficiente en stock, entonces agrego el producto
+	            productos.push({
+	              producto: this.state.nombreProducto,
+	              talle: this.state.talleProducto,
+	              cantidad: this.state.cantidadProducto
+	            });
+	            this.setState({
+	              detalle: productos,
+	              errorDetalle: false
+	            });
+	          }
+	        } else {
+	          this.setState({
+	            errorCantidadProducto: true,
+	            errorCantidadStock: true
+	          });
+	        }
 	      } else {
 	        var errorNombre = false;
 	        var errorTalle = false;
@@ -53706,7 +53739,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      //Cargo productos disponibles en el select
 	      var productosOptions = [];
@@ -53725,7 +53758,7 @@
 	      var tallesOptions = [];
 	      if (this.state.nombreProducto) {
 	        this.state.productosDisponibles.forEach(function (prod) {
-	          if (prod.producto === _this2.state.nombreProducto) {
+	          if (prod.producto === _this3.state.nombreProducto) {
 	            var existeTalle = tallesOptions.find(function (tll) {
 	              return tll.value === prod.talle;
 	            });
@@ -53756,7 +53789,7 @@
 	              type: 'button',
 	              className: 'modal-cerrar d-flex align-items-center',
 	              onClick: function onClick() {
-	                return _this2.props.onClose();
+	                return _this3.props.onClose();
 	              }
 	            },
 	            _react2.default.createElement(
@@ -53901,7 +53934,11 @@
 	                    value: this.state.cantidadProducto,
 	                    onChange: this.handleOnChange
 	                  }),
-	                  this.state.errorCantidadProducto && _react2.default.createElement(
+	                  this.state.errorCantidadProducto && this.state.errorCantidadStock ? _react2.default.createElement(
+	                    'div',
+	                    { className: 'invalid-feedback' },
+	                    'No hay suficiente stock'
+	                  ) : this.state.errorCantidadProducto && _react2.default.createElement(
 	                    'div',
 	                    { className: 'invalid-feedback' },
 	                    'Ingrese una cantidad'
@@ -53916,7 +53953,7 @@
 	                      type: 'button',
 	                      className: 'btn btn-outline-success',
 	                      onClick: function onClick() {
-	                        return _this2.agregarProducto();
+	                        return _this3.agregarProducto();
 	                      }
 	                    },
 	                    '+'
@@ -53986,7 +54023,7 @@
 	                          type: 'button',
 	                          className: 'btn btn-outline-success',
 	                          onClick: function onClick() {
-	                            return _this2.eliminarProducto(i);
+	                            return _this3.eliminarProducto(i);
 	                          }
 	                        },
 	                        'X'
@@ -54020,7 +54057,7 @@
 	                type: 'button',
 	                className: 'btn btn-success',
 	                onClick: function onClick() {
-	                  return _this2.onSave();
+	                  return _this3.onSave();
 	                }
 	              },
 	              'Guardar'

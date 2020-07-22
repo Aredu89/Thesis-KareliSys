@@ -24,6 +24,7 @@ export default class PedidosEditar extends React.Component {
       errorTalleProducto: false,
       cantidadProducto: "",
       errorCantidadProducto: false,
+      errorCantidadStock: false,
       productosDisponibles: [],
     }
     this.handleOnChange = this.handleOnChange.bind(this)
@@ -76,7 +77,8 @@ export default class PedidosEditar extends React.Component {
     //Limpio el error de cantidad del producto
     if(event.target.name === "cantidadProducto" && this.state.errorCantidadProducto == true){
       this.setState({
-        errorCantidadProducto: false
+        errorCantidadProducto: false,
+        errorCantidadStock: false
       })
     }
     //Limpio el error de fecha del pedido
@@ -95,15 +97,47 @@ export default class PedidosEditar extends React.Component {
       this.state.talleProducto &&
       this.state.cantidadProducto
     ){
-      productos.push({
-        producto: this.state.nombreProducto,
-        talle: this.state.talleProducto,
-        cantidad: this.state.cantidadProducto
+      //Controlo la cantidad según stock
+      let stock = null
+      this.state.productosDisponibles.forEach(pr=>{
+        if(pr.producto === this.state.nombreProducto && Number(pr.talle) === Number(this.state.talleProducto)){
+          stock = pr
+        }
       })
-      this.setState({
-        detalle: productos,
-        errorDetalle: false
-      })
+      if(stock){
+        let cantidadProductos = this.state.cantidadProducto
+        //Sumo los productos que ya están en el pedido
+        productos.forEach(produc => {
+          if(
+            produc.producto === stock.producto &&
+            Number(produc.talle) === Number(stock.talle)
+          ){
+            cantidadProductos = cantidadProductos + produc.cantidad
+          }
+        })
+        if(cantidadProductos > stock.cantidad){
+          this.setState({
+            errorCantidadProducto: true,
+            errorCantidadStock: true
+          })
+        } else {
+          //Si hay cantidad suficiente en stock, entonces agrego el producto
+          productos.push({
+            producto: this.state.nombreProducto,
+            talle: this.state.talleProducto,
+            cantidad: this.state.cantidadProducto
+          })
+          this.setState({
+            detalle: productos,
+            errorDetalle: false
+          })
+        }
+      } else {
+        this.setState({
+          errorCantidadProducto: true,
+          errorCantidadStock: true
+        })
+      }
     } else {
       let errorNombre = false
       let errorTalle = false
@@ -308,6 +342,10 @@ export default class PedidosEditar extends React.Component {
                     onChange={this.handleOnChange} 
                     />
                   {
+                    this.state.errorCantidadProducto &&
+                    this.state.errorCantidadStock ?
+                    <div className="invalid-feedback">No hay suficiente stock</div>
+                    :
                     this.state.errorCantidadProducto &&
                     <div className="invalid-feedback">Ingrese una cantidad</div>
                   }
