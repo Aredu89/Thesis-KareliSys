@@ -105,14 +105,14 @@ export default class PedidosEditar extends React.Component {
         }
       })
       if(stock){
-        let cantidadProductos = this.state.cantidadProducto
+        let cantidadProductos = Number(this.state.cantidadProducto)
         //Sumo los productos que ya están en el pedido
         productos.forEach(produc => {
           if(
             produc.producto === stock.producto &&
             Number(produc.talle) === Number(stock.talle)
           ){
-            cantidadProductos = cantidadProductos + produc.cantidad
+            cantidadProductos = Number(cantidadProductos) + Number(produc.cantidad)
           }
         })
         if(cantidadProductos > stock.cantidad){

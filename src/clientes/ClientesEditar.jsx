@@ -705,7 +705,7 @@ export default class ClientesEditar extends React.Component {
             >
               <PedidosEditar
                 data={this.state.modalPedidosEditar}
-                onSave={this.onSaveModal}
+                onSave={this.onCrearPedido}
                 onClose={()=>this.onCloseModal("modalPedidos")}
                 titulo={this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"}
                 productos={this.state.productosDisponibles}

@@ -26,6 +26,7 @@ const pedidos = new mongoose.Schema({
   fechaEntrega: Date,
   fechaEntregado: Date,
   detalle: [detalle],
+  quitadoDeStock: Boolean,
   precioTotal: Number,
   pagos: [pagos],
   estado: {type: String,

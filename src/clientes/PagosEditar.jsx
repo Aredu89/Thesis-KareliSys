@@ -1,60 +1,151 @@
 import React from 'react'
 import funciones from '../common/javascriptFunctions.js'
+import DatePicker from '../common/DatePicker.jsx'
 
 export default class PagosEditar extends React.Component {
   constructor() {
     super()
     this.state={
       _id: "",
+      errorFecha: false,
+      errorFormatoFecha: "",
       fecha: "",
       errorMonto: "",
       monto: "",
+      montoAdeudado: 0,
       formaPago: "",
-      observaciones: ""
+      errorFormaPago: "",
+      factura: null,
+      errorFactura: "",
+      observaciones: "",
+      error: ""
     }
     this.handleOnChange = this.handleOnChange.bind(this)
   }
   componentDidMount(){
     if(this.props.data){
+      //Cargo los datos recibidos por props
       this.setState({
         _id: this.props.data._id,
-        fecha: this.props.data.fecha,
+        fecha: this.props.data.fecha ? funciones.fechaANumeros(this.props.data.fecha) : "",
         monto: this.props.data.monto,
         formaPago: this.props.data.formaPago,
+        factura: this.props.data.factura,
         observaciones: this.props.data.observaciones
       })
+    }
+    //Calculo el monto adeudado del pedido
+    if(this.props.pedidoAPagar){
+      let auxMontoAdeudado = funciones.getDeudaPedido(this.props.pedidoAPagar)
+      if(this.props.data){
+        if(this.props.data._id){
+          auxMontoAdeudado = auxMontoAdeudado + this.props.data.monto
+        }
+      }
+      this.setState({
+        montoAdeudado: auxMontoAdeudado
+      })
+      console.log("Pedido a pagar: ",this.props.pedidoAPagar)
     }
   }
   handleOnChange(event){
     this.setState({
       [event.target.name]: event.target.value
     })
+    // Borro el error del campo
     if(event.target.name === "monto"){
       this.setState({
         errorMonto: ""
       })
     }
-  }
-  onSave(){
-    if(this.state.monto > 0 && this.state.monto < this.props.deudaTotal){
-      this.props.onSave({
-        _id: this.state._id,
-        fecha: this.state.fecha ? this.state.fecha : new Date(),
-        monto: this.state.monto,
-        formaPago: this.state.formaPago,
-        observaciones: this.state.observaciones
-      }, "pagos")
-      this.props.onClose()
-    } else if (this.state.monto > this.props.deudaTotal){
+    if(event.target.name === "fecha"){
       this.setState({
-        errorMonto: "El monto no puede superar la deuda total"
+        errorFecha: false,
+        errorFormatoFecha: ""
       })
-    } else {
+    }
+    if(event.target.name === "formaPago"){
       this.setState({
-        errorMonto: "El monto debe ser mayor a cero"
+        errorFormaPago: ""
+      })
+    }
+    if(event.target.name === "factura"){
+      this.setState({
+        errorFactura: ""
       })
     }
   }
+
+  onSave(){
+    if(this.props.pedidoAPagar){
+      let errorValidacion = false
+      let fechaPago = new Date()
+      // Seteo errores si es que existen
+      if(!this.state.fecha){
+        errorValidacion = true
+        this.setState({
+          errorFecha: true
+        })
+      } else {
+        fechaPago = funciones.numerosAFecha(this.state.fecha)
+      }
+      if(
+        isNaN(Date.parse(fechaPago))
+        ){
+        errorValidacion = true
+        this.setState({
+          errorFormatoFecha: "Ingrese una fecha válida en formato dd/mm/yyyy"
+        })
+      }
+      if(this.state.monto > this.state.montoAdeudado){
+        errorValidacion = true
+        this.setState({
+          errorMonto: "El monto no puede superar la deuda a pagar"
+        })
+      }
+      if(this.state.monto < 1){
+        errorValidacion = true
+        this.setState({
+          errorMonto: "El monto debe ser mayor a cero"
+        })
+      }
+      if(!this.state.formaPago){
+        errorValidacion = true
+        this.setState({
+          errorFormaPago: "Ingrese una forma de pago"
+        })
+      }
+      if(!this.state.factura){
+        errorValidacion = true
+        this.setState({
+          errorFactura: "Ingrese el número de factura"
+        })
+      }
+      // Si no hay errores, guardo
+      if(
+        !errorValidacion
+        ){
+        this.props.onSave({
+          _id: this.state._id,
+          fecha: this.state.fecha ? funciones.numerosAFecha(this.state.fecha) : new Date(),
+          monto: this.state.monto,
+          formaPago: this.state.formaPago,
+          factura: this.state.factura,
+          observaciones: this.state.observaciones,
+          pedidoId: this.props.pedidoAPagar._id
+        })
+        this.props.onClose()
+      } else {
+        console.log("Error en validacion de datos")
+      }
+    } else {
+      console.log("No hay un pedido asociado")
+      this.setState({
+        error: "No hay un pedido a pagar asociado"
+      })
+    }
+  }
+
   render(){
     return(
       <div className="contactos-editar">
@@ -73,8 +164,20 @@ export default class PagosEditar extends React.Component {
         <div className="formulario pt-2">
           {/* Fecha */}
           <div className="col-12 form-group text-center pt-2">
-            <label className="d-block">Fecha</label>
-            <span>{funciones.formatearDate(this.state.fecha ? this.state.fecha : new Date())}</span>
+            <label>Fecha</label>
+            <DatePicker
+              name="fecha"
+              value={this.state.fecha ? this.state.fecha : ""}
+              onChange={this.handleOnChange}
+              error={this.state.errorFecha}
+              disabled={this.state._id ? true : false}
+              />
+            {/* Mensaje de error por formato */}
+            {
+              this.state.errorFormatoFecha ?
+              <div className="alerta-feedback">{this.state.errorFormatoFecha}</div>
+              : null
+            }
           </div>
           {/* Monto */}
           <div className="col-12 form-group text-center pt-2">
@@ -98,13 +201,37 @@ export default class PagosEditar extends React.Component {
           <div className="col-12 form-group text-center pt-2">
             <label>Forma de Pago</label>
             <input type="text" 
-              className="form-control"
+              className={this.state.errorFormaPago ? "form-control is-invalid":"form-control"}
               id="formaPago" 
               name="formaPago"
               placeholder="Forma de Pago..."
               value={this.state.formaPago}
               onChange={this.handleOnChange} 
               />
+            {/* Mensaje de error */}
+            {
+              this.state.errorFormaPago ?
+              <div className="invalid-feedback">{this.state.errorFormaPago}</div>
+              : null
+            }
+          </div>
+          {/* Factura */}
+          <div className="col-12 form-group text-center pt-2">
+            <label>Factura N°</label>
+            <input type="number" 
+              className={this.state.errorFactura ? "form-control is-invalid":"form-control"}
+              id="factura" 
+              name="factura"
+              placeholder="Factura N°..."
+              value={this.state.factura}
+              onChange={this.handleOnChange} 
+              />
+            {/* Mensaje de error */}
+            {
+              this.state.errorFactura ?
+              <div className="invalid-feedback">{this.state.errorFactura}</div>
+              : null
+            }
           </div>
           {/* Observaciones */}
           <div className="col-12 form-group text-center pt-2">

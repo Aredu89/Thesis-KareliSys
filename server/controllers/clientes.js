@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Clientes = mongoose.model('Clientes')
+const Stock = mongoose.model('Stock')
 
 //Obtengo el listado de fabricas
 module.exports.listaClientes = (req, res) => {
@@ -277,6 +278,46 @@ module.exports.modificarPedido = (req,res) => {
           pedidoBody.fechaEntregado
         ){
           estadoAux = "entregado"
+          //Quito los productos del stock, si existen en stock
+          const pedidoAModificar = cliente.pedidos.find(pedido=> pedido._id.toString() === pedidoBody._id.toString())
+          if(pedidoAModificar){
+            console.log("Pedido a modificar: ", pedidoAModificar)
+            if(!pedidoAModificar.quitadoDeStock){
+              pedidoBody.quitadoDeStock = true
+              pedidoBody.detalle.forEach(det=>{
+                const productoAux ={
+                  producto: det.producto,
+                  talle: det.talle,
+                  cantidad: det.cantidad
+                }
+                Stock
+                  .findOne({
+                    producto: det.producto,
+                    talle: Number(det.talle)
+                  })
+                  .select('-creada')
+                  .exec(
+                    (err,stock) => {
+                      if (!stock) {
+                        console.log("No se encontró stock a modificar")
+                      } else if (err) {
+                        console.log("Error al buscar el stock")
+                      } else {
+                        const nuevaCantidad = stock.cantidad - det.cantidad
+                        stock.cantidad = nuevaCantidad > 0 ? nuevaCantidad : 0
+                        stock.save((err, stock) => {
+                          if (err) {
+                            console.log("Error al restar stock")
+                          } else {
+                            console.log("Stock restado")
+                          }
+                        })
+                      }
+                    }
+                  )
+              })
+            }
+          }
         }
         if(
           sum === pedidoBody.precioTotal &&
@@ -310,6 +351,7 @@ module.exports.modificarPedido = (req,res) => {
                 }
               }),
               estado: estadoAux,
+              quitadoDeStock: pedidoBody.quitadoDeStock ? true : false
             })
           } else {
             pedidos.push(ped)

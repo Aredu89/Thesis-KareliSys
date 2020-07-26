@@ -14,6 +14,7 @@ export default class ClientesPagos extends React.Component {
       error: "",
       modalPagos: false,
       modalPagosEditar: null,
+      pedidoAPagar: null,
       //Permisos
       permits: ""
     }
@@ -23,6 +24,7 @@ export default class ClientesPagos extends React.Component {
     this.onSaveModal = this.onSaveModal.bind(this)
     this.handleEditarPago = this.handleEditarPago.bind(this)
     this.handleEliminarPago = this.handleEliminarPago.bind(this)
+    this.handleOnPagar = this.handleOnPagar.bind(this)
   }
 
   componentDidMount(){
@@ -79,45 +81,51 @@ export default class ClientesPagos extends React.Component {
     }
   }
 
-  onClickGuardar(cliente){
-    fetch(`/api/clientes/${this.props.params.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(cliente),
-    })
-      .then(res => {
-        if(res.ok) {
-          res.json()
-            .then(data => {
-              this.setState({
-                cliente: data
+  onClickGuardar(pedido){
+    if(pedido._id){
+      fetch(`/api/clientes/${this.props.params.id}/pedidos/${pedido._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pedido),
+      })
+        .then(res => {
+          if(res.ok) {
+            res.json()
+              .then(data => {
+                this.cargarCliente()
+                Swal.fire(
+                  "Cambios Guardados!",
+                  "",
+                  "success"
+                )
               })
+          } else {
+            res.json()
+            .then(err => {
+              console.log("Error al insertar o modificar pago: ",err.message)
               Swal.fire(
-                "Cambios Guardados!",
+                "Error al insertar o modificar pago",
                 "",
-                "success"
+                "error"
               )
             })
-        } else {
-          res.json()
-          .then(err => {
-            console.log("Error al insertar o modificar pago: ",err.message)
-            Swal.fire(
-              "Error al insertar o modificar pago",
-              "",
-              "error"
-            )
-          })
-        }
-      })
-      .catch(err => {
-        console.log("Error del servidor: ",err.message)
-        Swal.fire(
-          "Error del servidor",
-          "",
-          "error"
-        )
-      })
+          }
+        })
+        .catch(err => {
+          console.log("Error del servidor: ",err.message)
+          Swal.fire(
+            "Error del servidor",
+            "",
+            "error"
+          )
+        })
+    } else {
+      Swal.fire(
+        "Error. No se recibió el id del pedido",
+        "",
+        "error"
+      )
+    }
   }
 
   //Modal
@@ -129,41 +137,67 @@ export default class ClientesPagos extends React.Component {
   onCloseModal(cual){
     this.setState({
       [cual]: false,
-      [cual+"Editar"]: null
+      [cual+"Editar"]: {},
+      pedidoAPagar: {}
     })
   }
   onSaveModal(pago){
     let cliente = this.state.cliente
-    let pagos = cliente.pagos
-    if(pago._id){
-      pagos.forEach((p, i) =>{
-        if(p._id === pago._id){
-          pagos.splice(i,1,pago)
+    let pedidoModificar = {}
+    cliente.pedidos.forEach(pedidoCliente=>{
+      if(pedidoCliente._id.toString() === pago.pedidoId.toString()){
+        let existe = false
+        pedidoModificar = pedidoCliente
+        let pagosAux = []
+        pedidoCliente.pagos.forEach(pagoPedido=>{
+          if(pagoPedido._id.toString() === pago._id.toString()){
+            existe = true
+            pagosAux.push({
+              _id: pago._id,
+              fecha: pago.fecha,
+              monto: pago.monto,
+              factura: pago.factura,
+              formaPago: pago.formaPago,
+              observaciones: pago.observaciones,
+            })
+          } else {
+            pagosAux.push({
+              _id: pagoPedido._id,
+              fecha: pagoPedido.fecha,
+              monto: pagoPedido.monto,
+              factura: pagoPedido.factura,
+              formaPago: pagoPedido.formaPago,
+              observaciones: pagoPedido.observaciones,
+            })
+          }
+        })
+        if(!existe){
+          pagosAux.push({
+            _id: pago._id,
+            fecha: pago.fecha,
+            monto: pago.monto,
+            factura: pago.factura,
+            formaPago: pago.formaPago,
+            observaciones: pago.observaciones,
+          })
         }
-      })
-    } else {
-      pagos.push(pago)
-    }
-    cliente.pagos = pagos
-    this.onClickGuardar(cliente)
+        pedidoModificar.pagos = pagosAux
+      }
+    })
+    this.onClickGuardar(pedidoModificar)
   }
 
   handleEditarPago(id){
-    let pago = {}
-    this.state.cliente.pagos.forEach(p=>{
-      if(id === p._id){
-        pago = p
-      }
-    })
+    const pagoAux = Funciones.getPagoFabrica(this.state.cliente, id)
     this.setState({
-      modalPagosEditar: pago,
+      pedidoAPagar: pagoAux.pedido,
+      modalPagosEditar: pagoAux,
       modalPagos: true
     })
   }
 
   handleEliminarPago(id){
     let cliente = this.state.cliente
-    let pagos = cliente.pagos
     //Primero pido confirmación
     Swal.fire({
       title: "¿Seguro que desea eliminar?",
@@ -176,14 +210,33 @@ export default class ClientesPagos extends React.Component {
     }).then((result)=>{
       if(result.value){
         // Elimino el pago
-        pagos.forEach((p,i)=>{
-          if(id === p._id){
-            pagos.splice(i,1)
+        const pagoAux = Funciones.getPagoFabrica(this.state.cliente, id)
+        const pedidoAux = pagoAux.pedido
+        let pagosAux = []
+        pedidoAux.pagos.forEach(pagoPedido=>{
+          if(pagoPedido._id.toString() !== id.toString()){
+            pagosAux.push({
+              _id: pagoPedido._id,
+              fecha: pagoPedido.fecha,
+              monto: pagoPedido.monto,
+              factura: pagoPedido.factura,
+              formaPago: pagoPedido.formaPago,
+              observaciones: pagoPedido.observaciones,
+            })
           }
         })
-        cliente.pagos = pagos
-        this.onClickGuardar(cliente)
+        pedidoAux.pagos = pagosAux
+        //Guardo los cambios
+        this.onClickGuardar(pedidoAux)
       }
+    })
+  }
+
+  handleOnPagar(pedido){
+    this.setState({
+      pedidoAPagar: pedido
+    }, ()=>{
+      this.onOpenModal("modalPagos")
     })
   }
 
@@ -194,20 +247,22 @@ export default class ClientesPagos extends React.Component {
     //Permisos
     const permitUpdate = permits === "MODIFICAR" ? true : false
     //Tabla
-    const deuda = Funciones.getDeuda(this.state.cliente)
+    const deuda = this.state.cliente.pedidos ? Funciones.getDeudaFabrica(this.state.cliente) : 0
+    const pedidosAdeudados = this.state.cliente.pedidos ? Funciones.getPedidosAdeudados(this.state.cliente) : []
+    const pagosRealizados = this.state.cliente.pedidos ? Funciones.getPagosFabrica(this.state.cliente) : []
     const columnsPagos = [
       ["Fecha","fecha","Fecha"],
       ["Monto","monto","Money"],
-      ["Forma de Pago","formaPago","String"]
+      ["Forma de Pago","formaPago","String"],
+      ["Factura N°", "factura", "String"]
     ]
     const columnsPedidos = [
-      ["Fecha","fecha","Fecha"],
-      ["Productos","detalle","Largo"],
-      ["Precio","precioTotal","String"],
+      ["Fecha del pedido","fechaPedido","Fecha"],
+      ["Fecha de entrega","fechaEntrega","Fecha"],
+      ["Precio total", "precioTotal", "Money"],
+      ["Adeudado", "data", "Pedido Adeudado"],
       ["Estado","estado","String"]
     ]
-    const pagosLength = this.state.cliente.pagos ? this.state.cliente.pagos.length : 0
-    const pedidosLength = this.state.cliente.pedidos ? this.state.cliente.pedidos.length : 0
     return (
       <div className="fabricas-pagos text-center">
         {!this.state.cargando ?
@@ -221,6 +276,24 @@ export default class ClientesPagos extends React.Component {
                 <h4>La deuda a cobrar es de: {Funciones.moneyFormatter(deuda)}</h4>
               </div>
             </div>
+            {/* Pedidos Adeudados */}
+            <div>
+              <div className="card border-primary" id="card">
+                <div className="card-header d-flex justify-content-between">
+                  <h5>Pedidos pendientes de cobro:</h5>
+                </div>
+                <div className="card-body contenedor-tabla">
+                  <TablaFlexible
+                    lista={"pedidosAdeudados"}
+                    columns={columnsPedidos}
+                    data={pedidosAdeudados}
+                    onPagarPedido={this.handleOnPagar}
+                    blockRead={!permitUpdate}
+                    blockDelete={!permitUpdate}
+                  />
+                </div>
+              </div>
+            </div>
             {/* Pagos */}
             <div className="mt-3">
               <div className="card border-primary" id="card">
@@ -232,17 +305,10 @@ export default class ClientesPagos extends React.Component {
                     aria-expanded="false" 
                     aria-controls="collapseOne">
                       <h5 className="d-flex align-items-center mb-0">
-                        Pagos: {pagosLength}
+                        Pagos: {pagosRealizados.length}
                         <i className="material-icons ml-3">keyboard_arrow_down</i>
                       </h5>
                     </button>
-                  {
-                    permitUpdate &&
-                      <button type="button" 
-                        className="btn btn-outline-success"
-                        onClick={() => this.onOpenModal("modalPagos")}
-                        >+ Agregar Pago</button>
-                  }
                 </div>
                 <div id="collapseOne" 
                   className="collapse" 
@@ -252,41 +318,11 @@ export default class ClientesPagos extends React.Component {
                     <TablaFlexible
                       lista={"pagos"}
                       columns={columnsPagos}
-                      data={this.state.cliente.pagos ? this.state.cliente.pagos : []}
+                      data={pagosRealizados}
                       handleEditar={this.handleEditarPago}
                       handleEliminar={this.handleEliminarPago}
                       blockRead={!permitUpdate}
                       blockDelete={!permitUpdate}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* Pedidos */}
-            <div className="mt-3">
-              <div className="card border-primary" id="card">
-                <div className="card-header d-flex justify-content-between" id="headingOne">
-                  <button type="button"
-                    className="btn btn-link collapsed col-sm-8 col-6"
-                    data-toggle="collapse"
-                    data-target="#collapseTwo"
-                    aria-expanded="false" 
-                    aria-controls="collapseTwo">
-                      <h5 className="d-flex align-items-center mb-0">
-                        Pedidos: {pedidosLength}
-                        <i className="material-icons ml-3">keyboard_arrow_down</i>
-                      </h5>
-                    </button>
-                </div>
-                <div id="collapseTwo" 
-                  className="collapse" 
-                  aria-labelledby="headingOne" 
-                  data-parent="#card">
-                  <div className="card-body contenedor-tabla">
-                    <TablaFlexible
-                      lista={"pedidos"}
-                      columns={columnsPedidos}
-                      data={this.state.cliente.pedidos ? this.state.cliente.pedidos : []}
                     />
                   </div>
                 </div>
@@ -302,6 +338,7 @@ export default class ClientesPagos extends React.Component {
               >
                 <PagosEditar
                   data={this.state.modalPagosEditar}
+                  pedidoAPagar={this.state.pedidoAPagar}
                   onSave={this.onSaveModal}
                   onClose={()=>this.onCloseModal("modalPagos")}
                   titulo={this.state.modalPedidosEditar ? "EDITAR PAGO" : "CARGAR PAGO"}

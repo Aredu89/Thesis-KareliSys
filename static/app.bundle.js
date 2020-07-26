@@ -53232,7 +53232,7 @@
 	            },
 	            _react2.default.createElement(_PedidosEditar2.default, {
 	              data: this.state.modalPedidosEditar,
-	              onSave: this.onSaveModal,
+	              onSave: this.onCrearPedido,
 	              onClose: function onClose() {
 	                return _this11.onCloseModal("modalPedidos");
 	              },
@@ -53643,11 +53643,11 @@
 	          }
 	        });
 	        if (stock) {
-	          var cantidadProductos = this.state.cantidadProducto;
+	          var cantidadProductos = Number(this.state.cantidadProducto);
 	          //Sumo los productos que ya están en el pedido
 	          productos.forEach(function (produc) {
 	            if (produc.producto === stock.producto && Number(produc.talle) === Number(stock.talle)) {
-	              cantidadProductos = cantidadProductos + produc.cantidad;
+	              cantidadProductos = Number(cantidadProductos) + Number(produc.cantidad);
 	            }
 	          });
 	          if (cantidadProductos > stock.cantidad) {
@@ -54134,6 +54134,7 @@
 	      error: "",
 	      modalPagos: false,
 	      modalPagosEditar: null,
+	      pedidoAPagar: null,
 	      //Permisos
 	      permits: ""
 	    };
@@ -54143,6 +54144,7 @@
 	    _this.onSaveModal = _this.onSaveModal.bind(_this);
 	    _this.handleEditarPago = _this.handleEditarPago.bind(_this);
 	    _this.handleEliminarPago = _this.handleEliminarPago.bind(_this);
+	    _this.handleOnPagar = _this.handleOnPagar.bind(_this);
 	    return _this;
 	  }
 	
@@ -54202,31 +54204,33 @@
 	    }
 	  }, {
 	    key: 'onClickGuardar',
-	    value: function onClickGuardar(cliente) {
+	    value: function onClickGuardar(pedido) {
 	      var _this3 = this;
 	
-	      fetch('/api/clientes/' + this.props.params.id, {
-	        method: 'PUT',
-	        headers: { 'Content-Type': 'application/json' },
-	        body: JSON.stringify(cliente)
-	      }).then(function (res) {
-	        if (res.ok) {
-	          res.json().then(function (data) {
-	            _this3.setState({
-	              cliente: data
+	      if (pedido._id) {
+	        fetch('/api/clientes/' + this.props.params.id + '/pedidos/' + pedido._id, {
+	          method: 'PUT',
+	          headers: { 'Content-Type': 'application/json' },
+	          body: JSON.stringify(pedido)
+	        }).then(function (res) {
+	          if (res.ok) {
+	            res.json().then(function (data) {
+	              _this3.cargarCliente();
+	              _sweetalert2.default.fire("Cambios Guardados!", "", "success");
 	            });
-	            _sweetalert2.default.fire("Cambios Guardados!", "", "success");
-	          });
-	        } else {
-	          res.json().then(function (err) {
-	            console.log("Error al insertar o modificar pago: ", err.message);
-	            _sweetalert2.default.fire("Error al insertar o modificar pago", "", "error");
-	          });
-	        }
-	      }).catch(function (err) {
-	        console.log("Error del servidor: ", err.message);
-	        _sweetalert2.default.fire("Error del servidor", "", "error");
-	      });
+	          } else {
+	            res.json().then(function (err) {
+	              console.log("Error al insertar o modificar pago: ", err.message);
+	              _sweetalert2.default.fire("Error al insertar o modificar pago", "", "error");
+	            });
+	          }
+	        }).catch(function (err) {
+	          console.log("Error del servidor: ", err.message);
+	          _sweetalert2.default.fire("Error del servidor", "", "error");
+	        });
+	      } else {
+	        _sweetalert2.default.fire("Error. No se recibió el id del pedido", "", "error");
+	      }
 	    }
 	
 	    //Modal
@@ -54241,36 +54245,62 @@
 	    value: function onCloseModal(cual) {
 	      var _setState2;
 	
-	      this.setState((_setState2 = {}, _defineProperty(_setState2, cual, false), _defineProperty(_setState2, cual + "Editar", null), _setState2));
+	      this.setState((_setState2 = {}, _defineProperty(_setState2, cual, false), _defineProperty(_setState2, cual + "Editar", {}), _defineProperty(_setState2, 'pedidoAPagar', {}), _setState2));
 	    }
 	  }, {
 	    key: 'onSaveModal',
 	    value: function onSaveModal(pago) {
 	      var cliente = this.state.cliente;
-	      var pagos = cliente.pagos;
-	      if (pago._id) {
-	        pagos.forEach(function (p, i) {
-	          if (p._id === pago._id) {
-	            pagos.splice(i, 1, pago);
+	      var pedidoModificar = {};
+	      cliente.pedidos.forEach(function (pedidoCliente) {
+	        if (pedidoCliente._id.toString() === pago.pedidoId.toString()) {
+	          var existe = false;
+	          pedidoModificar = pedidoCliente;
+	          var pagosAux = [];
+	          pedidoCliente.pagos.forEach(function (pagoPedido) {
+	            if (pagoPedido._id.toString() === pago._id.toString()) {
+	              existe = true;
+	              pagosAux.push({
+	                _id: pago._id,
+	                fecha: pago.fecha,
+	                monto: pago.monto,
+	                factura: pago.factura,
+	                formaPago: pago.formaPago,
+	                observaciones: pago.observaciones
+	              });
+	            } else {
+	              pagosAux.push({
+	                _id: pagoPedido._id,
+	                fecha: pagoPedido.fecha,
+	                monto: pagoPedido.monto,
+	                factura: pagoPedido.factura,
+	                formaPago: pagoPedido.formaPago,
+	                observaciones: pagoPedido.observaciones
+	              });
+	            }
+	          });
+	          if (!existe) {
+	            pagosAux.push({
+	              _id: pago._id,
+	              fecha: pago.fecha,
+	              monto: pago.monto,
+	              factura: pago.factura,
+	              formaPago: pago.formaPago,
+	              observaciones: pago.observaciones
+	            });
 	          }
-	        });
-	      } else {
-	        pagos.push(pago);
-	      }
-	      cliente.pagos = pagos;
-	      this.onClickGuardar(cliente);
+	          pedidoModificar.pagos = pagosAux;
+	        }
+	      });
+	      this.onClickGuardar(pedidoModificar);
 	    }
 	  }, {
 	    key: 'handleEditarPago',
 	    value: function handleEditarPago(id) {
-	      var pago = {};
-	      this.state.cliente.pagos.forEach(function (p) {
-	        if (id === p._id) {
-	          pago = p;
-	        }
-	      });
+	      var pagoAux = _javascriptFunctions2.default.getPagoFabrica(this.state.cliente, id);
 	      this.setState({
-	        modalPagosEditar: pago,
+	        pedidoAPagar: pagoAux.pedido,
+	        modalPagosEditar: pagoAux,
 	        modalPagos: true
 	      });
 	    }
@@ -54280,7 +54310,6 @@
 	      var _this4 = this;
 	
 	      var cliente = this.state.cliente;
-	      var pagos = cliente.pagos;
 	      //Primero pido confirmación
 	      _sweetalert2.default.fire({
 	        title: "¿Seguro que desea eliminar?",
@@ -54293,31 +54322,53 @@
 	      }).then(function (result) {
 	        if (result.value) {
 	          // Elimino el pago
-	          pagos.forEach(function (p, i) {
-	            if (id === p._id) {
-	              pagos.splice(i, 1);
+	          var pagoAux = _javascriptFunctions2.default.getPagoFabrica(_this4.state.cliente, id);
+	          var pedidoAux = pagoAux.pedido;
+	          var pagosAux = [];
+	          pedidoAux.pagos.forEach(function (pagoPedido) {
+	            if (pagoPedido._id.toString() !== id.toString()) {
+	              pagosAux.push({
+	                _id: pagoPedido._id,
+	                fecha: pagoPedido.fecha,
+	                monto: pagoPedido.monto,
+	                factura: pagoPedido.factura,
+	                formaPago: pagoPedido.formaPago,
+	                observaciones: pagoPedido.observaciones
+	              });
 	            }
 	          });
-	          cliente.pagos = pagos;
-	          _this4.onClickGuardar(cliente);
+	          pedidoAux.pagos = pagosAux;
+	          //Guardo los cambios
+	          _this4.onClickGuardar(pedidoAux);
 	        }
+	      });
+	    }
+	  }, {
+	    key: 'handleOnPagar',
+	    value: function handleOnPagar(pedido) {
+	      var _this5 = this;
+	
+	      this.setState({
+	        pedidoAPagar: pedido
+	      }, function () {
+	        _this5.onOpenModal("modalPagos");
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this5 = this;
+	      var _this6 = this;
 	
 	      var permits = this.state.permits;
 	      //Permisos
 	
 	      var permitUpdate = permits === "MODIFICAR" ? true : false;
 	      //Tabla
-	      var deuda = _javascriptFunctions2.default.getDeuda(this.state.cliente);
-	      var columnsPagos = [["Fecha", "fecha", "Fecha"], ["Monto", "monto", "Money"], ["Forma de Pago", "formaPago", "String"]];
-	      var columnsPedidos = [["Fecha", "fecha", "Fecha"], ["Productos", "detalle", "Largo"], ["Precio", "precioTotal", "String"], ["Estado", "estado", "String"]];
-	      var pagosLength = this.state.cliente.pagos ? this.state.cliente.pagos.length : 0;
-	      var pedidosLength = this.state.cliente.pedidos ? this.state.cliente.pedidos.length : 0;
+	      var deuda = this.state.cliente.pedidos ? _javascriptFunctions2.default.getDeudaFabrica(this.state.cliente) : 0;
+	      var pedidosAdeudados = this.state.cliente.pedidos ? _javascriptFunctions2.default.getPedidosAdeudados(this.state.cliente) : [];
+	      var pagosRealizados = this.state.cliente.pedidos ? _javascriptFunctions2.default.getPagosFabrica(this.state.cliente) : [];
+	      var columnsPagos = [["Fecha", "fecha", "Fecha"], ["Monto", "monto", "Money"], ["Forma de Pago", "formaPago", "String"], ["Factura N°", "factura", "String"]];
+	      var columnsPedidos = [["Fecha del pedido", "fechaPedido", "Fecha"], ["Fecha de entrega", "fechaEntrega", "Fecha"], ["Precio total", "precioTotal", "Money"], ["Adeudado", "data", "Pedido Adeudado"], ["Estado", "estado", "String"]];
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fabricas-pagos text-center' },
@@ -54350,6 +54401,35 @@
 	          ),
 	          _react2.default.createElement(
 	            'div',
+	            null,
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'card border-primary', id: 'card' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-header d-flex justify-content-between' },
+	                _react2.default.createElement(
+	                  'h5',
+	                  null,
+	                  'Pedidos pendientes de cobro:'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-body contenedor-tabla' },
+	                _react2.default.createElement(_TablaFlexible2.default, {
+	                  lista: "pedidosAdeudados",
+	                  columns: columnsPedidos,
+	                  data: pedidosAdeudados,
+	                  onPagarPedido: this.handleOnPagar,
+	                  blockRead: !permitUpdate,
+	                  blockDelete: !permitUpdate
+	                })
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
 	            { className: 'mt-3' },
 	            _react2.default.createElement(
 	              'div',
@@ -54369,23 +54449,13 @@
 	                    'h5',
 	                    { className: 'd-flex align-items-center mb-0' },
 	                    'Pagos: ',
-	                    pagosLength,
+	                    pagosRealizados.length,
 	                    _react2.default.createElement(
 	                      'i',
 	                      { className: 'material-icons ml-3' },
 	                      'keyboard_arrow_down'
 	                    )
 	                  )
-	                ),
-	                permitUpdate && _react2.default.createElement(
-	                  'button',
-	                  { type: 'button',
-	                    className: 'btn btn-outline-success',
-	                    onClick: function onClick() {
-	                      return _this5.onOpenModal("modalPagos");
-	                    }
-	                  },
-	                  '+ Agregar Pago'
 	                )
 	              ),
 	              _react2.default.createElement(
@@ -54400,7 +54470,7 @@
 	                  _react2.default.createElement(_TablaFlexible2.default, {
 	                    lista: "pagos",
 	                    columns: columnsPagos,
-	                    data: this.state.cliente.pagos ? this.state.cliente.pagos : [],
+	                    data: pagosRealizados,
 	                    handleEditar: this.handleEditarPago,
 	                    handleEliminar: this.handleEliminarPago,
 	                    blockRead: !permitUpdate,
@@ -54411,59 +54481,11 @@
 	            )
 	          ),
 	          _react2.default.createElement(
-	            'div',
-	            { className: 'mt-3' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'card border-primary', id: 'card' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'card-header d-flex justify-content-between', id: 'headingOne' },
-	                _react2.default.createElement(
-	                  'button',
-	                  { type: 'button',
-	                    className: 'btn btn-link collapsed col-sm-8 col-6',
-	                    'data-toggle': 'collapse',
-	                    'data-target': '#collapseTwo',
-	                    'aria-expanded': 'false',
-	                    'aria-controls': 'collapseTwo' },
-	                  _react2.default.createElement(
-	                    'h5',
-	                    { className: 'd-flex align-items-center mb-0' },
-	                    'Pedidos: ',
-	                    pedidosLength,
-	                    _react2.default.createElement(
-	                      'i',
-	                      { className: 'material-icons ml-3' },
-	                      'keyboard_arrow_down'
-	                    )
-	                  )
-	                )
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { id: 'collapseTwo',
-	                  className: 'collapse',
-	                  'aria-labelledby': 'headingOne',
-	                  'data-parent': '#card' },
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'card-body contenedor-tabla' },
-	                  _react2.default.createElement(_TablaFlexible2.default, {
-	                    lista: "pedidos",
-	                    columns: columnsPedidos,
-	                    data: this.state.cliente.pedidos ? this.state.cliente.pedidos : []
-	                  })
-	                )
-	              )
-	            )
-	          ),
-	          _react2.default.createElement(
 	            _reactResponsiveModal2.default,
 	            {
 	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
 	              onClose: function onClose() {
-	                return _this5.onCloseModal("modalPagos");
+	                return _this6.onCloseModal("modalPagos");
 	              },
 	              showCloseIcon: false,
 	              open: this.state.modalPagos,
@@ -54471,9 +54493,10 @@
 	            },
 	            _react2.default.createElement(_PagosEditar2.default, {
 	              data: this.state.modalPagosEditar,
+	              pedidoAPagar: this.state.pedidoAPagar,
 	              onSave: this.onSaveModal,
 	              onClose: function onClose() {
-	                return _this5.onCloseModal("modalPagos");
+	                return _this6.onCloseModal("modalPagos");
 	              },
 	              titulo: this.state.modalPedidosEditar ? "EDITAR PAGO" : "CARGAR PAGO",
 	              deudaTotal: deuda
@@ -54536,6 +54559,10 @@
 	
 	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
 	
+	var _DatePicker = __webpack_require__(315);
+	
+	var _DatePicker2 = _interopRequireDefault(_DatePicker);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -54556,11 +54583,18 @@
 	
 	    _this.state = {
 	      _id: "",
+	      errorFecha: false,
+	      errorFormatoFecha: "",
 	      fecha: "",
 	      errorMonto: "",
 	      monto: "",
+	      montoAdeudado: 0,
 	      formaPago: "",
-	      observaciones: ""
+	      errorFormaPago: "",
+	      factura: null,
+	      errorFactura: "",
+	      observaciones: "",
+	      error: ""
 	    };
 	    _this.handleOnChange = _this.handleOnChange.bind(_this);
 	    return _this;
@@ -54570,44 +54604,121 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      if (this.props.data) {
+	        //Cargo los datos recibidos por props
 	        this.setState({
 	          _id: this.props.data._id,
-	          fecha: this.props.data.fecha,
+	          fecha: this.props.data.fecha ? _javascriptFunctions2.default.fechaANumeros(this.props.data.fecha) : "",
 	          monto: this.props.data.monto,
 	          formaPago: this.props.data.formaPago,
+	          factura: this.props.data.factura,
 	          observaciones: this.props.data.observaciones
 	        });
+	      }
+	      //Calculo el monto adeudado del pedido
+	      if (this.props.pedidoAPagar) {
+	        var auxMontoAdeudado = _javascriptFunctions2.default.getDeudaPedido(this.props.pedidoAPagar);
+	        if (this.props.data) {
+	          if (this.props.data._id) {
+	            auxMontoAdeudado = auxMontoAdeudado + this.props.data.monto;
+	          }
+	        }
+	        this.setState({
+	          montoAdeudado: auxMontoAdeudado
+	        });
+	        console.log("Pedido a pagar: ", this.props.pedidoAPagar);
 	      }
 	    }
 	  }, {
 	    key: 'handleOnChange',
 	    value: function handleOnChange(event) {
 	      this.setState(_defineProperty({}, event.target.name, event.target.value));
+	      // Borro el error del campo
 	      if (event.target.name === "monto") {
 	        this.setState({
 	          errorMonto: ""
+	        });
+	      }
+	      if (event.target.name === "fecha") {
+	        this.setState({
+	          errorFecha: false,
+	          errorFormatoFecha: ""
+	        });
+	      }
+	      if (event.target.name === "formaPago") {
+	        this.setState({
+	          errorFormaPago: ""
+	        });
+	      }
+	      if (event.target.name === "factura") {
+	        this.setState({
+	          errorFactura: ""
 	        });
 	      }
 	    }
 	  }, {
 	    key: 'onSave',
 	    value: function onSave() {
-	      if (this.state.monto > 0 && this.state.monto < this.props.deudaTotal) {
-	        this.props.onSave({
-	          _id: this.state._id,
-	          fecha: this.state.fecha ? this.state.fecha : new Date(),
-	          monto: this.state.monto,
-	          formaPago: this.state.formaPago,
-	          observaciones: this.state.observaciones
-	        }, "pagos");
-	        this.props.onClose();
-	      } else if (this.state.monto > this.props.deudaTotal) {
-	        this.setState({
-	          errorMonto: "El monto no puede superar la deuda total"
-	        });
+	      if (this.props.pedidoAPagar) {
+	        var errorValidacion = false;
+	        var fechaPago = new Date();
+	        // Seteo errores si es que existen
+	        if (!this.state.fecha) {
+	          errorValidacion = true;
+	          this.setState({
+	            errorFecha: true
+	          });
+	        } else {
+	          fechaPago = _javascriptFunctions2.default.numerosAFecha(this.state.fecha);
+	        }
+	        if (isNaN(Date.parse(fechaPago))) {
+	          errorValidacion = true;
+	          this.setState({
+	            errorFormatoFecha: "Ingrese una fecha válida en formato dd/mm/yyyy"
+	          });
+	        }
+	        if (this.state.monto > this.state.montoAdeudado) {
+	          errorValidacion = true;
+	          this.setState({
+	            errorMonto: "El monto no puede superar la deuda a pagar"
+	          });
+	        }
+	        if (this.state.monto < 1) {
+	          errorValidacion = true;
+	          this.setState({
+	            errorMonto: "El monto debe ser mayor a cero"
+	          });
+	        }
+	        if (!this.state.formaPago) {
+	          errorValidacion = true;
+	          this.setState({
+	            errorFormaPago: "Ingrese una forma de pago"
+	          });
+	        }
+	        if (!this.state.factura) {
+	          errorValidacion = true;
+	          this.setState({
+	            errorFactura: "Ingrese el número de factura"
+	          });
+	        }
+	        // Si no hay errores, guardo
+	        if (!errorValidacion) {
+	          this.props.onSave({
+	            _id: this.state._id,
+	            fecha: this.state.fecha ? _javascriptFunctions2.default.numerosAFecha(this.state.fecha) : new Date(),
+	            monto: this.state.monto,
+	            formaPago: this.state.formaPago,
+	            factura: this.state.factura,
+	            observaciones: this.state.observaciones,
+	            pedidoId: this.props.pedidoAPagar._id
+	          });
+	          this.props.onClose();
+	        } else {
+	          console.log("Error en validacion de datos");
+	        }
 	      } else {
+	        console.log("No hay un pedido asociado");
 	        this.setState({
-	          errorMonto: "El monto debe ser mayor a cero"
+	          error: "No hay un pedido a pagar asociado"
 	        });
 	      }
 	    }
@@ -54651,14 +54762,21 @@
 	            { className: 'col-12 form-group text-center pt-2' },
 	            _react2.default.createElement(
 	              'label',
-	              { className: 'd-block' },
+	              null,
 	              'Fecha'
 	            ),
-	            _react2.default.createElement(
-	              'span',
-	              null,
-	              _javascriptFunctions2.default.formatearDate(this.state.fecha ? this.state.fecha : new Date())
-	            )
+	            _react2.default.createElement(_DatePicker2.default, {
+	              name: 'fecha',
+	              value: this.state.fecha ? this.state.fecha : "",
+	              onChange: this.handleOnChange,
+	              error: this.state.errorFecha,
+	              disabled: this.state._id ? true : false
+	            }),
+	            this.state.errorFormatoFecha ? _react2.default.createElement(
+	              'div',
+	              { className: 'alerta-feedback' },
+	              this.state.errorFormatoFecha
+	            ) : null
 	          ),
 	          _react2.default.createElement(
 	            'div',
@@ -54691,13 +54809,40 @@
 	              'Forma de Pago'
 	            ),
 	            _react2.default.createElement('input', { type: 'text',
-	              className: 'form-control',
+	              className: this.state.errorFormaPago ? "form-control is-invalid" : "form-control",
 	              id: 'formaPago',
 	              name: 'formaPago',
 	              placeholder: 'Forma de Pago...',
 	              value: this.state.formaPago,
 	              onChange: this.handleOnChange
-	            })
+	            }),
+	            this.state.errorFormaPago ? _react2.default.createElement(
+	              'div',
+	              { className: 'invalid-feedback' },
+	              this.state.errorFormaPago
+	            ) : null
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 form-group text-center pt-2' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              'Factura N\xB0'
+	            ),
+	            _react2.default.createElement('input', { type: 'number',
+	              className: this.state.errorFactura ? "form-control is-invalid" : "form-control",
+	              id: 'factura',
+	              name: 'factura',
+	              placeholder: 'Factura N\xB0...',
+	              value: this.state.factura,
+	              onChange: this.handleOnChange
+	            }),
+	            this.state.errorFactura ? _react2.default.createElement(
+	              'div',
+	              { className: 'invalid-feedback' },
+	              this.state.errorFactura
+	            ) : null
 	          ),
 	          _react2.default.createElement(
 	            'div',
