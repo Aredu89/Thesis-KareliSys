@@ -6,12 +6,12 @@ export default class ContactosEditar extends React.Component {
     this.state = {
       _id: "",
       nombre: "",
-      errorNombre: false,
+      errorNombre: '',
       talleNuevo: 0,
       errorTalleNuevo: false,
       talles: [],
       errorTalles: false,
-      errorTalleRepetido: false,
+      errorTalleRepetido: false
     }
     this.handleOnChange = this.handleOnChange.bind(this)
     this.agregarTalle = this.agregarTalle.bind(this)
@@ -34,9 +34,9 @@ export default class ContactosEditar extends React.Component {
       [event.target.name]: event.target.value
     })
     //Limpio el error del nombre
-    if(event.target.name === "nombre" && this.state.errorNombre == true){
+    if(event.target.name === "nombre" && this.state.errorNombre !== ''){
       this.setState({
-        errorNombre: false
+        errorNombre: ''
       })
     }
   }
@@ -82,18 +82,34 @@ export default class ContactosEditar extends React.Component {
       this.state.nombre &&
       this.state.talles.length > 0
     ){
-      this.props.onSave({
-        _id: this.state._id,
-        nombre: this.state.nombre,
-        talles: this.state.talles,
-        errorTalles: false,
-        errorNombre: false,
-      }, "productos")
-      this.props.onClose()
+      let nombreRep = false
+      if(this.props.productos){
+        if(this.props.productos.length > 0){
+          this.props.productos.forEach(prod=>{
+            if(prod.nombre === this.state.nombre){
+              nombreRep = true
+            }
+          })
+        }
+      }
+      if(nombreRep){
+        this.setState({
+          errorNombre: 'El producto ya existe'
+        })
+      } else {
+        this.props.onSave({
+          _id: this.state._id,
+          nombre: this.state.nombre,
+          talles: this.state.talles,
+          errorTalles: false,
+          errorNombre: '',
+        }, "productos")
+        this.props.onClose()
+      }
     } else {
       if(!this.state.nombre){
         this.setState({
-          errorNombre: true
+          errorNombre: 'Se debe ingresar un nombre'
         })
       }
       if(this.state.talles.length < 1){
@@ -133,7 +149,7 @@ export default class ContactosEditar extends React.Component {
               />
             {
               this.state.errorNombre &&
-              <div className="invalid-feedback">Se debe ingresar un nombre</div>
+              <div className="invalid-feedback">{this.state.errorNombre}</div>
             }
           </div>
           {/* Talles */}

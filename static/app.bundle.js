@@ -46223,12 +46223,12 @@
 	            },
 	            _react2.default.createElement(_PedidosEditar2.default, {
 	              data: this.state.modalPedidosEditar,
+	              productos: this.state.productos,
 	              onSave: this.onCrearPedido,
 	              onClose: function onClose() {
 	                return _this12.onCloseModal("modalPedidos");
 	              },
-	              titulo: this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO",
-	              productos: this.state.productos
+	              titulo: this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"
 	            })
 	          ),
 	          _react2.default.createElement(
@@ -46244,6 +46244,7 @@
 	            },
 	            _react2.default.createElement(_ProductosEditar2.default, {
 	              data: this.state.modalProductosEditar,
+	              productos: this.state.productos,
 	              onSave: this.onSaveModal,
 	              onClose: function onClose() {
 	                return _this12.onCloseModal("modalProductos");
@@ -51042,7 +51043,7 @@
 	    _this.state = {
 	      _id: "",
 	      nombre: "",
-	      errorNombre: false,
+	      errorNombre: '',
 	      talleNuevo: 0,
 	      errorTalleNuevo: false,
 	      talles: [],
@@ -51072,9 +51073,9 @@
 	    value: function handleOnChange(event) {
 	      this.setState(_defineProperty({}, event.target.name, event.target.value));
 	      //Limpio el error del nombre
-	      if (event.target.name === "nombre" && this.state.errorNombre == true) {
+	      if (event.target.name === "nombre" && this.state.errorNombre !== '') {
 	        this.setState({
-	          errorNombre: false
+	          errorNombre: ''
 	        });
 	      }
 	    }
@@ -51123,19 +51124,37 @@
 	  }, {
 	    key: "onSave",
 	    value: function onSave() {
+	      var _this3 = this;
+	
 	      if (this.state.nombre && this.state.talles.length > 0) {
-	        this.props.onSave({
-	          _id: this.state._id,
-	          nombre: this.state.nombre,
-	          talles: this.state.talles,
-	          errorTalles: false,
-	          errorNombre: false
-	        }, "productos");
-	        this.props.onClose();
+	        var nombreRep = false;
+	        if (this.props.productos) {
+	          if (this.props.productos.length > 0) {
+	            this.props.productos.forEach(function (prod) {
+	              if (prod.nombre === _this3.state.nombre) {
+	                nombreRep = true;
+	              }
+	            });
+	          }
+	        }
+	        if (nombreRep) {
+	          this.setState({
+	            errorNombre: 'El producto ya existe'
+	          });
+	        } else {
+	          this.props.onSave({
+	            _id: this.state._id,
+	            nombre: this.state.nombre,
+	            talles: this.state.talles,
+	            errorTalles: false,
+	            errorNombre: ''
+	          }, "productos");
+	          this.props.onClose();
+	        }
 	      } else {
 	        if (!this.state.nombre) {
 	          this.setState({
-	            errorNombre: true
+	            errorNombre: 'Se debe ingresar un nombre'
 	          });
 	        }
 	        if (this.state.talles.length < 1) {
@@ -51148,7 +51167,7 @@
 	  }, {
 	    key: "render",
 	    value: function render() {
-	      var _this3 = this;
+	      var _this4 = this;
 	
 	      return _react2.default.createElement(
 	        "div",
@@ -51167,7 +51186,7 @@
 	              type: "button",
 	              className: "modal-cerrar d-flex align-items-center",
 	              onClick: function onClick() {
-	                return _this3.props.onClose();
+	                return _this4.props.onClose();
 	              }
 	            },
 	            _react2.default.createElement(
@@ -51199,7 +51218,7 @@
 	            this.state.errorNombre && _react2.default.createElement(
 	              "div",
 	              { className: "invalid-feedback" },
-	              "Se debe ingresar un nombre"
+	              this.state.errorNombre
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -51242,7 +51261,7 @@
 	                      type: "button",
 	                      className: "btn btn-outline-success",
 	                      onClick: function onClick() {
-	                        return _this3.agregarTalle();
+	                        return _this4.agregarTalle();
 	                      }
 	                    },
 	                    "+"
@@ -51293,7 +51312,7 @@
 	                        type: "button",
 	                        className: "btn btn-outline-success",
 	                        onClick: function onClick() {
-	                          return _this3.eliminarTalle(i);
+	                          return _this4.eliminarTalle(i);
 	                        }
 	                      },
 	                      "X"
@@ -51369,7 +51388,7 @@
 	                type: "button",
 	                className: "btn btn-success",
 	                onClick: function onClick() {
-	                  return _this3.onSave();
+	                  return _this4.onSave();
 	                }
 	              },
 	              "Guardar"

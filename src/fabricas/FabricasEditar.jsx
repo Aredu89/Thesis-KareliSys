@@ -762,10 +762,10 @@ export default class FabricasEditar extends React.Component {
             >
               <PedidosEditar
                 data={this.state.modalPedidosEditar}
+                productos={this.state.productos}
                 onSave={this.onCrearPedido}
                 onClose={()=>this.onCloseModal("modalPedidos")}
                 titulo={this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"}
-                productos={this.state.productos}
               />
             </Modal>
           {/* Modal Productos */}
@@ -778,6 +778,7 @@ export default class FabricasEditar extends React.Component {
             >
               <ProductosEditar
                 data={this.state.modalProductosEditar}
+                productos={this.state.productos}
                 onSave={this.onSaveModal}
                 onClose={()=>this.onCloseModal("modalProductos")}
                 titulo={this.state.modalProductosEditar ? "EDITAR PRODUCTO" : "CREAR PRODUCTO"}
