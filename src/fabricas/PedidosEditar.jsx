@@ -258,7 +258,7 @@ export default class PedidosEditar extends React.Component {
                 value={this.state.fechaEntrega ? this.state.fechaEntrega : ""}
                 onChange={this.handleOnChange}
                 error={this.state.errorFechaEntrega}
-                disabled={this.state.pagos.length > 0 || this.state.fechaEntregado ? true : false}
+                disabled={this.state.estado !== 'pendiente' ? true : false}
                 />
             </div>
           }
@@ -274,7 +274,7 @@ export default class PedidosEditar extends React.Component {
                 placeholder="Precio Total..."
                 value={this.state.precioTotal}
                 onChange={this.handleOnChange}
-                disabled={this.state.pagos.length > 0 ? true : false}
+                disabled={this.state.estado !== 'pendiente' ? true : false}
                 />
               {
                 (deudaPedido > 0) &&
@@ -298,8 +298,8 @@ export default class PedidosEditar extends React.Component {
           }
           {/* Productos */}
           <div className="col-12 form-group text-center pt-2">
-            <label>Agregar productos al pedido</label>
-            <div className="contenedor-productos">
+            <label>{this.state.estado === 'pendiente' ? "Agregar productos al pedido" : "Productos del pedido"}</label>
+            {this.state.estado === 'pendiente' && <div className="contenedor-productos">
               <FormSelect
                 label="Nombre"
                 name="nombreProducto"
@@ -342,7 +342,7 @@ export default class PedidosEditar extends React.Component {
                     >+</button>
                 </div>
               </div>
-            </div>
+            </div>}
             {/* Productos agregados */}
             <table className="table table-hover">
               <thead>
@@ -350,7 +350,7 @@ export default class PedidosEditar extends React.Component {
                   <th scope="col">Nombre</th>
                   <th scope="col">Talle</th>
                   <th scope="col">Cantidad</th>
-                  <th scope="col">Quitar</th>
+                  {this.state.estado === 'pendiente' && <th scope="col">Quitar</th>}
                 </tr>
               </thead>
               <tbody>
@@ -360,13 +360,13 @@ export default class PedidosEditar extends React.Component {
                       <td>{producto.producto}</td>
                       <td>{producto.talle}</td>
                       <td>{producto.cantidad}</td>
-                      <td>
+                      {this.state.estado === 'pendiente' && <td>
                         <button 
                           type="button"
                           className="btn btn-outline-success"
                           onClick={()=>this.eliminarProducto(i)}
                           >X</button>
-                      </td>
+                      </td>}
                     </tr>
                   })
                 }

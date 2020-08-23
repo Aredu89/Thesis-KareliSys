@@ -255,6 +255,8 @@ module.exports.modificarPedido = (req,res) => {
           res.status(404).json(err)
           return
         }
+        //Defino el día de hoy
+        const fechaHoy = new Date()
         //Defino si cambia el estado
         let estadoAux = "pendiente"
         if(
@@ -273,6 +275,12 @@ module.exports.modificarPedido = (req,res) => {
           sum === pedidoBody.precioTotal
         ){
           estadoAux = "pagado"
+        }
+        const fechaEntregaDate = new Date(pedidoBody.fechaEntrega)
+        if(
+          fechaEntregaDate < fechaHoy
+        ) {
+          estadoAux = "demorado"
         }
         if(
           pedidoBody.fechaEntregado

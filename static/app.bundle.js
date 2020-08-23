@@ -50677,7 +50677,7 @@
 	              value: this.state.fechaEntrega ? this.state.fechaEntrega : "",
 	              onChange: this.handleOnChange,
 	              error: this.state.errorFechaEntrega,
-	              disabled: this.state.pagos.length > 0 || this.state.fechaEntregado ? true : false
+	              disabled: this.state.estado !== 'pendiente' ? true : false
 	            })
 	          ),
 	          this.state._id && _react2.default.createElement(
@@ -50695,7 +50695,7 @@
 	              placeholder: 'Precio Total...',
 	              value: this.state.precioTotal,
 	              onChange: this.handleOnChange,
-	              disabled: this.state.pagos.length > 0 ? true : false
+	              disabled: this.state.estado !== 'pendiente' ? true : false
 	            }),
 	            deudaPedido > 0 && _react2.default.createElement(
 	              'div',
@@ -50724,9 +50724,9 @@
 	            _react2.default.createElement(
 	              'label',
 	              null,
-	              'Agregar productos al pedido'
+	              this.state.estado === 'pendiente' ? "Agregar productos al pedido" : "Productos del pedido"
 	            ),
-	            _react2.default.createElement(
+	            this.state.estado === 'pendiente' && _react2.default.createElement(
 	              'div',
 	              { className: 'contenedor-productos' },
 	              _react2.default.createElement(_FormSelect2.default, {
@@ -50815,7 +50815,7 @@
 	                    { scope: 'col' },
 	                    'Cantidad'
 	                  ),
-	                  _react2.default.createElement(
+	                  this.state.estado === 'pendiente' && _react2.default.createElement(
 	                    'th',
 	                    { scope: 'col' },
 	                    'Quitar'
@@ -50844,7 +50844,7 @@
 	                      null,
 	                      producto.cantidad
 	                    ),
-	                    _react2.default.createElement(
+	                    _this2.state.estado === 'pendiente' && _react2.default.createElement(
 	                      'td',
 	                      null,
 	                      _react2.default.createElement(
@@ -51496,13 +51496,13 @@
 	      modalPagosEditar: null,
 	      pedidoAPagar: null,
 	      //Permisos
-	      permits: ""
+	      permits: "",
+	      permitsAdmin: false
 	    };
 	    _this.cargarFabrica = _this.cargarFabrica.bind(_this);
 	    _this.onOpenModal = _this.onOpenModal.bind(_this);
 	    _this.onCloseModal = _this.onCloseModal.bind(_this);
 	    _this.onSaveModal = _this.onSaveModal.bind(_this);
-	    _this.handleEditarPago = _this.handleEditarPago.bind(_this);
 	    _this.handleEliminarPago = _this.handleEliminarPago.bind(_this);
 	    _this.handleOnPagar = _this.handleOnPagar.bind(_this);
 	    return _this;
@@ -51517,7 +51517,8 @@
 	      if (user) {
 	        if (user.permits) {
 	          this.setState({
-	            permits: user.permits.fabricas ? user.permits.fabricas : ""
+	            permits: user.permits.fabricas ? user.permits.fabricas : "",
+	            permitsAdmin: user.permitsAdmin
 	          });
 	        }
 	      }
@@ -51653,16 +51654,6 @@
 	        }
 	      });
 	      this.onClickGuardar(pedidoModificar);
-	    }
-	  }, {
-	    key: 'handleEditarPago',
-	    value: function handleEditarPago(id) {
-	      var pagoAux = _javascriptFunctions2.default.getPagoFabrica(this.state.fabrica, id);
-	      this.setState({
-	        pedidoAPagar: pagoAux.pedido,
-	        modalPagosEditar: pagoAux,
-	        modalPagos: true
-	      });
 	    }
 	  }, {
 	    key: 'handleEliminarPago',
@@ -51831,8 +51822,7 @@
 	                    lista: "pagos",
 	                    columns: columnsPagos,
 	                    data: pagosRealizados,
-	                    handleEditar: this.handleEditarPago,
-	                    handleEliminar: this.handleEliminarPago,
+	                    handleEliminar: this.state.permitsAdmin ? this.handleEliminarPago : null,
 	                    blockRead: !permitUpdate,
 	                    blockDelete: !permitUpdate
 	                  })
@@ -53920,7 +53910,7 @@
 	              value: this.state.fechaEntrega ? this.state.fechaEntrega : "",
 	              onChange: this.handleOnChange,
 	              error: this.state.errorFechaEntrega,
-	              disabled: this.state.pagos.length > 0 || this.state.fechaEntregado ? true : false
+	              disabled: this.state.estado !== 'pendiente' ? true : false
 	            })
 	          ),
 	          this.state._id && _react2.default.createElement(
@@ -53938,7 +53928,7 @@
 	              placeholder: 'Precio Total...',
 	              value: this.state.precioTotal,
 	              onChange: this.handleOnChange,
-	              disabled: this.state.pagos.length > 0 ? true : false
+	              disabled: this.state.estado !== 'pendiente' ? true : false
 	            }),
 	            deudaPedido > 0 && _react2.default.createElement(
 	              'div',
@@ -53967,9 +53957,9 @@
 	            _react2.default.createElement(
 	              'label',
 	              null,
-	              'Agregar productos al pedido'
+	              this.state.estado === 'pendiente' ? "Agregar productos al pedido" : "Productos del pedido"
 	            ),
-	            _react2.default.createElement(
+	            this.state.estado === 'pendiente' && _react2.default.createElement(
 	              'div',
 	              { className: 'contenedor-productos' },
 	              _react2.default.createElement(_FormSelect2.default, {
@@ -54062,7 +54052,7 @@
 	                    { scope: 'col' },
 	                    'Cantidad'
 	                  ),
-	                  _react2.default.createElement(
+	                  this.state.estado === 'pendiente' && _react2.default.createElement(
 	                    'th',
 	                    { scope: 'col' },
 	                    'Quitar'
@@ -54091,7 +54081,7 @@
 	                      null,
 	                      producto.cantidad
 	                    ),
-	                    _react2.default.createElement(
+	                    _this3.state.estado === 'pendiente' && _react2.default.createElement(
 	                      'td',
 	                      null,
 	                      _react2.default.createElement(
@@ -54213,13 +54203,13 @@
 	      modalPagosEditar: null,
 	      pedidoAPagar: null,
 	      //Permisos
-	      permits: ""
+	      permits: "",
+	      permitsAdmin: false
 	    };
 	    _this.cargarCliente = _this.cargarCliente.bind(_this);
 	    _this.onOpenModal = _this.onOpenModal.bind(_this);
 	    _this.onCloseModal = _this.onCloseModal.bind(_this);
 	    _this.onSaveModal = _this.onSaveModal.bind(_this);
-	    _this.handleEditarPago = _this.handleEditarPago.bind(_this);
 	    _this.handleEliminarPago = _this.handleEliminarPago.bind(_this);
 	    _this.handleOnPagar = _this.handleOnPagar.bind(_this);
 	    return _this;
@@ -54234,7 +54224,8 @@
 	      if (user) {
 	        if (user.permits) {
 	          this.setState({
-	            permits: user.permits.clientes ? user.permits.clientes : ""
+	            permits: user.permits.clientes ? user.permits.clientes : "",
+	            permitsAdmin: user.permitsAdmin
 	          });
 	        }
 	      }
@@ -54370,16 +54361,6 @@
 	        }
 	      });
 	      this.onClickGuardar(pedidoModificar);
-	    }
-	  }, {
-	    key: 'handleEditarPago',
-	    value: function handleEditarPago(id) {
-	      var pagoAux = _javascriptFunctions2.default.getPagoFabrica(this.state.cliente, id);
-	      this.setState({
-	        pedidoAPagar: pagoAux.pedido,
-	        modalPagosEditar: pagoAux,
-	        modalPagos: true
-	      });
 	    }
 	  }, {
 	    key: 'handleEliminarPago',
@@ -54548,8 +54529,7 @@
 	                    lista: "pagos",
 	                    columns: columnsPagos,
 	                    data: pagosRealizados,
-	                    handleEditar: this.handleEditarPago,
-	                    handleEliminar: this.handleEliminarPago,
+	                    handleEliminar: this.state.permitsAdmin ? this.handleEliminarPago : null,
 	                    blockRead: !permitUpdate,
 	                    blockDelete: !permitUpdate
 	                  })

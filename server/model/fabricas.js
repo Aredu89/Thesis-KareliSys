@@ -35,7 +35,7 @@ const pedidos = new mongoose.Schema({
   precioTotal: Number,
   pagos: [pagos],
   estado: {type: String,
-    enum:["pendiente","aprobado","pagado","entregado","finalizado","cancelado"],
+    enum:["pendiente","aprobado","pagado","demorado","entregado","finalizado","cancelado"],
     default: "pendiente"}
 })
 

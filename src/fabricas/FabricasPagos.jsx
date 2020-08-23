@@ -16,13 +16,13 @@ export default class FabricasPagos extends React.Component {
       modalPagosEditar: null,
       pedidoAPagar: null,
       //Permisos
-      permits: ""
+      permits: "",
+      permitsAdmin: false
     }
     this.cargarFabrica = this.cargarFabrica.bind(this)
     this.onOpenModal = this.onOpenModal.bind(this)
     this.onCloseModal = this.onCloseModal.bind(this)
     this.onSaveModal = this.onSaveModal.bind(this)
-    this.handleEditarPago = this.handleEditarPago.bind(this)
     this.handleEliminarPago = this.handleEliminarPago.bind(this)
     this.handleOnPagar = this.handleOnPagar.bind(this)
   }
@@ -34,7 +34,8 @@ export default class FabricasPagos extends React.Component {
     if(user){
       if(user.permits){
         this.setState({
-          permits: user.permits.fabricas ? user.permits.fabricas : ""
+          permits: user.permits.fabricas ? user.permits.fabricas : "",
+          permitsAdmin: user.permitsAdmin
         })
       }
     }
@@ -187,15 +188,6 @@ export default class FabricasPagos extends React.Component {
     this.onClickGuardar(pedidoModificar)
   }
 
-  handleEditarPago(id){
-    const pagoAux = Funciones.getPagoFabrica(this.state.fabrica, id)
-    this.setState({
-      pedidoAPagar: pagoAux.pedido,
-      modalPagosEditar: pagoAux,
-      modalPagos: true
-    })
-  }
-
   handleEliminarPago(id){
     let fabrica = this.state.fabrica
     //Primero pido confirmación
@@ -319,8 +311,7 @@ export default class FabricasPagos extends React.Component {
                       lista={"pagos"}
                       columns={columnsPagos}
                       data={pagosRealizados}
-                      handleEditar={this.handleEditarPago}
-                      handleEliminar={this.handleEliminarPago}
+                      handleEliminar={this.state.permitsAdmin ? this.handleEliminarPago : null}
                       blockRead={!permitUpdate}
                       blockDelete={!permitUpdate}
                     />

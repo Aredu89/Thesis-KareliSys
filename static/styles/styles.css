@@ -65,6 +65,9 @@
   width: 48px;
 }
 /* Estilos para formulario de fabricas */
+input:disabled{
+  color: #FFF;
+}
 .fabricas-editar .contenedor-formulario{
   padding-top: 15px;
 }
