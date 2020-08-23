@@ -46,7 +46,7 @@ export default class TablaFlexible extends React.Component {
           className="form-control buscador-tabla"
           id={`myInput${this.props.lista}`}
           type="text"
-          placeholder="Buscar en la tabla..."
+          placeholder="Buscar en la lista..."
           />
         <br></br>
         <table className="table">
@@ -96,6 +96,15 @@ export default class TablaFlexible extends React.Component {
                           title="Editar"
                           onClick={() => this.props.handleEditar(data._id)}
                           ><i className="material-icons">create</i></button>
+                      : null
+                    }
+                    {
+                      this.props.goToPedidos && !this.blockRead ?
+                        <button type="button" 
+                          className="btn btn-outline-primary"
+                          title="Pedidos"
+                          onClick={() => this.props.goToPedidos(data._id)}
+                          ><i className="material-icons">shopping_cart</i></button>
                       : null
                     }
                     {

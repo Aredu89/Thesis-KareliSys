@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Router, Route, browserHistory, Redirect, withRouter, Switch } from 'react-router'
+import { Router, Route, browserHistory, Redirect, withRouter } from 'react-router'
 
 import jwt_decode from "jwt-decode"
 import { setToken } from './common/js/setAuthToken.js'
@@ -11,9 +11,11 @@ import Login from './common/Login.jsx'
 import Registrarse from './common/Registrarse.jsx'
 import FabricasLista from './fabricas/FabricasLista.jsx'
 import FabricasEditar from './fabricas/FabricasEditar.jsx'
+import FabricasPedidos from './fabricas/FabricasPedidos.jsx'
 import FabricasPagos from './fabricas/FabricasPagos.jsx'
 import ClientesLista from './clientes/ClientesLista.jsx'
 import ClientesEditar from './clientes/ClientesEditar.jsx'
+import ClientesPedidos from './clientes/ClientesPedidos.jsx'
 import ClientesPagos from './clientes/ClientesPagos.jsx'
 import StockLista from './stock/StockLista.jsx'
 import StockEditar from './stock/StockEditar.jsx'
@@ -68,10 +70,12 @@ const RoutedApp = () => {
           <Route path="fabricas" component={permits.fabricas ? FabricasLista : noPermits} />
           <Route path="fabricas/editar" component={permits.fabricas ? FabricasEditar : noPermits} />
           <Route path="fabricas/editar/:id" component={permits.fabricas ? FabricasEditar : noPermits} />
+          <Route path="fabricas/pedidos/:id" component={permits.fabricas ? FabricasPedidos : noPermits} />
           <Route path="fabricas/pagos/:id" component={permits.fabricas ? FabricasPagos : noPermits} />
           <Route path="clientes" component={permits.clientes ? ClientesLista : noPermits} />
           <Route path="clientes/editar" component={permits.clientes ? ClientesEditar : noPermits} />
           <Route path="clientes/editar/:id" component={permits.clientes ? ClientesEditar : noPermits} />
+          <Route path="clientes/pedidos/:id" component={permits.clientes ? ClientesPedidos : noPermits} />
           <Route path="clientes/pagos/:id" component={permits.clientes ? ClientesPagos : noPermits} />
           <Route path="stock" component={permits.stock ? StockLista : noPermits} />
           <Route path="stock/editar" component={permits.stock ? StockEditar : noPermits} />

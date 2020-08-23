@@ -86,6 +86,10 @@
 	
 	var _FabricasEditar2 = _interopRequireDefault(_FabricasEditar);
 	
+	var _FabricasPedidos = __webpack_require__(331);
+	
+	var _FabricasPedidos2 = _interopRequireDefault(_FabricasPedidos);
+	
 	var _FabricasPagos = __webpack_require__(319);
 	
 	var _FabricasPagos2 = _interopRequireDefault(_FabricasPagos);
@@ -97,6 +101,10 @@
 	var _ClientesEditar = __webpack_require__(322);
 	
 	var _ClientesEditar2 = _interopRequireDefault(_ClientesEditar);
+	
+	var _ClientesPedidos = __webpack_require__(332);
+	
+	var _ClientesPedidos2 = _interopRequireDefault(_ClientesPedidos);
 	
 	var _ClientesPagos = __webpack_require__(325);
 	
@@ -182,10 +190,12 @@
 	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas', component: permits.fabricas ? _FabricasLista2.default : noPermits }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas/editar', component: permits.fabricas ? _FabricasEditar2.default : noPermits }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas/editar/:id', component: permits.fabricas ? _FabricasEditar2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas/pedidos/:id', component: permits.fabricas ? _FabricasPedidos2.default : noPermits }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'fabricas/pagos/:id', component: permits.fabricas ? _FabricasPagos2.default : noPermits }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes', component: permits.clientes ? _ClientesLista2.default : noPermits }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes/editar', component: permits.clientes ? _ClientesEditar2.default : noPermits }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes/editar/:id', component: permits.clientes ? _ClientesEditar2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes/pedidos/:id', component: permits.clientes ? _ClientesPedidos2.default : noPermits }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'clientes/pagos/:id', component: permits.clientes ? _ClientesPagos2.default : noPermits }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'stock', component: permits.stock ? _StockLista2.default : noPermits }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'stock/editar', component: permits.stock ? _StockEditar2.default : noPermits }),
@@ -34308,6 +34318,7 @@
 	    _this.handleEliminar = _this.handleEliminar.bind(_this);
 	    _this.actualizarLista = _this.actualizarLista.bind(_this);
 	    _this.goToPagos = _this.goToPagos.bind(_this);
+	    _this.goToPedidos = _this.goToPedidos.bind(_this);
 	    return _this;
 	  }
 	
@@ -34375,6 +34386,11 @@
 	    key: 'handleEditar',
 	    value: function handleEditar(id) {
 	      this.props.history.push('/fabricas/editar/' + id);
+	    }
+	  }, {
+	    key: 'goToPedidos',
+	    value: function goToPedidos(id) {
+	      this.props.history.push('/fabricas/pedidos/' + id);
 	    }
 	  }, {
 	    key: 'goToPagos',
@@ -34484,6 +34500,7 @@
 	              data: this.state.fabricas,
 	              handleEditar: this.handleEditar,
 	              handleEliminar: this.handleEliminar,
+	              goToPedidos: this.goToPedidos,
 	              goToPagos: this.goToPagos,
 	              blockRead: !permitRead,
 	              blockDelete: !permitUpdate
@@ -34619,7 +34636,7 @@
 	          className: 'form-control buscador-tabla',
 	          id: 'myInput' + this.props.lista,
 	          type: 'text',
-	          placeholder: 'Buscar en la tabla...'
+	          placeholder: 'Buscar en la lista...'
 	        }),
 	        _react2.default.createElement('br', null),
 	        _react2.default.createElement(
@@ -34725,6 +34742,21 @@
 	                      'i',
 	                      { className: 'material-icons' },
 	                      'create'
+	                    )
+	                  ) : null,
+	                  _this2.props.goToPedidos && !_this2.blockRead ? _react2.default.createElement(
+	                    'button',
+	                    { type: 'button',
+	                      className: 'btn btn-outline-primary',
+	                      title: 'Pedidos',
+	                      onClick: function onClick() {
+	                        return _this2.props.goToPedidos(data._id);
+	                      }
+	                    },
+	                    _react2.default.createElement(
+	                      'i',
+	                      { className: 'material-icons' },
+	                      'shopping_cart'
 	                    )
 	                  ) : null,
 	                  _this2.props.goToPagos && !_this2.blockRead ? _react2.default.createElement(
@@ -45771,6 +45803,11 @@
 	      });
 	    }
 	  }, {
+	    key: 'goToPedidos',
+	    value: function goToPedidos() {
+	      this.props.history.push('/fabricas/pedidos/' + this.props.params.id);
+	    }
+	  }, {
 	    key: 'goToPagos',
 	    value: function goToPagos() {
 	      this.props.history.push('/fabricas/pagos/' + this.props.params.id);
@@ -45914,6 +45951,16 @@
 	                  },
 	                  '+ Guardar'
 	                ),
+	                !this.state.nuevo ? _react2.default.createElement(
+	                  'button',
+	                  { type: 'button',
+	                    className: 'btn btn-secondary ml-2',
+	                    onClick: function onClick() {
+	                      return _this12.goToPedidos();
+	                    }
+	                  },
+	                  'Ir a Pedidos'
+	                ) : null,
 	                !this.state.nuevo ? _react2.default.createElement(
 	                  'button',
 	                  { type: 'button',
@@ -52293,6 +52340,7 @@
 	    _this.handleEliminar = _this.handleEliminar.bind(_this);
 	    _this.actualizarLista = _this.actualizarLista.bind(_this);
 	    _this.goToPagos = _this.goToPagos.bind(_this);
+	    _this.goToPedidos = _this.goToPedidos.bind(_this);
 	    return _this;
 	  }
 	
@@ -52360,6 +52408,11 @@
 	    key: 'handleEditar',
 	    value: function handleEditar(id) {
 	      this.props.history.push('/clientes/editar/' + id);
+	    }
+	  }, {
+	    key: 'goToPedidos',
+	    value: function goToPedidos(id) {
+	      this.props.history.push('/clientes/pedidos/' + id);
 	    }
 	  }, {
 	    key: 'goToPagos',
@@ -52469,6 +52522,7 @@
 	              data: this.state.clientes,
 	              handleEditar: this.handleEditar,
 	              handleEliminar: this.handleEliminar,
+	              goToPedidos: this.goToPedidos,
 	              goToPagos: this.goToPagos,
 	              blockRead: !permitRead,
 	              blockDelete: !permitUpdate
@@ -52881,6 +52935,11 @@
 	      });
 	    }
 	  }, {
+	    key: 'goToPedidos',
+	    value: function goToPedidos() {
+	      this.props.history.push('/clientes/pedidos/' + this.props.params.id);
+	    }
+	  }, {
 	    key: 'goToPagos',
 	    value: function goToPagos() {
 	      this.props.history.push('/clientes/pagos/' + this.props.params.id);
@@ -53023,6 +53082,16 @@
 	                  },
 	                  '+ Guardar'
 	                ),
+	                !this.state.nuevo ? _react2.default.createElement(
+	                  'button',
+	                  { type: 'button',
+	                    className: 'btn btn-secondary ml-2',
+	                    onClick: function onClick() {
+	                      return _this11.goToPedidos();
+	                    }
+	                  },
+	                  'Ir a Pedidos'
+	                ) : null,
 	                !this.state.nuevo ? _react2.default.createElement(
 	                  'button',
 	                  { type: 'button',
@@ -56462,6 +56531,588 @@
 	}(_react2.default.Component);
 	
 	exports.default = UsuariosEditar;
+
+/***/ },
+/* 331 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _TablaFlexible = __webpack_require__(286);
+	
+	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
+	
+	var _sweetalert = __webpack_require__(284);
+	
+	var _sweetalert2 = _interopRequireDefault(_sweetalert);
+	
+	var _javascriptFunctions = __webpack_require__(281);
+	
+	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
+	
+	var _reactResponsiveModal = __webpack_require__(289);
+	
+	var _reactResponsiveModal2 = _interopRequireDefault(_reactResponsiveModal);
+	
+	var _PedidosEditar = __webpack_require__(314);
+	
+	var _PedidosEditar2 = _interopRequireDefault(_PedidosEditar);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //https://github.com/sweetalert2/sweetalert2
+	
+	
+	var FabricasPedidos = function (_React$Component) {
+	  _inherits(FabricasPedidos, _React$Component);
+	
+	  function FabricasPedidos() {
+	    _classCallCheck(this, FabricasPedidos);
+	
+	    var _this = _possibleConstructorReturn(this, (FabricasPedidos.__proto__ || Object.getPrototypeOf(FabricasPedidos)).call(this));
+	
+	    _this.state = {
+	      fabrica: {},
+	      cargando: true,
+	      error: "",
+	      pedidos: [],
+	      modalPedidos: false,
+	      modalPedidosEditar: null,
+	      //Permisos
+	      permits: "",
+	      permitsAdmin: false
+	    };
+	    _this.cargarFabrica = _this.cargarFabrica.bind(_this);
+	    _this.handleEditarPedido = _this.handleEditarPedido.bind(_this);
+	    _this.handleEliminarPedido = _this.handleEliminarPedido.bind(_this);
+	    _this.onCrearPedido = _this.onCrearPedido.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(FabricasPedidos, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.cargarFabrica();
+	      //Controlo permisos
+	      var user = JSON.parse(localStorage.getItem("currentUser"));
+	      if (user) {
+	        if (user.permits) {
+	          this.setState({
+	            permits: user.permits.fabricas ? user.permits.fabricas : "",
+	            permitsAdmin: user.permitsAdmin
+	          });
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'cargarFabrica',
+	    value: function cargarFabrica() {
+	      var _this2 = this;
+	
+	      if (this.props.params.id) {
+	        // Obtengo los pagos de la fábrica
+	        fetch('/api/fabricas/' + this.props.params.id).then(function (res) {
+	          if (res.ok) {
+	            res.json().then(function (data) {
+	              console.log("Fabrica: ", data);
+	              _this2.setState({
+	                cargando: false,
+	                error: "",
+	                fabrica: data,
+	                pedidos: data.pedidos
+	              });
+	            });
+	          } else {
+	            res.json().then(function (error) {
+	              console.log("Error al obtener fabrica - ", error.message);
+	              _this2.setState({
+	                cargando: false,
+	                error: error.message
+	              });
+	            });
+	          }
+	        }).catch(function (error) {
+	          console.log("Error en el servidor. ", error.message);
+	          _this2.setState({
+	            cargando: false,
+	            error: error.message
+	          });
+	        });
+	      } else {
+	        this.setState({
+	          cargando: false,
+	          error: "No se puede cargar esta pantalla sin el id de la Fábrica"
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'handleEditarPedido',
+	    value: function handleEditarPedido(id) {
+	      var _this3 = this;
+	
+	      //Busco el id
+	      this.state.pedidos.forEach(function (pedido) {
+	        if (pedido._id === id) {
+	          _this3.setState({
+	            modalPedidosEditar: pedido
+	          }, _this3.onOpenModal("modalPedidos"));
+	          return;
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'handleEliminarPedido',
+	    value: function handleEliminarPedido(id) {
+	      var _this4 = this;
+	
+	      //Primero pido confirmación
+	      _sweetalert2.default.fire({
+	        title: "¿Seguro que desea eliminar?",
+	        text: "Esta acción no se puede revertir",
+	        icon: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#3085d6",
+	        cancelButtonColor: "#d33",
+	        confirmButtonText: "Si, eliminar"
+	      }).then(function (result) {
+	        if (result.value) {
+	          //Elimino
+	          fetch('/api/fabricas/' + _this4.state.fabrica._id + '/pedidos/' + id, {
+	            method: 'DELETE',
+	            headers: { 'Content-Type': 'application/json' }
+	          }).then(function (res) {
+	            if (res.ok) {
+	              res.json().then(function (data) {
+	                _sweetalert2.default.fire("Pedido Eliminado", "", "success").then(function () {
+	                  _this4.setState({
+	                    pedidos: data.pedidos
+	                  });
+	                });
+	              });
+	            } else {
+	              _sweetalert2.default.fire("Error al eliminar", "", "error");
+	            }
+	          }).catch(function (err) {
+	            _sweetalert2.default.fire("Error del servidor", err.message, "error");
+	          });
+	        }
+	      });
+	    }
+	
+	    //Modal
+	
+	  }, {
+	    key: 'onOpenModal',
+	    value: function onOpenModal(cual) {
+	      this.setState(_defineProperty({}, cual, true));
+	    }
+	  }, {
+	    key: 'onCloseModal',
+	    value: function onCloseModal(cual) {
+	      var _setState2;
+	
+	      this.setState((_setState2 = {}, _defineProperty(_setState2, cual, false), _defineProperty(_setState2, cual + "Editar", null), _setState2));
+	    }
+	  }, {
+	    key: 'onCrearPedido',
+	    value: function onCrearPedido(obj) {
+	      var _this5 = this;
+	
+	      if (obj._id) {
+	        //Modifico un pedido existente
+	        fetch('/api/fabricas/' + this.state.fabrica._id + '/pedidos/' + obj._id, {
+	          method: 'PUT',
+	          headers: { 'Content-Type': 'application/json' },
+	          body: JSON.stringify(obj)
+	        }).then(function (res) {
+	          if (res.ok) {
+	            res.json().then(function (data) {
+	              _sweetalert2.default.fire("Pedido modificado!", "", "success").then(function () {
+	                _this5.setState({
+	                  pedidos: data.pedidos
+	                });
+	              });
+	            });
+	          } else {
+	            res.json().then(function (err) {
+	              console.log("Error al modificar pedido: ", err.message);
+	              _sweetalert2.default.fire("Error al modificar el pedido", err.message, "error");
+	            });
+	          }
+	        }).catch(function (err) {
+	          console.log("Error al crear: ", err.message);
+	          _sweetalert2.default.fire("Error del servidor", err.message, "error");
+	        });
+	      } else {
+	        //Crear pedido
+	        fetch('/api/fabricas/' + this.state.fabrica._id + '/pedidos', {
+	          method: 'POST',
+	          headers: { 'Content-Type': 'application/json' },
+	          body: JSON.stringify(obj)
+	        }).then(function (res) {
+	          if (res.ok) {
+	            res.json().then(function (data) {
+	              _sweetalert2.default.fire("Pedido creado!", "", "success").then(function () {
+	                _this5.setState({
+	                  pedidos: data.pedidos
+	                });
+	              });
+	            });
+	          } else {
+	            res.json().then(function (err) {
+	              console.log("Error al crear pedido: ", err.message);
+	              _sweetalert2.default.fire("Error al crear el pedido", "", "error");
+	            });
+	          }
+	        }).catch(function (err) {
+	          console.log("Error al crear: ", err.message);
+	          _sweetalert2.default.fire("Error del servidor", "", "error");
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this6 = this;
+	
+	      var permits = this.state.permits;
+	      //Permisos
+	
+	      var permitUpdate = permits === "MODIFICAR" ? true : false;
+	      var permitCreate = permits === "MODIFICAR" || permits === "CREAR" ? true : false;
+	      //Tabla
+	      var columnsPedidos = [["Fecha del pedido", "fechaPedido", "Fecha"], ["Fecha de entrega", "fechaEntrega", "Fecha"], ["Precio total", "precioTotal", "Money"], ["Adeudado", "data", "Pedido Adeudado"], ["Productos", "detalle", "Largo"], ["Estado", "estado", "String"]];
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'fabricas-pedidos text-center' },
+	        !this.state.cargando ? _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row mb-3' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 d-flex justify-content-between' },
+	              _react2.default.createElement(
+	                'h3',
+	                null,
+	                'Gesti\xF3n de Pedidos - ',
+	                this.state.fabrica.nombre
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'card border-primary', id: 'card' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-header d-flex justify-content-between' },
+	                _react2.default.createElement(
+	                  'h5',
+	                  null,
+	                  'Pedidos de la f\xE1brica:'
+	                ),
+	                permitUpdate && _react2.default.createElement(
+	                  'button',
+	                  { type: 'button',
+	                    className: 'btn btn-outline-success',
+	                    onClick: function onClick() {
+	                      return _this6.onOpenModal("modalPedidos");
+	                    }
+	                  },
+	                  '+ Agregar Pedido'
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-body contenedor-tabla' },
+	                _react2.default.createElement(_TablaFlexible2.default, {
+	                  lista: "pedidos",
+	                  columns: columnsPedidos,
+	                  data: this.state.pedidos,
+	                  handleEditar: this.handleEditarPedido,
+	                  handleEliminar: this.handleEliminarPedido,
+	                  blockRead: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true,
+	                  blockDelete: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true
+	                })
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            _reactResponsiveModal2.default,
+	            {
+	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
+	              onClose: function onClose() {
+	                return _this6.onCloseModal("modalPedidos");
+	              },
+	              showCloseIcon: false,
+	              open: this.state.modalPedidos,
+	              center: true
+	            },
+	            _react2.default.createElement(_PedidosEditar2.default, {
+	              data: this.state.modalPedidosEditar,
+	              productos: this.state.productos,
+	              onSave: this.onCrearPedido,
+	              onClose: function onClose() {
+	                return _this6.onCloseModal("modalPedidos");
+	              },
+	              titulo: this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO"
+	            })
+	          )
+	        ) : this.state.error ?
+	        //Mensaje de error
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'alert alert-dismissible alert-danger' },
+	          _react2.default.createElement(
+	            'button',
+	            { type: 'button', className: 'close', 'data-dismiss': 'alert' },
+	            '\xD7'
+	          ),
+	          _react2.default.createElement(
+	            'strong',
+	            null,
+	            'Error!'
+	          ),
+	          ' ',
+	          this.state.error
+	        ) :
+	        // Spinner
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'spinner-border text-light', role: 'status' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'sr-only' },
+	            'Loading...'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return FabricasPedidos;
+	}(_react2.default.Component);
+	
+	exports.default = FabricasPedidos;
+
+/***/ },
+/* 332 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _TablaFlexible = __webpack_require__(286);
+	
+	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
+	
+	var _sweetalert = __webpack_require__(284);
+	
+	var _sweetalert2 = _interopRequireDefault(_sweetalert);
+	
+	var _javascriptFunctions = __webpack_require__(281);
+	
+	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
+	
+	var _reactResponsiveModal = __webpack_require__(289);
+	
+	var _reactResponsiveModal2 = _interopRequireDefault(_reactResponsiveModal);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //https://github.com/sweetalert2/sweetalert2
+	
+	
+	var ClientesPedidos = function (_React$Component) {
+	  _inherits(ClientesPedidos, _React$Component);
+	
+	  function ClientesPedidos() {
+	    _classCallCheck(this, ClientesPedidos);
+	
+	    var _this = _possibleConstructorReturn(this, (ClientesPedidos.__proto__ || Object.getPrototypeOf(ClientesPedidos)).call(this));
+	
+	    _this.state = {
+	      cliente: {},
+	      cargando: true,
+	      error: "",
+	      //Permisos
+	      permits: "",
+	      permitsAdmin: false
+	    };
+	    _this.cargarCliente = _this.cargarCliente.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(ClientesPedidos, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.cargarCliente();
+	      //Controlo permisos
+	      var user = JSON.parse(localStorage.getItem("currentUser"));
+	      if (user) {
+	        if (user.permits) {
+	          this.setState({
+	            permits: user.permits.clientes ? user.permits.clientes : "",
+	            permitsAdmin: user.permitsAdmin
+	          });
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'cargarCliente',
+	    value: function cargarCliente() {
+	      var _this2 = this;
+	
+	      if (this.props.params.id) {
+	        // Obtengo los pagos de la fábrica
+	        fetch('/api/clientes/' + this.props.params.id).then(function (res) {
+	          if (res.ok) {
+	            res.json().then(function (data) {
+	              console.log("Cliente: ", data);
+	              _this2.setState({
+	                cargando: false,
+	                error: "",
+	                cliente: data
+	              });
+	            });
+	          } else {
+	            res.json().then(function (error) {
+	              console.log("Error al obtener cliente - ", error.message);
+	              _this2.setState({
+	                cargando: false,
+	                error: error.message
+	              });
+	            });
+	          }
+	        }).catch(function (error) {
+	          console.log("Error en el servidor. ", error.message);
+	          _this2.setState({
+	            cargando: false,
+	            error: error.message
+	          });
+	        });
+	      } else {
+	        this.setState({
+	          cargando: false,
+	          error: "No se puede cargar esta pantalla sin el id del Cliente"
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var permits = this.state.permits;
+	      //Permisos
+	
+	      var permitUpdate = permits === "MODIFICAR" ? true : false;
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'fabricas-pedidos text-center' },
+	        !this.state.cargando ? _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row mb-3' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 d-flex justify-content-between' },
+	              _react2.default.createElement(
+	                'h3',
+	                null,
+	                'Gesti\xF3n de Pedidos - ',
+	                this.state.cliente.nombre
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'card border-primary', id: 'card' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-header d-flex justify-content-between' },
+	                _react2.default.createElement(
+	                  'h5',
+	                  null,
+	                  'Pedidos del cliente:'
+	                )
+	              ),
+	              _react2.default.createElement('div', { className: 'card-body contenedor-tabla' })
+	            )
+	          )
+	        ) : this.state.error ?
+	        //Mensaje de error
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'alert alert-dismissible alert-danger' },
+	          _react2.default.createElement(
+	            'button',
+	            { type: 'button', className: 'close', 'data-dismiss': 'alert' },
+	            '\xD7'
+	          ),
+	          _react2.default.createElement(
+	            'strong',
+	            null,
+	            'Error!'
+	          ),
+	          ' ',
+	          this.state.error
+	        ) :
+	        // Spinner
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'spinner-border text-light', role: 'status' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'sr-only' },
+	            'Loading...'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return ClientesPedidos;
+	}(_react2.default.Component);
+	
+	exports.default = ClientesPedidos;
 
 /***/ }
 /******/ ]);

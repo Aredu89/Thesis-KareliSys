@@ -18,6 +18,7 @@ export default class ClientesLista extends React.Component {
     this.handleEliminar = this.handleEliminar.bind(this)
     this.actualizarLista = this.actualizarLista.bind(this)
     this.goToPagos = this.goToPagos.bind(this)
+    this.goToPedidos = this.goToPedidos.bind(this)
   }
 
   componentDidMount(){
@@ -79,6 +80,10 @@ export default class ClientesLista extends React.Component {
 
   handleEditar(id){
     this.props.history.push(`/clientes/editar/${id}`)
+  }
+
+  goToPedidos(id){
+    this.props.history.push(`/clientes/pedidos/${id}`)
   }
 
   goToPagos(id){
@@ -189,6 +194,7 @@ export default class ClientesLista extends React.Component {
                   data={this.state.clientes}
                   handleEditar={this.handleEditar}
                   handleEliminar={this.handleEliminar}
+                  goToPedidos={this.goToPedidos}
                   goToPagos={this.goToPagos}
                   blockRead={!permitRead}
                   blockDelete={!permitUpdate}

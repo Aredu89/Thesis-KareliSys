@@ -350,6 +350,10 @@ export default class FabricasEditar extends React.Component {
     })
   }
 
+  goToPedidos(){
+    this.props.history.push(`/fabricas/pedidos/${this.props.params.id}`)
+  }
+
   goToPagos(){
     this.props.history.push(`/fabricas/pagos/${this.props.params.id}`)
   }
@@ -524,6 +528,14 @@ export default class FabricasEditar extends React.Component {
                     className="btn btn-success"
                     onClick={() => this.onClickGuardar()}
                     >+ Guardar</button>
+                }
+                {
+                  !this.state.nuevo ?
+                    <button type="button" 
+                      className="btn btn-secondary ml-2"
+                      onClick={() => this.goToPedidos()}
+                      >Ir a Pedidos</button>
+                  : null
                 }
                 {
                   !this.state.nuevo ?
