@@ -30563,7 +30563,7 @@
 	// Formatear una fecha
 	module.exports.formatearDate = date => {
 	  const fecha = new Date(date)
-	  const dd = fecha.getDate()
+	  const dd = fecha.getDate()+1
 	  const mm = fecha.getMonth()+1
 	  const yyyy = fecha.getFullYear()
 	  return dd+"/"+mm+"/"+yyyy
@@ -30696,7 +30696,7 @@
 	//Convertir de fecha a numeros dd/mm/yyyy
 	module.exports.fechaANumeros = fecha => {
 	  const date = new Date(fecha)
-	  const dia = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+	  const dia = date.getDate()+1 < 10 ? '0' + date.getDate()+1 : date.getDate()+1
 	  const mesraw = date.getMonth() + 1
 	  const mes = mesraw < 10 ? '0' + mesraw : mesraw
 	  return dia + '/' + mes + '/' + date.getFullYear()
@@ -50397,9 +50397,11 @@
 	    _this.state = {
 	      _id: "",
 	      fechaPedido: "",
-	      errorFechaPedido: false,
+	      errorFechaPedido: '',
 	      fechaEntrega: "",
+	      errorFechaEntrega: '',
 	      fechaEntregado: "",
+	      errorFechaEntregado: '',
 	      detalle: [],
 	      errorDetalle: false,
 	      precioTotal: "",
@@ -50464,9 +50466,21 @@
 	        });
 	      }
 	      //Limpio el error de fecha del pedido
-	      if (event.target.name === "fechaPedido" && this.state.errorFechaPedido == true) {
+	      if (event.target.name === "fechaPedido" && this.state.errorFechaPedido !== '') {
 	        this.setState({
-	          errorFechaPedido: false
+	          errorFechaPedido: ''
+	        });
+	      }
+	      //Limpio el error de fecha de entrega
+	      if (event.target.name === "fechaEntrega" && this.state.errorFechaEntrega !== '') {
+	        this.setState({
+	          errorFechaEntrega: ''
+	        });
+	      }
+	      //Limpio el error de fecha de entregado
+	      if (event.target.name === "fechaEntregado" && this.state.errorFechaEntregado !== '') {
+	        this.setState({
+	          errorFechaEntregado: ''
 	        });
 	      }
 	    }
@@ -50518,17 +50532,30 @@
 	    key: 'onSave',
 	    value: function onSave() {
 	      if (this.state.fechaPedido && this.state.detalle.length > 0) {
-	        this.props.onSave({
-	          _id: this.state._id,
-	          fechaPedido: this.state.fechaPedido ? _javascriptFunctions2.default.numerosAFecha(this.state.fechaPedido) : new Date(),
-	          fechaEntrega: this.state.fechaEntrega ? _javascriptFunctions2.default.numerosAFecha(this.state.fechaEntrega) : null,
-	          fechaEntregado: this.state.fechaEntregado ? _javascriptFunctions2.default.numerosAFecha(this.state.fechaEntregado) : null,
-	          detalle: this.state.detalle,
-	          pagos: this.state.pagos ? this.state.pagos : [],
-	          precioTotal: this.state.precioTotal ? Number(this.state.precioTotal) : null,
-	          estado: this.state.estado
-	        });
-	        this.props.onClose();
+	        if (_javascriptFunctions2.default.numerosAFecha(this.state.fechaEntrega) < _javascriptFunctions2.default.numerosAFecha(this.state.fechaPedido)) {
+	          this.setState({
+	            errorFechaEntrega: 'La fecha de entrega no puede ser menor a la fecha del pedido'
+	          });
+	        }
+	        if (_javascriptFunctions2.default.numerosAFecha(this.state.fechaEntregado) < _javascriptFunctions2.default.numerosAFecha(this.state.fechaPedido)) {
+	          this.setState({
+	            errorFechaEntregado: 'La fecha de entregado no puede ser menor a la fecha del pedido'
+	          });
+	        }
+	        if ((_javascriptFunctions2.default.numerosAFecha(this.state.fechaEntrega) >= _javascriptFunctions2.default.numerosAFecha(this.state.fechaPedido) || !this.state.fechaEntrega) && (_javascriptFunctions2.default.numerosAFecha(this.state.fechaEntregado) >= _javascriptFunctions2.default.numerosAFecha(this.state.fechaPedido) || !this.state.fechaEntregado)) {
+	          //Guardo el pedido
+	          this.props.onSave({
+	            _id: this.state._id,
+	            fechaPedido: this.state.fechaPedido ? _javascriptFunctions2.default.numerosAFecha(this.state.fechaPedido) : new Date(),
+	            fechaEntrega: this.state.fechaEntrega ? _javascriptFunctions2.default.numerosAFecha(this.state.fechaEntrega) : null,
+	            fechaEntregado: this.state.fechaEntregado ? _javascriptFunctions2.default.numerosAFecha(this.state.fechaEntregado) : null,
+	            detalle: this.state.detalle,
+	            pagos: this.state.pagos ? this.state.pagos : [],
+	            precioTotal: this.state.precioTotal ? Number(this.state.precioTotal) : null,
+	            estado: this.state.estado
+	          });
+	          this.props.onClose();
+	        }
 	      } else {
 	        if (this.state.detalle.length < 1) {
 	          this.setState({
@@ -50537,7 +50564,7 @@
 	        }
 	        if (!this.state.fechaPedido) {
 	          this.setState({
-	            errorFechaPedido: true
+	            errorFechaPedido: 'Ingrese una fecha'
 	          });
 	        }
 	      }
@@ -50649,6 +50676,7 @@
 	              name: 'fechaEntrega',
 	              value: this.state.fechaEntrega ? this.state.fechaEntrega : "",
 	              onChange: this.handleOnChange,
+	              error: this.state.errorFechaEntrega,
 	              disabled: this.state.pagos.length > 0 || this.state.fechaEntregado ? true : false
 	            })
 	          ),
@@ -50675,7 +50703,7 @@
 	              'Adeudado: ' + _javascriptFunctions2.default.moneyFormatter(deudaPedido)
 	            )
 	          ),
-	          this.state._id && this.state.fechaEntrega && this.state.precioTotal && _react2.default.createElement(
+	          this.state._id && this.state.estado !== 'pendiente' && _react2.default.createElement(
 	            'div',
 	            { className: 'col-12 form-group text-center pt-2' },
 	            _react2.default.createElement(
@@ -50686,6 +50714,7 @@
 	            _react2.default.createElement(_DatePicker2.default, {
 	              name: 'fechaEntregado',
 	              value: this.state.fechaEntregado ? this.state.fechaEntregado : "",
+	              error: this.state.errorFechaEntregado,
 	              onChange: this.handleOnChange
 	            })
 	          ),
@@ -50919,7 +50948,7 @@
 	    error && _react2.default.createElement(
 	      'div',
 	      { className: 'invalid-feedback' },
-	      'Ingrese una fecha'
+	      error
 	    )
 	  );
 	}
@@ -53565,9 +53594,11 @@
 	    _this.state = {
 	      _id: "",
 	      fechaPedido: "",
-	      errorFechaPedido: false,
+	      errorFechaPedido: '',
 	      fechaEntrega: "",
+	      errorFechaEntrega: '',
 	      fechaEntregado: "",
+	      errorFechaEntregado: '',
 	      detalle: [],
 	      errorDetalle: false,
 	      precioTotal: "",
@@ -53640,9 +53671,21 @@
 	        });
 	      }
 	      //Limpio el error de fecha del pedido
-	      if (event.target.name === "fechaPedido" && this.state.errorFechaPedido == true) {
+	      if (event.target.name === "fechaPedido" && this.state.errorFechaPedido !== '') {
 	        this.setState({
-	          errorFechaPedido: false
+	          errorFechaPedido: ''
+	        });
+	      }
+	      //Limpio el error de fecha de entrega
+	      if (event.target.name === "fechaEntrega" && this.state.errorFechaEntrega !== '') {
+	        this.setState({
+	          errorFechaEntrega: ''
+	        });
+	      }
+	      //Limpio el error de fecha de entregado
+	      if (event.target.name === "fechaEntregado" && this.state.errorFechaEntregado !== '') {
+	        this.setState({
+	          errorFechaEntregado: ''
 	        });
 	      }
 	    }
@@ -53725,17 +53768,30 @@
 	    key: 'onSave',
 	    value: function onSave() {
 	      if (this.state.fechaPedido && this.state.detalle.length > 0) {
-	        this.props.onSave({
-	          _id: this.state._id,
-	          fechaPedido: this.state.fechaPedido ? _javascriptFunctions2.default.numerosAFecha(this.state.fechaPedido) : new Date(),
-	          fechaEntrega: this.state.fechaEntrega ? _javascriptFunctions2.default.numerosAFecha(this.state.fechaEntrega) : null,
-	          fechaEntregado: this.state.fechaEntregado ? _javascriptFunctions2.default.numerosAFecha(this.state.fechaEntregado) : null,
-	          detalle: this.state.detalle,
-	          pagos: this.state.pagos ? this.state.pagos : [],
-	          precioTotal: this.state.precioTotal ? Number(this.state.precioTotal) : null,
-	          estado: this.state.estado
-	        });
-	        this.props.onClose();
+	        if (_javascriptFunctions2.default.numerosAFecha(this.state.fechaEntrega) < _javascriptFunctions2.default.numerosAFecha(this.state.fechaPedido)) {
+	          this.setState({
+	            errorFechaEntrega: 'La fecha de entrega no puede ser menor a la fecha del pedido'
+	          });
+	        }
+	        if (_javascriptFunctions2.default.numerosAFecha(this.state.fechaEntregado) < _javascriptFunctions2.default.numerosAFecha(this.state.fechaPedido)) {
+	          this.setState({
+	            errorFechaEntregado: 'La fecha de entregado no puede ser menor a la fecha del pedido'
+	          });
+	        }
+	        if ((_javascriptFunctions2.default.numerosAFecha(this.state.fechaEntrega) >= _javascriptFunctions2.default.numerosAFecha(this.state.fechaPedido) || !this.state.fechaEntrega) && (_javascriptFunctions2.default.numerosAFecha(this.state.fechaEntregado) >= _javascriptFunctions2.default.numerosAFecha(this.state.fechaPedido) || !this.state.fechaEntregado)) {
+	          //Guardo el pedido
+	          this.props.onSave({
+	            _id: this.state._id,
+	            fechaPedido: this.state.fechaPedido ? _javascriptFunctions2.default.numerosAFecha(this.state.fechaPedido) : new Date(),
+	            fechaEntrega: this.state.fechaEntrega ? _javascriptFunctions2.default.numerosAFecha(this.state.fechaEntrega) : null,
+	            fechaEntregado: this.state.fechaEntregado ? _javascriptFunctions2.default.numerosAFecha(this.state.fechaEntregado) : null,
+	            detalle: this.state.detalle,
+	            pagos: this.state.pagos ? this.state.pagos : [],
+	            precioTotal: this.state.precioTotal ? Number(this.state.precioTotal) : null,
+	            estado: this.state.estado
+	          });
+	          this.props.onClose();
+	        }
 	      } else {
 	        if (this.state.detalle.length < 1) {
 	          this.setState({
@@ -53744,7 +53800,7 @@
 	        }
 	        if (!this.state.fechaPedido) {
 	          this.setState({
-	            errorFechaPedido: true
+	            errorFechaPedido: 'Ingrese una fecha'
 	          });
 	        }
 	      }
@@ -53863,6 +53919,7 @@
 	              name: 'fechaEntrega',
 	              value: this.state.fechaEntrega ? this.state.fechaEntrega : "",
 	              onChange: this.handleOnChange,
+	              error: this.state.errorFechaEntrega,
 	              disabled: this.state.pagos.length > 0 || this.state.fechaEntregado ? true : false
 	            })
 	          ),
@@ -53900,6 +53957,7 @@
 	            _react2.default.createElement(_DatePicker2.default, {
 	              name: 'fechaEntregado',
 	              value: this.state.fechaEntregado ? this.state.fechaEntregado : "",
+	              error: this.state.errorFechaEntregado,
 	              onChange: this.handleOnChange
 	            })
 	          ),

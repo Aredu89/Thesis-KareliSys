@@ -9,9 +9,11 @@ export default class PedidosEditar extends React.Component {
     this.state={
       _id: "",
       fechaPedido: "",
-      errorFechaPedido: false,
+      errorFechaPedido: '',
       fechaEntrega: "",
+      errorFechaEntrega: '',
       fechaEntregado: "",
+      errorFechaEntregado: '',
       detalle: [],
       errorDetalle: false,
       precioTotal: "",
@@ -74,9 +76,21 @@ export default class PedidosEditar extends React.Component {
       })
     }
     //Limpio el error de fecha del pedido
-    if(event.target.name === "fechaPedido" && this.state.errorFechaPedido == true){
+    if(event.target.name === "fechaPedido" && this.state.errorFechaPedido !== ''){
       this.setState({
-        errorFechaPedido: false
+        errorFechaPedido: ''
+      })
+    }
+    //Limpio el error de fecha de entrega
+    if(event.target.name === "fechaEntrega" && this.state.errorFechaEntrega !== ''){
+      this.setState({
+        errorFechaEntrega: ''
+      })
+    }
+    //Limpio el error de fecha de entregado
+    if(event.target.name === "fechaEntregado" && this.state.errorFechaEntregado !== ''){
+      this.setState({
+        errorFechaEntregado: ''
       })
     }
   }
@@ -129,17 +143,35 @@ export default class PedidosEditar extends React.Component {
 
   onSave(){
     if(this.state.fechaPedido && this.state.detalle.length > 0){
-      this.props.onSave({
-        _id: this.state._id,
-        fechaPedido: this.state.fechaPedido ? funciones.numerosAFecha(this.state.fechaPedido) : new Date(),
-        fechaEntrega: this.state.fechaEntrega ? funciones.numerosAFecha(this.state.fechaEntrega) : null,
-        fechaEntregado: this.state.fechaEntregado ? funciones.numerosAFecha(this.state.fechaEntregado) : null,
-        detalle: this.state.detalle,
-        pagos: this.state.pagos ? this.state.pagos : [],
-        precioTotal: this.state.precioTotal ? Number(this.state.precioTotal) : null,
-        estado: this.state.estado
-      })
-      this.props.onClose()
+      if(funciones.numerosAFecha(this.state.fechaEntrega) < funciones.numerosAFecha(this.state.fechaPedido)){
+        this.setState({
+          errorFechaEntrega: 'La fecha de entrega no puede ser menor a la fecha del pedido'
+        })
+      }
+      if(funciones.numerosAFecha(this.state.fechaEntregado) < funciones.numerosAFecha(this.state.fechaPedido)){
+        this.setState({
+          errorFechaEntregado: 'La fecha de entregado no puede ser menor a la fecha del pedido'
+        })
+      }
+      if(
+        (funciones.numerosAFecha(this.state.fechaEntrega) >= funciones.numerosAFecha(this.state.fechaPedido) ||
+        !this.state.fechaEntrega) &&
+        (funciones.numerosAFecha(this.state.fechaEntregado) >= funciones.numerosAFecha(this.state.fechaPedido) ||
+        !this.state.fechaEntregado)
+      ){
+        //Guardo el pedido
+        this.props.onSave({
+          _id: this.state._id,
+          fechaPedido: this.state.fechaPedido ? funciones.numerosAFecha(this.state.fechaPedido) : new Date(),
+          fechaEntrega: this.state.fechaEntrega ? funciones.numerosAFecha(this.state.fechaEntrega) : null,
+          fechaEntregado: this.state.fechaEntregado ? funciones.numerosAFecha(this.state.fechaEntregado) : null,
+          detalle: this.state.detalle,
+          pagos: this.state.pagos ? this.state.pagos : [],
+          precioTotal: this.state.precioTotal ? Number(this.state.precioTotal) : null,
+          estado: this.state.estado
+        })
+        this.props.onClose()
+      }
     } else {
       if(this.state.detalle.length < 1){
         this.setState({
@@ -148,7 +180,7 @@ export default class PedidosEditar extends React.Component {
       }
       if(!this.state.fechaPedido){
         this.setState({
-          errorFechaPedido: true
+          errorFechaPedido: 'Ingrese una fecha'
         })
       }
     }
@@ -225,6 +257,7 @@ export default class PedidosEditar extends React.Component {
                 name="fechaEntrega"
                 value={this.state.fechaEntrega ? this.state.fechaEntrega : ""}
                 onChange={this.handleOnChange}
+                error={this.state.errorFechaEntrega}
                 disabled={this.state.pagos.length > 0 || this.state.fechaEntregado ? true : false}
                 />
             </div>
@@ -252,13 +285,13 @@ export default class PedidosEditar extends React.Component {
           {/* Fecha Entregado */}
           {
             this.state._id &&
-            this.state.fechaEntrega &&
-            this.state.precioTotal &&
+            this.state.estado !== 'pendiente' &&
             <div className="col-12 form-group text-center pt-2">
               <label>Fecha Entregado</label>
               <DatePicker
                 name="fechaEntregado"
                 value={this.state.fechaEntregado ? this.state.fechaEntregado : ""}
+                error={this.state.errorFechaEntregado}
                 onChange={this.handleOnChange}
                 />
             </div>

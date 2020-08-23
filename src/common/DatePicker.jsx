@@ -21,7 +21,7 @@ export default function DatePicker(props) {
         mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
         />
       {error && 
-        <div className="invalid-feedback">Ingrese una fecha</div>
+        <div className="invalid-feedback">{error}</div>
       }
     </div>
   )

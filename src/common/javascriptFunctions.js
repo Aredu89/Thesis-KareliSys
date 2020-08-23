@@ -1,7 +1,7 @@
 // Formatear una fecha
 module.exports.formatearDate = date => {
   const fecha = new Date(date)
-  const dd = fecha.getDate()
+  const dd = fecha.getDate()+1
   const mm = fecha.getMonth()+1
   const yyyy = fecha.getFullYear()
   return dd+"/"+mm+"/"+yyyy
@@ -134,7 +134,7 @@ module.exports.numerosAFecha = string => {
 //Convertir de fecha a numeros dd/mm/yyyy
 module.exports.fechaANumeros = fecha => {
   const date = new Date(fecha)
-  const dia = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+  const dia = date.getDate()+1 < 10 ? '0' + date.getDate()+1 : date.getDate()+1
   const mesraw = date.getMonth() + 1
   const mes = mesraw < 10 ? '0' + mesraw : mesraw
   return dia + '/' + mes + '/' + date.getFullYear()
