@@ -53,6 +53,7 @@ export default class FabricasPedidos extends React.Component {
                 error: "",
                 fabrica: data,
                 pedidos: data.pedidos,
+                productos: data.productos,
               })
             })
           } else {
