@@ -52781,10 +52781,6 @@
 	
 	var _ContactosEditar2 = _interopRequireDefault(_ContactosEditar);
 	
-	var _PedidosEditar = __webpack_require__(325);
-	
-	var _PedidosEditar2 = _interopRequireDefault(_PedidosEditar);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -52822,7 +52818,6 @@
 	      modalContactosEditar: null,
 	      modalPedidos: false,
 	      modalPedidosEditar: null,
-	      productosDisponibles: [],
 	      //Permisos
 	      permits: ""
 	    };
@@ -52833,10 +52828,6 @@
 	    _this.handleEditarContacto = _this.handleEditarContacto.bind(_this);
 	    _this.onSaveModal = _this.onSaveModal.bind(_this);
 	    _this.handleEliminarContacto = _this.handleEliminarContacto.bind(_this);
-	    _this.handleEditarPedido = _this.handleEditarPedido.bind(_this);
-	    _this.handleEliminarPedido = _this.handleEliminarPedido.bind(_this);
-	    _this.onCrearPedido = _this.onCrearPedido.bind(_this);
-	    _this.obtenerProductos = _this.obtenerProductos.bind(_this);
 	    return _this;
 	  }
 	
@@ -52845,7 +52836,6 @@
 	    value: function componentDidMount() {
 	      if (this.props.params.id) {
 	        this.obtenerCliente();
-	        this.obtenerProductos();
 	      } else {
 	        this.setState({
 	          cargando: false
@@ -52901,30 +52891,6 @@
 	      });
 	    }
 	
-	    //Obtengo los productos disponibles para los pedidos
-	
-	  }, {
-	    key: 'obtenerProductos',
-	    value: function obtenerProductos() {
-	      var _this3 = this;
-	
-	      fetch('/api/stock').then(function (res) {
-	        if (res.ok) {
-	          res.json().then(function (data) {
-	            _this3.setState({
-	              productosDisponibles: data
-	            });
-	          });
-	        } else {
-	          res.json().then(function (error) {
-	            console.log("Error al obtener productos. ", error.message);
-	          });
-	        }
-	      }).catch(function (error) {
-	        console.log("Error del servidor al obtener productos: ", error.message);
-	      });
-	    }
-	
 	    //Manejo de cambios en el formulario
 	
 	  }, {
@@ -52944,7 +52910,7 @@
 	  }, {
 	    key: 'crearCliente',
 	    value: function crearCliente(nuevoCliente) {
-	      var _this4 = this;
+	      var _this3 = this;
 	
 	      fetch('/api/clientes', {
 	        method: 'POST',
@@ -52955,7 +52921,7 @@
 	          res.json().then(function (data) {
 	            console.log("Cliente creado: ", data);
 	            _sweetalert2.default.fire("Cliente creado!", "", "success").then(function () {
-	              _this4.props.history.push("/clientes");
+	              _this3.props.history.push("/clientes");
 	            });
 	          });
 	        } else {
@@ -52975,7 +52941,7 @@
 	  }, {
 	    key: 'modificarCliente',
 	    value: function modificarCliente(nuevoCliente, id) {
-	      var _this5 = this;
+	      var _this4 = this;
 	
 	      fetch('/api/clientes/' + id, {
 	        method: 'PUT',
@@ -52986,7 +52952,7 @@
 	          res.json().then(function (data) {
 	            console.log("Cliente modificado: ", data);
 	            _sweetalert2.default.fire("Cliente modificado!", "", "success").then(function () {
-	              _this5.props.history.push("/clientes");
+	              _this4.props.history.push("/clientes");
 	            });
 	          });
 	        } else {
@@ -53036,14 +53002,14 @@
 	  }, {
 	    key: 'handleEditarContacto',
 	    value: function handleEditarContacto(id) {
-	      var _this6 = this;
+	      var _this5 = this;
 	
 	      //Busco el id
 	      this.state.contactos.forEach(function (contacto) {
 	        if (contacto._id === id) {
-	          _this6.setState({
+	          _this5.setState({
 	            modalContactosEditar: contacto
-	          }, _this6.onOpenModal("modalContactos"));
+	          }, _this5.onOpenModal("modalContactos"));
 	          return;
 	        }
 	      });
@@ -53051,70 +53017,17 @@
 	  }, {
 	    key: 'handleEliminarContacto',
 	    value: function handleEliminarContacto(id) {
-	      var _this7 = this;
+	      var _this6 = this;
 	
 	      var auxContactos = this.state.contactos;
 	      //Elimino el contacto del state
 	      auxContactos.forEach(function (contacto, i) {
 	        if (contacto._id === id) {
 	          auxContactos.splice(i, 1);
-	          _this7.setState({
+	          _this6.setState({
 	            contactos: auxContactos
 	          });
 	          return;
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'handleEditarPedido',
-	    value: function handleEditarPedido(id) {
-	      var _this8 = this;
-	
-	      //Busco el id
-	      this.state.pedidos.forEach(function (pedido) {
-	        if (pedido._id === id) {
-	          _this8.setState({
-	            modalPedidosEditar: pedido
-	          }, _this8.onOpenModal("modalPedidos"));
-	          return;
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'handleEliminarPedido',
-	    value: function handleEliminarPedido(id) {
-	      var _this9 = this;
-	
-	      //Primero pido confirmación
-	      _sweetalert2.default.fire({
-	        title: "¿Seguro que desea eliminar?",
-	        text: "Esta acción no se puede revertir",
-	        icon: "warning",
-	        showCancelButton: true,
-	        confirmButtonColor: "#3085d6",
-	        cancelButtonColor: "#d33",
-	        confirmButtonText: "Si, eliminar"
-	      }).then(function (result) {
-	        if (result.value) {
-	          //Elimino
-	          fetch('/api/clientes/' + _this9.state._id + '/pedidos/' + id, {
-	            method: 'DELETE',
-	            headers: { 'Content-Type': 'application/json' }
-	          }).then(function (res) {
-	            if (res.ok) {
-	              res.json().then(function (data) {
-	                _sweetalert2.default.fire("Pedido Eliminado", "", "success").then(function () {
-	                  _this9.setState({
-	                    pedidos: data.pedidos
-	                  });
-	                });
-	              });
-	            } else {
-	              _sweetalert2.default.fire("Error al eliminar", "", "error");
-	            }
-	          }).catch(function (err) {
-	            _sweetalert2.default.fire("Error del servidor", err.message, "error");
-	          });
 	        }
 	      });
 	    }
@@ -53161,66 +53074,9 @@
 	      this.setState(_defineProperty({}, array, auxArray));
 	    }
 	  }, {
-	    key: 'onCrearPedido',
-	    value: function onCrearPedido(obj) {
-	      var _this10 = this;
-	
-	      if (obj._id) {
-	        //Modifico un pedido existente
-	        fetch('/api/clientes/' + this.state._id + '/pedidos/' + obj._id, {
-	          method: 'PUT',
-	          headers: { 'Content-Type': 'application/json' },
-	          body: JSON.stringify(obj)
-	        }).then(function (res) {
-	          if (res.ok) {
-	            res.json().then(function (data) {
-	              _sweetalert2.default.fire("Pedido modificado!", "", "success").then(function () {
-	                _this10.setState({
-	                  pedidos: data.pedidos
-	                });
-	              });
-	            });
-	          } else {
-	            res.json().then(function (err) {
-	              console.log("Error al modificar pedido: ", err.message);
-	              _sweetalert2.default.fire("Error al modificar el pedido", err.message, "error");
-	            });
-	          }
-	        }).catch(function (err) {
-	          console.log("Error al crear: ", err.message);
-	          _sweetalert2.default.fire("Error del servidor", err.message, "error");
-	        });
-	      } else {
-	        //Crear pedido
-	        fetch('/api/clientes/' + this.state._id + '/pedidos', {
-	          method: 'POST',
-	          headers: { 'Content-Type': 'application/json' },
-	          body: JSON.stringify(obj)
-	        }).then(function (res) {
-	          if (res.ok) {
-	            res.json().then(function (data) {
-	              _sweetalert2.default.fire("Pedido creado!", "", "success").then(function () {
-	                _this10.setState({
-	                  pedidos: data.pedidos
-	                });
-	              });
-	            });
-	          } else {
-	            res.json().then(function (err) {
-	              console.log("Error al crear pedido: ", err.message);
-	              _sweetalert2.default.fire("Error al crear el pedido", "", "error");
-	            });
-	          }
-	        }).catch(function (err) {
-	          console.log("Error al crear: ", err.message);
-	          _sweetalert2.default.fire("Error del servidor", "", "error");
-	        });
-	      }
-	    }
-	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this11 = this;
+	      var _this7 = this;
 	
 	      var permits = this.state.permits;
 	      //Permisos
@@ -53230,7 +53086,6 @@
 	      var permitRead = permits === "MODIFICAR" || permits === "CREAR" || permits === "LEER" ? true : false;
 	      //Tabla
 	      var columnsContactos = [["Nombre", "nombre", "String"], ["Apellido", "apellido", "String"], ["Email", "email", "String"], ["Teléfono", "telefono", "String"]];
-	      var columnsPedidos = [["Fecha del pedido", "fechaPedido", "Fecha"], ["Fecha de entrega", "fechaEntrega", "Fecha"], ["Precio total", "precioTotal", "Money"], ["Adeudado", "data", "Pedido Adeudado"], ["Productos", "detalle", "Largo"], ["Estado", "estado", "String"]];
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fabricas-editar text-center' },
@@ -53261,7 +53116,7 @@
 	                  { type: 'button',
 	                    className: 'btn btn-success',
 	                    onClick: function onClick() {
-	                      return _this11.onClickGuardar();
+	                      return _this7.onClickGuardar();
 	                    }
 	                  },
 	                  '+ Guardar'
@@ -53271,7 +53126,7 @@
 	                  { type: 'button',
 	                    className: 'btn btn-secondary ml-2',
 	                    onClick: function onClick() {
-	                      return _this11.goToPedidos();
+	                      return _this7.goToPedidos();
 	                    }
 	                  },
 	                  'Ir a Pedidos'
@@ -53281,7 +53136,7 @@
 	                  { type: 'button',
 	                    className: 'btn btn-secondary ml-2',
 	                    onClick: function onClick() {
-	                      return _this11.goToPagos();
+	                      return _this7.goToPagos();
 	                    }
 	                  },
 	                  'Ir a Pagos $'
@@ -53399,7 +53254,7 @@
 	                    { type: 'button',
 	                      className: 'btn btn-outline-success',
 	                      onClick: function onClick() {
-	                        return _this11.onOpenModal("modalContactos");
+	                        return _this7.onOpenModal("modalContactos");
 	                      }
 	                    },
 	                    '+ Agregar Contacto'
@@ -53426,68 +53281,6 @@
 	                  )
 	                )
 	              )
-	            ),
-	            !this.state.nuevo && _react2.default.createElement(
-	              'div',
-	              { className: 'col-12 mt-3' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'card border-primary', id: 'card' },
-	                _react2.default.createElement(
-	                  'div',
-	                  { className: 'card-header d-flex justify-content-between', id: 'headingOne' },
-	                  _react2.default.createElement(
-	                    'button',
-	                    { type: 'button',
-	                      className: 'btn btn-link collapsed col-sm-8 col-6',
-	                      'data-toggle': 'collapse',
-	                      'data-target': '#collapseTwo',
-	                      'aria-expanded': 'false',
-	                      'aria-controls': 'collapseTwo' },
-	                    _react2.default.createElement(
-	                      'h5',
-	                      { className: 'd-flex align-items-center mb-0' },
-	                      'Pedidos: ',
-	                      this.state.pedidos.length,
-	                      _react2.default.createElement(
-	                        'i',
-	                        { className: 'material-icons ml-3' },
-	                        'keyboard_arrow_down'
-	                      )
-	                    )
-	                  ),
-	                  (this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate) && _react2.default.createElement(
-	                    'button',
-	                    { type: 'button',
-	                      className: 'btn btn-outline-success',
-	                      onClick: function onClick() {
-	                        return _this11.onOpenModal("modalPedidos");
-	                      }
-	                    },
-	                    '+ Agregar Pedido'
-	                  )
-	                ),
-	                _react2.default.createElement(
-	                  'div',
-	                  { id: 'collapseTwo',
-	                    className: 'collapse',
-	                    'aria-labelledby': 'headingTwo',
-	                    'data-parent': '#card' },
-	                  _react2.default.createElement(
-	                    'div',
-	                    { className: 'card-body contenedor-tabla' },
-	                    _react2.default.createElement(_TablaFlexible2.default, {
-	                      lista: "pedidos",
-	                      columns: columnsPedidos,
-	                      data: this.state.pedidos,
-	                      handleEditar: this.handleEditarPedido,
-	                      handleEliminar: this.handleEliminarPedido,
-	                      blockRead: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true,
-	                      blockDelete: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true
-	                    })
-	                  )
-	                )
-	              )
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -53495,7 +53288,7 @@
 	            {
 	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
 	              onClose: function onClose() {
-	                return _this11.onCloseModal("modalContactos");
+	                return _this7.onCloseModal("modalContactos");
 	              },
 	              showCloseIcon: false,
 	              open: this.state.modalContactos,
@@ -53505,30 +53298,9 @@
 	              data: this.state.modalContactosEditar,
 	              onSave: this.onSaveModal,
 	              onClose: function onClose() {
-	                return _this11.onCloseModal("modalContactos");
+	                return _this7.onCloseModal("modalContactos");
 	              },
 	              titulo: this.state.modalContactosEditar ? "EDITAR CONTACTO" : "CREAR CONTACTO"
-	            })
-	          ),
-	          _react2.default.createElement(
-	            _reactResponsiveModal2.default,
-	            {
-	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
-	              onClose: function onClose() {
-	                return _this11.onCloseModal("modalPedidos");
-	              },
-	              showCloseIcon: false,
-	              open: this.state.modalPedidos,
-	              center: true
-	            },
-	            _react2.default.createElement(_PedidosEditar2.default, {
-	              data: this.state.modalPedidosEditar,
-	              onSave: this.onCrearPedido,
-	              onClose: function onClose() {
-	                return _this11.onCloseModal("modalPedidos");
-	              },
-	              titulo: this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO",
-	              productos: this.state.productosDisponibles
 	            })
 	          )
 	        ) : this.state.error ?
@@ -54425,7 +54197,13 @@
 	
 	var _reactResponsiveModal2 = _interopRequireDefault(_reactResponsiveModal);
 	
+	var _PedidosEditar = __webpack_require__(325);
+	
+	var _PedidosEditar2 = _interopRequireDefault(_PedidosEditar);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -54444,13 +54222,20 @@
 	
 	    _this.state = {
 	      cliente: {},
+	      pedidos: [],
 	      cargando: true,
 	      error: "",
+	      modalPedidos: false,
+	      modalPedidosEditar: null,
+	      productosDisponibles: [],
 	      //Permisos
 	      permits: "",
 	      permitsAdmin: false
 	    };
 	    _this.cargarCliente = _this.cargarCliente.bind(_this);
+	    _this.handleEditarPedido = _this.handleEditarPedido.bind(_this);
+	    _this.handleEliminarPedido = _this.handleEliminarPedido.bind(_this);
+	    _this.onCrearPedido = _this.onCrearPedido.bind(_this);
 	    return _this;
 	  }
 	
@@ -54458,6 +54243,7 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.cargarCliente();
+	      this.obtenerProductos();
 	      //Controlo permisos
 	      var user = JSON.parse(localStorage.getItem("currentUser"));
 	      if (user) {
@@ -54483,7 +54269,8 @@
 	              _this2.setState({
 	                cargando: false,
 	                error: "",
-	                cliente: data
+	                cliente: data,
+	                pedidos: data.pedidos
 	              });
 	            });
 	          } else {
@@ -54509,13 +54296,167 @@
 	        });
 	      }
 	    }
+	
+	    //Obtengo los productos disponibles para los pedidos
+	
+	  }, {
+	    key: 'obtenerProductos',
+	    value: function obtenerProductos() {
+	      var _this3 = this;
+	
+	      fetch('/api/stock').then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            _this3.setState({
+	              productosDisponibles: data
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener productos. ", error.message);
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.log("Error del servidor al obtener productos: ", error.message);
+	      });
+	    }
+	  }, {
+	    key: 'handleEditarPedido',
+	    value: function handleEditarPedido(id) {
+	      var _this4 = this;
+	
+	      //Busco el id
+	      this.state.pedidos.forEach(function (pedido) {
+	        if (pedido._id === id) {
+	          _this4.setState({
+	            modalPedidosEditar: pedido
+	          }, _this4.onOpenModal("modalPedidos"));
+	          return;
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'handleEliminarPedido',
+	    value: function handleEliminarPedido(id) {
+	      var _this5 = this;
+	
+	      //Primero pido confirmación
+	      _sweetalert2.default.fire({
+	        title: "¿Seguro que desea eliminar?",
+	        text: "Esta acción no se puede revertir",
+	        icon: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#3085d6",
+	        cancelButtonColor: "#d33",
+	        confirmButtonText: "Si, eliminar"
+	      }).then(function (result) {
+	        if (result.value) {
+	          //Elimino
+	          fetch('/api/clientes/' + _this5.state.cliente._id + '/pedidos/' + id, {
+	            method: 'DELETE',
+	            headers: { 'Content-Type': 'application/json' }
+	          }).then(function (res) {
+	            if (res.ok) {
+	              res.json().then(function (data) {
+	                _sweetalert2.default.fire("Pedido Eliminado", "", "success").then(function () {
+	                  _this5.setState({
+	                    pedidos: data.pedidos
+	                  });
+	                });
+	              });
+	            } else {
+	              _sweetalert2.default.fire("Error al eliminar", "", "error");
+	            }
+	          }).catch(function (err) {
+	            _sweetalert2.default.fire("Error del servidor", err.message, "error");
+	          });
+	        }
+	      });
+	    }
+	
+	    //Modal
+	
+	  }, {
+	    key: 'onOpenModal',
+	    value: function onOpenModal(cual) {
+	      this.setState(_defineProperty({}, cual, true));
+	    }
+	  }, {
+	    key: 'onCloseModal',
+	    value: function onCloseModal(cual) {
+	      var _setState2;
+	
+	      this.setState((_setState2 = {}, _defineProperty(_setState2, cual, false), _defineProperty(_setState2, cual + "Editar", null), _setState2));
+	    }
+	  }, {
+	    key: 'onCrearPedido',
+	    value: function onCrearPedido(obj) {
+	      var _this6 = this;
+	
+	      if (obj._id) {
+	        //Modifico un pedido existente
+	        fetch('/api/clientes/' + this.state.cliente._id + '/pedidos/' + obj._id, {
+	          method: 'PUT',
+	          headers: { 'Content-Type': 'application/json' },
+	          body: JSON.stringify(obj)
+	        }).then(function (res) {
+	          if (res.ok) {
+	            res.json().then(function (data) {
+	              _sweetalert2.default.fire("Pedido modificado!", "", "success").then(function () {
+	                _this6.setState({
+	                  pedidos: data.pedidos
+	                });
+	              });
+	            });
+	          } else {
+	            res.json().then(function (err) {
+	              console.log("Error al modificar pedido: ", err.message);
+	              _sweetalert2.default.fire("Error al modificar el pedido", err.message, "error");
+	            });
+	          }
+	        }).catch(function (err) {
+	          console.log("Error al crear: ", err.message);
+	          _sweetalert2.default.fire("Error del servidor", err.message, "error");
+	        });
+	      } else {
+	        //Crear pedido
+	        fetch('/api/clientes/' + this.state.cliente._id + '/pedidos', {
+	          method: 'POST',
+	          headers: { 'Content-Type': 'application/json' },
+	          body: JSON.stringify(obj)
+	        }).then(function (res) {
+	          if (res.ok) {
+	            res.json().then(function (data) {
+	              _sweetalert2.default.fire("Pedido creado!", "", "success").then(function () {
+	                _this6.setState({
+	                  pedidos: data.pedidos
+	                });
+	              });
+	            });
+	          } else {
+	            res.json().then(function (err) {
+	              console.log("Error al crear pedido: ", err.message);
+	              _sweetalert2.default.fire("Error al crear el pedido", "", "error");
+	            });
+	          }
+	        }).catch(function (err) {
+	          console.log("Error al crear: ", err.message);
+	          _sweetalert2.default.fire("Error del servidor", "", "error");
+	        });
+	      }
+	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this7 = this;
+	
 	      var permits = this.state.permits;
 	      //Permisos
 	
 	      var permitUpdate = permits === "MODIFICAR" ? true : false;
+	      var permitCreate = permits === "MODIFICAR" || permits === "CREAR" ? true : false;
+	      //Tabla
+	      var columnsPedidos = [["Fecha del pedido", "fechaPedido", "Fecha"], ["Fecha de entrega", "fechaEntrega", "Fecha"], ["Precio total", "precioTotal", "Money"], ["Adeudado", "data", "Pedido Adeudado"], ["Productos", "detalle", "Largo"], ["Estado", "estado", "String"]];
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fabricas-pedidos text-center' },
@@ -54549,10 +54490,53 @@
 	                  'h5',
 	                  null,
 	                  'Pedidos del cliente:'
+	                ),
+	                permitUpdate && _react2.default.createElement(
+	                  'button',
+	                  { type: 'button',
+	                    className: 'btn btn-outline-success',
+	                    onClick: function onClick() {
+	                      return _this7.onOpenModal("modalPedidos");
+	                    }
+	                  },
+	                  '+ Agregar Pedido'
 	                )
 	              ),
-	              _react2.default.createElement('div', { className: 'card-body contenedor-tabla' })
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-body contenedor-tabla' },
+	                _react2.default.createElement(_TablaFlexible2.default, {
+	                  lista: "pedidos",
+	                  columns: columnsPedidos,
+	                  data: this.state.pedidos,
+	                  handleEditar: this.handleEditarPedido,
+	                  handleEliminar: this.handleEliminarPedido,
+	                  blockRead: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true,
+	                  blockDelete: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true
+	                })
+	              )
 	            )
+	          ),
+	          _react2.default.createElement(
+	            _reactResponsiveModal2.default,
+	            {
+	              classNames: { modal: ['modal-custom'], closeButton: ['modal-custom-button'] },
+	              onClose: function onClose() {
+	                return _this7.onCloseModal("modalPedidos");
+	              },
+	              showCloseIcon: false,
+	              open: this.state.modalPedidos,
+	              center: true
+	            },
+	            _react2.default.createElement(_PedidosEditar2.default, {
+	              data: this.state.modalPedidosEditar,
+	              onSave: this.onCrearPedido,
+	              onClose: function onClose() {
+	                return _this7.onCloseModal("modalPedidos");
+	              },
+	              titulo: this.state.modalPedidosEditar ? "EDITAR PEDIDO" : "CREAR PEDIDO",
+	              productos: this.state.productosDisponibles
+	            })
 	          )
 	        ) : this.state.error ?
 	        //Mensaje de error
