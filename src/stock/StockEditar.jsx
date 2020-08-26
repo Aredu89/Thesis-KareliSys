@@ -1,5 +1,6 @@
 import React from 'react'
 import Swal from 'sweetalert2' //https://github.com/sweetalert2/sweetalert2
+import FormSelect from '../common/FormSelect.jsx'
 
 export default class FabricasEditar extends React.Component {
   constructor() {
@@ -11,14 +12,17 @@ export default class FabricasEditar extends React.Component {
       _id: "",
       // Campos del formulario
       producto: "",
+      errorProducto: false,
       fabrica: "",
+      errorFabrica: false,
       tipo: "",
       material: "",
       talle: "",
+      errorTalle: false,
       estilo: "",
       cantidad: "",
+      errorCantidad: false,
       estante: "",
-      errorProducto: false,
       fabricas: [],
       //Permisos
       permits: ""
@@ -86,7 +90,6 @@ export default class FabricasEditar extends React.Component {
         if(res.ok){
           res.json()
           .then(data =>{
-            console.log("Stock: ",data)
             this.setState({
               _id: data._id,
               nuevo: false,
@@ -130,6 +133,21 @@ export default class FabricasEditar extends React.Component {
     if(event.target.name === "producto"){
       this.setState({
         errorProducto: false
+      })
+    }
+    if(event.target.name === "fabrica"){
+      this.setState({
+        errorFabrica: false
+      })
+    }
+    if(event.target.name === "talle"){
+      this.setState({
+        errorTalle: false
+      })
+    }
+    if(event.target.name === "cantidad"){
+      this.setState({
+        errorCantidad: false
       })
     }
   }
@@ -219,7 +237,12 @@ export default class FabricasEditar extends React.Component {
   }
 
   onClickGuardar(){
-    if(this.state.producto){
+    if(
+      this.state.producto &&
+      this.state.fabrica &&
+      this.state.talle &&
+      this.state.cantidad
+      ){
       if(this.state.nuevo){
         //Creo un registro
         this.crearStock({
@@ -247,9 +270,26 @@ export default class FabricasEditar extends React.Component {
         }, this.state._id)
       }
     } else {
-      this.setState({
-        errorProducto: true
-      })
+      if(!this.state.fabrica){
+        this.setState({
+          errorFabrica: true
+        })
+      }
+      if(!this.state.producto){
+        this.setState({
+          errorProducto: true
+        })
+      }
+      if(!this.state.talle){
+        this.setState({
+          errorTalle: true
+        })
+      }
+      if(!this.state.cantidad){
+        this.setState({
+          errorCantidad: true
+        })
+      }
     }
   }
 
@@ -266,17 +306,51 @@ export default class FabricasEditar extends React.Component {
       permits === "LEER" ? true : false
     //Opciones de los selects
     let fabricasArray = []
+    let productosArray = []
+    let tallesArray = []
     if(this.state.fabricas){
       if(this.state.fabricas.length > 0){
+        //Completo las opciones de fábricas
         this.state.fabricas.forEach(fab=>{
           fabricasArray.push({
             id: fab.nombre,
             value: fab.nombre
           })
         })
+        //Completo las opciones de productos
+        if(this.state.fabrica){
+          const fabricaAux = this.state.fabricas.find(fabr=>fabr.nombre === this.state.fabrica)
+          if(fabricaAux){
+            if(fabricaAux.productos){
+              if(fabricaAux.productos.length > 0){
+                fabricaAux.productos.forEach(prod=>{
+                  productosArray.push({
+                    id: prod.nombre,
+                    value: prod.nombre
+                  })
+                })
+                //Completo las opciones de talles
+                if(this.state.producto){
+                  const productoAux = fabricaAux.productos.find(pr=>pr.nombre === this.state.producto)
+                  if(productoAux){
+                    if(productoAux.talles){
+                      if(productoAux.talles.length > 0){
+                        productoAux.talles.forEach(tall=>{
+                          tallesArray.push({
+                            id: tall,
+                            value: tall
+                          })
+                        })
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
-    
     return (
       <div className="fabricas-editar text-center">
         {!this.state.cargando ?
@@ -305,21 +379,60 @@ export default class FabricasEditar extends React.Component {
           </div>
           {/* Formulario */}
           <div className="row contenedor-formulario text-center">
+            {/* Fabrica */}
+            <div className="col-sm-6 col-12 form-group">
+              <FormSelect
+                label="Fábrica"
+                name="fabrica"
+                value={this.state.fabrica}
+                onChange={this.handleOnChange}
+                error={this.state.errorFabrica}
+                options={fabricasArray}
+                disabled={this.state.nuevo && permitCreate ||
+                  !this.state.nuevo && permitUpdate ? false : true}
+                />
+            </div>
             {/* Producto */}
             <div className="col-sm-6 col-12 form-group">
-              <label>Producto</label>
-              <input type="text" 
-                className={this.state.errorProducto ? "form-control is-invalid" : "form-control"}
-                id="producto" 
+              <FormSelect
+                label="Producto"
                 name="producto"
-                placeholder="Producto..."
                 value={this.state.producto}
+                onChange={this.handleOnChange}
+                error={this.state.errorProducto}
+                options={productosArray}
+                disabled={this.state.nuevo && permitCreate ||
+                  !this.state.nuevo && permitUpdate ? false : true}
+                />
+            </div>
+            {/* Talle */}
+            <div className="col-sm-6 col-12 form-group">
+              <FormSelect
+                label="Talle"
+                name="talle"
+                value={this.state.talle}
+                onChange={this.handleOnChange}
+                error={this.state.errorTalle}
+                options={tallesArray}
+                disabled={this.state.nuevo && permitCreate ||
+                  !this.state.nuevo && permitUpdate ? false : true}
+                />
+            </div>
+            {/* Cantidad */}
+            <div className="col-sm-6 col-12 form-group">
+              <label>Cantidad</label>
+              <input type="number" 
+                className={this.state.errorCantidad ? "form-control is-invalid" : "form-control"}
+                id="cantidad" 
+                name="cantidad"
+                placeholder="Cantidad..."
+                value={this.state.cantidad}
                 onChange={this.handleOnChange}
                 disabled={this.state.nuevo && permitCreate ||
                   !this.state.nuevo && permitUpdate ? false : true} />
               {
-                this.state.errorProducto ?
-                <div className="invalid-feedback">El producto es requerido</div>
+                this.state.errorCantidad ?
+                <div className="invalid-feedback">Ingrese una cantidad</div>
                 : null
               }
             </div>
@@ -349,19 +462,6 @@ export default class FabricasEditar extends React.Component {
                 disabled={this.state.nuevo && permitCreate ||
                   !this.state.nuevo && permitUpdate ? false : true} />
             </div>
-            {/* Talle */}
-            <div className="col-sm-6 col-12 form-group">
-              <label>Talle</label>
-              <input type="number" 
-                className="form-control"
-                id="talle" 
-                name="talle"
-                placeholder="Talle..."
-                value={this.state.talle}
-                onChange={this.handleOnChange}
-                disabled={this.state.nuevo && permitCreate ||
-                  !this.state.nuevo && permitUpdate ? false : true} />
-            </div>
             {/* Estilo */}
             <div className="col-sm-6 col-12 form-group">
               <label>Estilo</label>
@@ -371,19 +471,6 @@ export default class FabricasEditar extends React.Component {
                 name="estilo"
                 placeholder="Estilo..."
                 value={this.state.estilo}
-                onChange={this.handleOnChange}
-                disabled={this.state.nuevo && permitCreate ||
-                  !this.state.nuevo && permitUpdate ? false : true} />
-            </div>
-            {/* Cantidad */}
-            <div className="col-sm-6 col-12 form-group">
-              <label>Cantidad</label>
-              <input type="number" 
-                className="form-control"
-                id="cantidad" 
-                name="cantidad"
-                placeholder="Cantidad..."
-                value={this.state.cantidad}
                 onChange={this.handleOnChange}
                 disabled={this.state.nuevo && permitCreate ||
                   !this.state.nuevo && permitUpdate ? false : true} />

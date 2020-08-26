@@ -51597,6 +51597,9 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	exports.default = FormSelect;
 	
 	var _react = __webpack_require__(1);
@@ -51638,12 +51641,12 @@
 	    ),
 	    _react2.default.createElement(
 	      "select",
-	      {
+	      _extends({}, props, {
 	        className: error ? 'select form-control mb-2 is-invalid' : 'select form-control mb-2',
 	        name: name,
 	        value: value,
 	        onChange: onChange
-	      },
+	      }),
 	      selectOptions.length > 0 ? selectOptions.map(function (opt, i) {
 	        return _react2.default.createElement(
 	          "option",
@@ -55656,6 +55659,10 @@
 	
 	var _sweetalert2 = _interopRequireDefault(_sweetalert);
 	
+	var _FormSelect = __webpack_require__(319);
+	
+	var _FormSelect2 = _interopRequireDefault(_FormSelect);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -55664,9 +55671,8 @@
 	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //https://github.com/sweetalert2/sweetalert2
 	
-	//https://github.com/sweetalert2/sweetalert2
 	
 	var FabricasEditar = function (_React$Component) {
 	  _inherits(FabricasEditar, _React$Component);
@@ -55683,14 +55689,17 @@
 	      _id: "",
 	      // Campos del formulario
 	      producto: "",
+	      errorProducto: false,
 	      fabrica: "",
+	      errorFabrica: false,
 	      tipo: "",
 	      material: "",
 	      talle: "",
+	      errorTalle: false,
 	      estilo: "",
 	      cantidad: "",
+	      errorCantidad: false,
 	      estante: "",
-	      errorProducto: false,
 	      fabricas: [],
 	      //Permisos
 	      permits: ""
@@ -55761,7 +55770,6 @@
 	      fetch('/api/stock/' + this.props.params.id).then(function (res) {
 	        if (res.ok) {
 	          res.json().then(function (data) {
-	            console.log("Stock: ", data);
 	            _this3.setState({
 	              _id: data._id,
 	              nuevo: false,
@@ -55804,6 +55812,21 @@
 	      if (event.target.name === "producto") {
 	        this.setState({
 	          errorProducto: false
+	        });
+	      }
+	      if (event.target.name === "fabrica") {
+	        this.setState({
+	          errorFabrica: false
+	        });
+	      }
+	      if (event.target.name === "talle") {
+	        this.setState({
+	          errorTalle: false
+	        });
+	      }
+	      if (event.target.name === "cantidad") {
+	        this.setState({
+	          errorCantidad: false
 	        });
 	      }
 	    }
@@ -55872,7 +55895,7 @@
 	  }, {
 	    key: 'onClickGuardar',
 	    value: function onClickGuardar() {
-	      if (this.state.producto) {
+	      if (this.state.producto && this.state.fabrica && this.state.talle && this.state.cantidad) {
 	        if (this.state.nuevo) {
 	          //Creo un registro
 	          this.crearStock({
@@ -55900,9 +55923,26 @@
 	          }, this.state._id);
 	        }
 	      } else {
-	        this.setState({
-	          errorProducto: true
-	        });
+	        if (!this.state.fabrica) {
+	          this.setState({
+	            errorFabrica: true
+	          });
+	        }
+	        if (!this.state.producto) {
+	          this.setState({
+	            errorProducto: true
+	          });
+	        }
+	        if (!this.state.talle) {
+	          this.setState({
+	            errorTalle: true
+	          });
+	        }
+	        if (!this.state.cantidad) {
+	          this.setState({
+	            errorCantidad: true
+	          });
+	        }
 	      }
 	    }
 	  }, {
@@ -55918,17 +55958,55 @@
 	      var permitRead = permits === "MODIFICAR" || permits === "CREAR" || permits === "LEER" ? true : false;
 	      //Opciones de los selects
 	      var fabricasArray = [];
+	      var productosArray = [];
+	      var tallesArray = [];
 	      if (this.state.fabricas) {
 	        if (this.state.fabricas.length > 0) {
+	          //Completo las opciones de fábricas
 	          this.state.fabricas.forEach(function (fab) {
 	            fabricasArray.push({
 	              id: fab.nombre,
 	              value: fab.nombre
 	            });
 	          });
+	          //Completo las opciones de productos
+	          if (this.state.fabrica) {
+	            var fabricaAux = this.state.fabricas.find(function (fabr) {
+	              return fabr.nombre === _this6.state.fabrica;
+	            });
+	            if (fabricaAux) {
+	              if (fabricaAux.productos) {
+	                if (fabricaAux.productos.length > 0) {
+	                  fabricaAux.productos.forEach(function (prod) {
+	                    productosArray.push({
+	                      id: prod.nombre,
+	                      value: prod.nombre
+	                    });
+	                  });
+	                  //Completo las opciones de talles
+	                  if (this.state.producto) {
+	                    var productoAux = fabricaAux.productos.find(function (pr) {
+	                      return pr.nombre === _this6.state.producto;
+	                    });
+	                    if (productoAux) {
+	                      if (productoAux.talles) {
+	                        if (productoAux.talles.length > 0) {
+	                          productoAux.talles.forEach(function (tall) {
+	                            tallesArray.push({
+	                              id: tall,
+	                              value: tall
+	                            });
+	                          });
+	                        }
+	                      }
+	                    }
+	                  }
+	                }
+	              }
+	            }
+	          }
 	        }
 	      }
-	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'fabricas-editar text-center' },
@@ -55969,23 +56047,62 @@
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(_FormSelect2.default, {
+	                label: 'F\xE1brica',
+	                name: 'fabrica',
+	                value: this.state.fabrica,
+	                onChange: this.handleOnChange,
+	                error: this.state.errorFabrica,
+	                options: fabricasArray,
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true
+	              })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(_FormSelect2.default, {
+	                label: 'Producto',
+	                name: 'producto',
+	                value: this.state.producto,
+	                onChange: this.handleOnChange,
+	                error: this.state.errorProducto,
+	                options: productosArray,
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true
+	              })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
+	              _react2.default.createElement(_FormSelect2.default, {
+	                label: 'Talle',
+	                name: 'talle',
+	                value: this.state.talle,
+	                onChange: this.handleOnChange,
+	                error: this.state.errorTalle,
+	                options: tallesArray,
+	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true
+	              })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-sm-6 col-12 form-group' },
 	              _react2.default.createElement(
 	                'label',
 	                null,
-	                'Producto'
+	                'Cantidad'
 	              ),
-	              _react2.default.createElement('input', { type: 'text',
-	                className: this.state.errorProducto ? "form-control is-invalid" : "form-control",
-	                id: 'producto',
-	                name: 'producto',
-	                placeholder: 'Producto...',
-	                value: this.state.producto,
+	              _react2.default.createElement('input', { type: 'number',
+	                className: this.state.errorCantidad ? "form-control is-invalid" : "form-control",
+	                id: 'cantidad',
+	                name: 'cantidad',
+	                placeholder: 'Cantidad...',
+	                value: this.state.cantidad,
 	                onChange: this.handleOnChange,
 	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true }),
-	              this.state.errorProducto ? _react2.default.createElement(
+	              this.state.errorCantidad ? _react2.default.createElement(
 	                'div',
 	                { className: 'invalid-feedback' },
-	                'El producto es requerido'
+	                'Ingrese una cantidad'
 	              ) : null
 	            ),
 	            _react2.default.createElement(
@@ -56028,23 +56145,6 @@
 	              _react2.default.createElement(
 	                'label',
 	                null,
-	                'Talle'
-	              ),
-	              _react2.default.createElement('input', { type: 'number',
-	                className: 'form-control',
-	                id: 'talle',
-	                name: 'talle',
-	                placeholder: 'Talle...',
-	                value: this.state.talle,
-	                onChange: this.handleOnChange,
-	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true })
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-sm-6 col-12 form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                null,
 	                'Estilo'
 	              ),
 	              _react2.default.createElement('input', { type: 'text',
@@ -56053,23 +56153,6 @@
 	                name: 'estilo',
 	                placeholder: 'Estilo...',
 	                value: this.state.estilo,
-	                onChange: this.handleOnChange,
-	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true })
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'col-sm-6 col-12 form-group' },
-	              _react2.default.createElement(
-	                'label',
-	                null,
-	                'Cantidad'
-	              ),
-	              _react2.default.createElement('input', { type: 'number',
-	                className: 'form-control',
-	                id: 'cantidad',
-	                name: 'cantidad',
-	                placeholder: 'Cantidad...',
-	                value: this.state.cantidad,
 	                onChange: this.handleOnChange,
 	                disabled: this.state.nuevo && permitCreate || !this.state.nuevo && permitUpdate ? false : true })
 	            ),

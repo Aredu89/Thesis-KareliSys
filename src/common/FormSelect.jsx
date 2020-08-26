@@ -31,6 +31,7 @@ export default function FormSelect(props) {
         <div className="mb-2">{label}</div>
       }
       <select
+        {...props}
         className={error ? 'select form-control mb-2 is-invalid' : 'select form-control mb-2'}
         name={name}
         value={value}
