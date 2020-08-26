@@ -146,6 +146,7 @@ export default class StockLista extends React.Component {
     //Tabla
     const columns = [
       ["Producto","producto","String"],
+      ["Fábrica", "fabrica", "String"],
       ["Tipo","tipo","String"],
       ["Material","material","String"],
       ["Talle","talle","String"],

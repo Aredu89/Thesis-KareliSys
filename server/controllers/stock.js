@@ -19,7 +19,7 @@ module.exports.listaStock = (req, res) => {
     })
 }
 
-//Obtengo el listado de stock
+//Obtengo la cantidad de stock
 module.exports.getCantidadStock = (req, res) => {
   // Para filtrar por algun parametro
   const filter = {}

@@ -12,7 +12,11 @@ const stock = new mongoose.Schema({
   talle: Number,
   estilo: String,
   cantidad: Number,
-  estante: String
+  estante: String,
+  fabrica: String
 })
+
+//Combinación de campos únicos producto/talle
+stock.index({producto: 1, talle: 1, fabrica: 1}, {unique: true})
 
 mongoose.model('Stock',stock)

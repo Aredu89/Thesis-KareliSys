@@ -276,28 +276,28 @@ module.exports.modificarPedido = (req,res) => {
         ){
           estadoAux = "aprobado"
           //Agrego los productos del pedido a Stock
-          const pedidoAModificar = fabrica.pedidos.find(pedido=> pedido._id.toString() === pedidoBody._id.toString())
-          if(pedidoAModificar){
-            if(!pedidoAModificar.enStock){
-              pedidoBody.enStock = true
-              pedidoBody.detalle.forEach(det=>{
-                const productoAux ={
-                  producto: det.producto,
-                  estado: "pendiente",
-                  talle: det.talle,
-                  cantidad: det.cantidad
-                }
-                Stock
-                  .create(productoAux, (err, stock) => {
-                    if(err) {
-                      console.log("Error al agregar stock ", err)
-                    } else {
-                      console.log("Stock agregado ", stock)
-                    }
-                  })
-              })
-            }
-          }
+          // const pedidoAModificar = fabrica.pedidos.find(pedido=> pedido._id.toString() === pedidoBody._id.toString())
+          // if(pedidoAModificar){
+          //   if(!pedidoAModificar.enStock){
+          //     pedidoBody.enStock = true
+          //     pedidoBody.detalle.forEach(det=>{
+          //       const productoAux ={
+          //         producto: det.producto,
+          //         estado: "pendiente",
+          //         talle: det.talle,
+          //         cantidad: det.cantidad
+          //       }
+          //       Stock
+          //         .create(productoAux, (err, stock) => {
+          //           if(err) {
+          //             console.log("Error al agregar stock ", err)
+          //           } else {
+          //             console.log("Stock agregado ", stock)
+          //           }
+          //         })
+          //     })
+          //   }
+          // }
         }
         let sum = 0
         if(pedidoBody.pagos){

@@ -11,6 +11,7 @@ export default class FabricasEditar extends React.Component {
       _id: "",
       // Campos del formulario
       producto: "",
+      fabrica: "",
       tipo: "",
       material: "",
       talle: "",
@@ -18,11 +19,13 @@ export default class FabricasEditar extends React.Component {
       cantidad: "",
       estante: "",
       errorProducto: false,
+      fabricas: [],
       //Permisos
       permits: ""
     }
     this.handleOnChange = this.handleOnChange.bind(this)
     this.obtenerStock = this.obtenerStock.bind(this)
+    this.obtenerFabricas = this.obtenerFabricas.bind(this)
   }
 
   componentDidMount(){
@@ -33,6 +36,8 @@ export default class FabricasEditar extends React.Component {
         cargando: false
       })
     }
+    //Obtengo las fabricas
+    this.obtenerFabricas()
     //Controlo permisos
     const user = JSON.parse(localStorage.getItem("currentUser"))
     if(user){
@@ -42,6 +47,37 @@ export default class FabricasEditar extends React.Component {
         })
       }
     }
+  }
+
+  obtenerFabricas(){
+    fetch(`/api/fabricas`)
+      .then(res =>{
+        if(res.ok){
+          res.json()
+          .then(data =>{
+            console.log("fabricas: ",data)
+            this.setState({
+              fabricas: data
+            })
+          })
+        } else {
+          res.json()
+          .then(error => {
+            console.log("Error al obtener fabricas ",error.message)
+            this.setState({
+              cargando: false,
+              error: error.message
+            })
+          })
+        }
+      })
+      .catch(error => {
+        console.log("Error en el servidor. ",error.message)
+        this.setState({
+          cargando: false,
+          error: error.message
+        })
+      })
   }
 
   obtenerStock(){
@@ -56,6 +92,7 @@ export default class FabricasEditar extends React.Component {
               nuevo: false,
               cargando: false,
               producto: data.producto,
+              fabrica: data.fabrica,
               tipo: data.tipo,
               material: data.material,
               talle: data.talle,
@@ -187,6 +224,7 @@ export default class FabricasEditar extends React.Component {
         //Creo un registro
         this.crearStock({
           producto: this.state.producto,
+          fabrica: this.state.fabrica,
           tipo: this.state.tipo,
           material: this.state.material,
           talle: this.state.talle,
@@ -199,6 +237,7 @@ export default class FabricasEditar extends React.Component {
         this.modificarStock({
           _id: this.state._id,
           producto: this.state.producto,
+          fabrica: this.state.fabrica,
           tipo: this.state.tipo,
           material: this.state.material,
           talle: this.state.talle,
@@ -225,6 +264,19 @@ export default class FabricasEditar extends React.Component {
     const permitRead = permits === "MODIFICAR" ||
       permits === "CREAR" ||
       permits === "LEER" ? true : false
+    //Opciones de los selects
+    let fabricasArray = []
+    if(this.state.fabricas){
+      if(this.state.fabricas.length > 0){
+        this.state.fabricas.forEach(fab=>{
+          fabricasArray.push({
+            id: fab.nombre,
+            value: fab.nombre
+          })
+        })
+      }
+    }
+    
     return (
       <div className="fabricas-editar text-center">
         {!this.state.cargando ?
