@@ -360,6 +360,23 @@ export default class UsuariosEditar extends React.Component {
                       </select>
                     </div>
                   </div>
+                  <div className="row">
+                    <div className="col-12 col-sm-6 d-flex justify-content-between align-items-center mb-3 pr-4">
+                      <span className="col-6">Reportes</span>
+                      <select className="custom-select"
+                        id="reportes"
+                        name="reportes"
+                        value={this.state.permits.reportes ? this.state.permits.reportes : ""}
+                        onChange={this.handleOnPermitsChange}
+                      >
+                        {
+                          permits.map((permit, i)=>{
+                            return <option value={permit} key={i}>{permit ? permit : "No"}</option>
+                          })
+                        }
+                      </select>
+                    </div>
+                  </div>
                 </div>
                 
               </div>

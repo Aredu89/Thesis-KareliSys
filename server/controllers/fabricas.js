@@ -33,7 +33,7 @@ module.exports.getEgresosMes = (req, res) => {
         res.status(404).json(err)
       } else {
         //Obtengo el dia 1 del mes actual y del siguiente
-        const ahora = new Date()
+        const ahora = req.query.fechaFiltro ? req.query.fechaFiltro : new Date()
         const año = ahora.getFullYear()
         const mes = ahora.getMonth()
         const mesSiguiente = mes === 11 ? 0 : mes + 1

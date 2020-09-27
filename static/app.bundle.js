@@ -126,6 +126,10 @@
 	
 	var _UsuariosEditar2 = _interopRequireDefault(_UsuariosEditar);
 	
+	var _Resultados = __webpack_require__(333);
+	
+	var _Resultados2 = _interopRequireDefault(_Resultados);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var contentNode = document.getElementById('contents');
@@ -203,6 +207,7 @@
 	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios', component: permitsAdmin ? _UsuariosLista2.default : noPermits }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios/editar', component: permitsAdmin ? _UsuariosEditar2.default : noPermits }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios/editar/:id', component: permitsAdmin ? _UsuariosEditar2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'reportes/resultados', component: permits.reportes ? _Resultados2.default : noPermits }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '*', component: noMatch })
 	    ) : _react2.default.createElement(_reactRouter.Redirect, { from: '/*', to: '/login' })
 	  );
@@ -29691,6 +29696,28 @@
 	                  'Stock'
 	                )
 	              ),
+	              permits.reportes && _react2.default.createElement(
+	                'div',
+	                { className: 'nav-item dropdown mr-sm-2' },
+	                _react2.default.createElement(
+	                  'a',
+	                  { className: 'nav-link dropdown-toggle',
+	                    'data-toggle': 'dropdown',
+	                    href: '#', role: 'button',
+	                    'aria-haspopup': 'true',
+	                    'aria-expanded': 'false' },
+	                  'Reportes'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'dropdown-menu' },
+	                  _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { className: 'dropdown-item', to: '/reportes/resultados' },
+	                    'Resultados'
+	                  )
+	                )
+	              ),
 	              permitsAdmin && _react2.default.createElement(
 	                'li',
 	                { className: 'nav-item' },
@@ -56907,6 +56934,35 @@
 	                      })
 	                    )
 	                  )
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'row' },
+	                  _react2.default.createElement(
+	                    'div',
+	                    { className: 'col-12 col-sm-6 d-flex justify-content-between align-items-center mb-3 pr-4' },
+	                    _react2.default.createElement(
+	                      'span',
+	                      { className: 'col-6' },
+	                      'Reportes'
+	                    ),
+	                    _react2.default.createElement(
+	                      'select',
+	                      { className: 'custom-select',
+	                        id: 'reportes',
+	                        name: 'reportes',
+	                        value: this.state.permits.reportes ? this.state.permits.reportes : "",
+	                        onChange: this.handleOnPermitsChange
+	                      },
+	                      permits.map(function (permit, i) {
+	                        return _react2.default.createElement(
+	                          'option',
+	                          { value: permit, key: i },
+	                          permit ? permit : "No"
+	                        );
+	                      })
+	                    )
+	                  )
 	                )
 	              )
 	            ),
@@ -57031,6 +57087,367 @@
 	}(_react2.default.Component);
 	
 	exports.default = UsuariosEditar;
+
+/***/ },
+/* 333 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _javascriptFunctions = __webpack_require__(281);
+	
+	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Resultados = function (_React$Component) {
+	  _inherits(Resultados, _React$Component);
+	
+	  function Resultados() {
+	    _classCallCheck(this, Resultados);
+	
+	    var _this = _possibleConstructorReturn(this, (Resultados.__proto__ || Object.getPrototypeOf(Resultados)).call(this));
+	
+	    _this.state = {
+	      ingresos: 0,
+	      cargandoIngresos: true,
+	      errorIngresos: "",
+	      egresos: 0,
+	      cargandoEgresos: true,
+	      errorEgresos: "",
+	      stock: 0,
+	      cargandoStock: true,
+	      errorStock: ""
+	    };
+	    _this.cargarEgresos = _this.cargarEgresos.bind(_this);
+	    _this.cargarIngresos = _this.cargarIngresos.bind(_this);
+	    _this.cargarStockCantidad = _this.cargarStockCantidad.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(Resultados, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.cargarEgresos();
+	      this.cargarIngresos();
+	      this.cargarStockCantidad();
+	    }
+	  }, {
+	    key: 'cargarEgresos',
+	    value: function cargarEgresos() {
+	      var _this2 = this;
+	
+	      fetch('/api/egresos').then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            _this2.setState({
+	              cargandoEgresos: false,
+	              errorEgresos: "",
+	              egresos: data.egresosMes
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener egresos. ", error.message);
+	            _this2.setState({
+	              cargandoEgresos: false,
+	              errorEgresos: error.message
+	            });
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.log("Error: ", error.message);
+	        _this2.setState({
+	          cargandoEgresos: false,
+	          errorEgresos: error.message
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'cargarIngresos',
+	    value: function cargarIngresos() {
+	      var _this3 = this;
+	
+	      fetch('/api/ingresos').then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            _this3.setState({
+	              cargandoIngresos: false,
+	              errorIngresos: "",
+	              ingresos: data.ingresosMes
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener ingresos. ", error.message);
+	            _this3.setState({
+	              cargandoIngresos: false,
+	              errorIngresos: error.message
+	            });
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.log("Error: ", error.message);
+	        _this3.setState({
+	          cargandoIngresos: false,
+	          errorIngresos: error.message
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'cargarStockCantidad',
+	    value: function cargarStockCantidad() {
+	      var _this4 = this;
+	
+	      fetch('/api/stock-cantidad').then(function (res) {
+	        if (res.ok) {
+	          res.json().then(function (data) {
+	            _this4.setState({
+	              cargandoStock: false,
+	              errorStock: "",
+	              stock: data.cantidadStock
+	            });
+	          });
+	        } else {
+	          res.json().then(function (error) {
+	            console.log("Error al obtener stock. ", error.message);
+	            _this4.setState({
+	              cargandoStock: false,
+	              errorStock: error.message
+	            });
+	          });
+	        }
+	      }).catch(function (error) {
+	        console.log("Error: ", error.message);
+	        _this4.setState({
+	          cargandoStock: false,
+	          errorStock: error.message
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'home' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'row' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 d-flex justify-content-between' },
+	            _react2.default.createElement(
+	              'h3',
+	              null,
+	              'Reporte de Resultados'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-md-6 col-12' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 card border-primary mb-3' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-header' },
+	                'Resultado del mes'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-body' },
+	                this.state.cargandoIngresos || this.state.cargandoEgresos ?
+	                // Spinner
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'spinner-border text-light', role: 'status' },
+	                  _react2.default.createElement(
+	                    'span',
+	                    { className: 'sr-only' },
+	                    'Loading...'
+	                  )
+	                ) : this.state.errorEgresos || this.state.errorIngresos ? _react2.default.createElement(
+	                  'h4',
+	                  { className: 'card-title' },
+	                  'Error al cargar los resultados del mes'
+	                ) : _react2.default.createElement(
+	                  'div',
+	                  null,
+	                  this.state.ingresos - this.state.egresos < 0 ? _react2.default.createElement(
+	                    'h4',
+	                    { className: 'card-title' },
+	                    'Perdidas de:'
+	                  ) : _react2.default.createElement(
+	                    'h4',
+	                    { className: 'card-title' },
+	                    'Ganancias de:'
+	                  ),
+	                  _react2.default.createElement(
+	                    'p',
+	                    { className: 'card-text' },
+	                    _javascriptFunctions2.default.moneyFormatter(this.state.ingresos - this.state.egresos)
+	                  )
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-md-6 col-12' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 card border-primary mb-3' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-header' },
+	                'Estado del Stock'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-body' },
+	                this.state.cargandoStock ?
+	                // Spinner
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'spinner-border text-light', role: 'status' },
+	                  _react2.default.createElement(
+	                    'span',
+	                    { className: 'sr-only' },
+	                    'Loading...'
+	                  )
+	                ) : this.state.errorStock ? _react2.default.createElement(
+	                  'p',
+	                  { className: 'card-text' },
+	                  'Error al cargar el stock'
+	                ) : _react2.default.createElement(
+	                  'p',
+	                  { className: 'card-text' },
+	                  'Productos en stock: ',
+	                  _react2.default.createElement(
+	                    'strong',
+	                    null,
+	                    this.state.stock
+	                  )
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-md-6 col-12' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 card border-success mb-3' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-header' },
+	                'Ingresos del mes'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-body' },
+	                this.state.cargandoIngresos ?
+	                // Spinner
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'spinner-border text-light', role: 'status' },
+	                  _react2.default.createElement(
+	                    'span',
+	                    { className: 'sr-only' },
+	                    'Loading...'
+	                  )
+	                ) : this.state.errorIngresos ? _react2.default.createElement(
+	                  'h4',
+	                  { className: 'card-title' },
+	                  'Error al cargar los ingresos'
+	                ) : _react2.default.createElement(
+	                  'div',
+	                  null,
+	                  _react2.default.createElement(
+	                    'h4',
+	                    { className: 'card-title' },
+	                    'Total Cobrado:'
+	                  ),
+	                  _react2.default.createElement(
+	                    'p',
+	                    { className: 'card-text' },
+	                    this.state.ingresos
+	                  )
+	                )
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-md-6 col-12' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col-12 card border-danger mb-3' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-header' },
+	                'Egresos del mes'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'card-body' },
+	                this.state.cargandoEgresos ?
+	                // Spinner
+	                _react2.default.createElement(
+	                  'div',
+	                  { className: 'spinner-border text-light', role: 'status' },
+	                  _react2.default.createElement(
+	                    'span',
+	                    { className: 'sr-only' },
+	                    'Loading...'
+	                  )
+	                ) : this.state.errorEgresos ? _react2.default.createElement(
+	                  'h4',
+	                  { className: 'card-title' },
+	                  'Error al cargar los ingresos'
+	                ) : _react2.default.createElement(
+	                  'div',
+	                  null,
+	                  _react2.default.createElement(
+	                    'h4',
+	                    { className: 'card-title' },
+	                    'Total Pagado:'
+	                  ),
+	                  _react2.default.createElement(
+	                    'p',
+	                    { className: 'card-text' },
+	                    this.state.egresos
+	                  )
+	                )
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Resultados;
+	}(_react2.default.Component);
+	
+	exports.default = Resultados;
 
 /***/ }
 /******/ ]);

@@ -67,6 +67,22 @@ export default class Header extends React.Component {
               {permits.stock && <li className="nav-item">
                 <Link className="nav-link" to="/stock">Stock</Link>
               </li>}
+              {
+                permits.reportes &&
+                <div className="nav-item dropdown mr-sm-2">
+                  <a className="nav-link dropdown-toggle" 
+                    data-toggle="dropdown" 
+                    href="#" role="button" 
+                    aria-haspopup="true" 
+                    aria-expanded="false">
+                      Reportes
+                    </a>
+                  <div className="dropdown-menu">
+                    <Link className="dropdown-item" to="/reportes/resultados">Resultados</Link>
+                    {/* <div className="dropdown-divider"></div> */}
+                  </div>
+                </div>
+              }
               {permitsAdmin && <li className="nav-item">
                 <Link className="nav-link" to="/usuarios">Usuarios</Link>
               </li>}

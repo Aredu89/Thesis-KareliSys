@@ -41,6 +41,16 @@ const permisos = new mongoose.Schema({
     ],
     default: ""
   },
+  reportes: {
+    type: String,
+    enum: [
+      "",
+      "LEER",
+      "CREAR",
+      "MODIFICAR"
+    ],
+    default: ""
+  },
 })
 
 const usuarios = new mongoose.Schema({
