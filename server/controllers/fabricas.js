@@ -2,6 +2,16 @@ const mongoose = require('mongoose')
 const Fabricas = mongoose.model('Fabricas')
 // const Stock = mongoose.model('Stock')
 
+const numerosAFecha = string => {
+  if(string){
+    const numeros = string.split('/')
+    const date = numeros[2] + '-' + numeros[1] + '-' + numeros[0]
+    return new Date(date)
+  } else {
+    return null
+  }
+}
+
 //Obtengo el listado de fabricas
 module.exports.listaFabricas = (req, res) => {
   // Para filtrar por algun parametro
@@ -33,13 +43,6 @@ module.exports.getEgresosMes = (req, res) => {
       } else if (err) {
         res.status(404).json(err)
       } else {
-        //Obtengo el dia 1 del mes actual y del siguiente
-        const ahora = req.query.fechaFiltro ? req.query.fechaFiltro : new Date()
-        const año = ahora.getFullYear()
-        const mes = ahora.getMonth()
-        const mesSiguiente = mes === 11 ? 0 : mes + 1
-        const desde1 = desde && hasta ? desde : new Date(año, mes, 1)
-        const hasta1 = desde && hasta ? hasta : new Date(año, mesSiguiente, 1)
         let egresos = 0
         if(results.length > 0){
           results.forEach(fabrica=>{
@@ -47,7 +50,19 @@ module.exports.getEgresosMes = (req, res) => {
               fabrica.pedidos.forEach(pedido=>{
                 if(pedido.pagos.length > 0){
                   pedido.pagos.forEach(pago=>{
-                    if(pago.fecha > desde1 && pago.fecha < hasta1){
+                    if(desde && hasta){
+                      if(pago.fecha > numerosAFecha(desde) && pago.fecha < numerosAFecha(hasta)){
+                        egresos = egresos + pago.monto
+                      }
+                    } else if(desde){
+                      if(pago.fecha > numerosAFecha(desde)){
+                        egresos = egresos + pago.monto
+                      }
+                    } else if(hasta) {
+                      if(pago.fecha < numerosAFecha(hasta)){
+                        egresos = egresos + pago.monto
+                      }
+                    } else {
                       egresos = egresos + pago.monto
                     }
                   })

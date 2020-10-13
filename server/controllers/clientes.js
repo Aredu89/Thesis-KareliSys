@@ -2,6 +2,16 @@ const mongoose = require('mongoose')
 const Clientes = mongoose.model('Clientes')
 const Stock = mongoose.model('Stock')
 
+const numerosAFecha = string => {
+  if(string){
+    const numeros = string.split('/')
+    const date = numeros[2] + '-' + numeros[1] + '-' + numeros[0]
+    return new Date(date)
+  } else {
+    return null
+  }
+}
+
 //Obtengo el listado de fabricas
 module.exports.listaClientes = (req, res) => {
   // Para filtrar por algun parametro
@@ -33,13 +43,6 @@ module.exports.getIngresosMes = (req, res) => {
       } else if (err) {
         res.status(404).json(err)
       } else {
-        //Obtengo el dia 1 del mes actual y del siguiente
-        const ahora = new Date()
-        const año = ahora.getFullYear()
-        const mes = ahora.getMonth()
-        const mesSiguiente = mes === 11 ? 0 : mes + 1
-        const desde1 = desde && hasta ? desde : new Date(año, mes, 1)
-        const hasta1 = desde && hasta ? hasta : new Date(año, mesSiguiente, 1)
         let ingresos = 0
         if(results.length > 0){
           results.forEach(cliente=>{
@@ -47,7 +50,19 @@ module.exports.getIngresosMes = (req, res) => {
               cliente.pedidos.forEach(pedido=>{
                 if(pedido.pagos.length > 0){
                   pedido.pagos.forEach(pago=>{
-                    if(pago.fecha > desde1 && pago.fecha < hasta1){
+                    if(desde && hasta){
+                      if(pago.fecha > numerosAFecha(desde) && pago.fecha < numerosAFecha(hasta)){
+                        ingresos = ingresos + pago.monto
+                      }
+                    } else if(desde){
+                      if(pago.fecha > numerosAFecha(desde)){
+                        ingresos = ingresos + pago.monto
+                      }
+                    } else if(hasta) {
+                      if(pago.fecha < numerosAFecha(hasta)){
+                        ingresos = ingresos + pago.monto
+                      }
+                    } else {
                       ingresos = ingresos + pago.monto
                     }
                   })

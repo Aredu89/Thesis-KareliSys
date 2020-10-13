@@ -27,7 +27,14 @@ export default class Home extends React.Component {
   }
 
   cargarEgresos(){
-    fetch('/api/egresos')
+    //Calculo el primer y ultimo día del mes
+    const ahora = new Date()
+    const año = ahora.getFullYear()
+    const mes = ahora.getMonth()
+    const mesSiguiente = mes === 11 ? 0 : mes + 1
+    const desde = new Date(año, mes, 1)
+    const hasta = new Date(año, mesSiguiente, 1)
+    fetch(`/api/egresos?desde=${funciones.fechaANumeros(desde)}&hasta=${funciones.fechaANumeros(hasta)}`)
       .then(res => {
         if(res.ok) {
           res.json()
@@ -59,7 +66,14 @@ export default class Home extends React.Component {
   }
 
   cargarIngresos(){
-    fetch('/api/ingresos')
+    //Calculo el primer y ultimo día del mes
+    const ahora = new Date()
+    const año = ahora.getFullYear()
+    const mes = ahora.getMonth()
+    const mesSiguiente = mes === 11 ? 0 : mes + 1
+    const desde = new Date(año, mes, 1)
+    const hasta = new Date(año, mesSiguiente, 1)
+    fetch(`/api/ingresos?desde=${funciones.fechaANumeros(desde)}&hasta=${funciones.fechaANumeros(hasta)}`)
       .then(res => {
         if(res.ok) {
           res.json()

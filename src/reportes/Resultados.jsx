@@ -23,6 +23,8 @@ export default class Resultados extends React.Component {
       this.cargarEgresos = this.cargarEgresos.bind(this)
       this.cargarIngresos = this.cargarIngresos.bind(this)
       this.cargarStockCantidad = this.cargarStockCantidad.bind(this)
+      this.onClickConsultar = this.onClickConsultar.bind(this)
+      this.handleOnChange = this.handleOnChange.bind(this)
     }
   
     componentDidMount(){
@@ -32,7 +34,7 @@ export default class Resultados extends React.Component {
     }
   
     cargarEgresos(){
-      fetch(`/api/egresos?desde=${this.state.desde}`)
+      fetch(`/api/egresos?desde=${this.state.desde}&hasta=${this.state.hasta}`)
         .then(res => {
           if(res.ok) {
             res.json()
@@ -64,7 +66,7 @@ export default class Resultados extends React.Component {
     }
   
     cargarIngresos(){
-      fetch('/api/ingresos')
+      fetch(`/api/ingresos?desde=${this.state.desde}&hasta=${this.state.hasta}`)
         .then(res => {
           if(res.ok) {
             res.json()
@@ -144,6 +146,11 @@ export default class Resultados extends React.Component {
         })
       }
     }
+
+    onClickConsultar(){
+      this.cargarEgresos()
+      this.cargarIngresos()
+    }
   
     render() {
       return (
@@ -167,18 +174,18 @@ export default class Resultados extends React.Component {
                 name="hasta"
                 value={this.state.hasta ? this.state.hasta : ""}
                 onChange={this.handleOnChange}
-                error={this.state.errorDesde}
+                error={this.state.errorHasta}
                 />
               <button 
                 type="button"
                 className="btn btn-success ml-2"
-                onClick={()=>this.onSave()}
+                onClick={this.onClickConsultar}
                 >Consultar</button>
             </div>
             {/* Card Resultado */}
             <div className="col-md-6 col-12">
               <div className="col-12 card border-primary mb-3">
-                <div className="card-header">Resultado del mes</div>
+                <div className="card-header">Resultados</div>
                 <div className="card-body">
                   {
                     this.state.cargandoIngresos || this.state.cargandoEgresos ?
@@ -227,7 +234,7 @@ export default class Resultados extends React.Component {
             {/* Card Ingresos */}
             <div className="col-md-6 col-12">
               <div className="col-12 card border-success mb-3">
-                <div className="card-header">Ingresos del mes</div>
+                <div className="card-header">Ingresos</div>
                 <div className="card-body">
                   {
                     this.state.cargandoIngresos ?
@@ -250,7 +257,7 @@ export default class Resultados extends React.Component {
             {/* Card Egresos */}
             <div className="col-md-6 col-12">
               <div className="col-12 card border-danger mb-3">
-                <div className="card-header">Egresos del mes</div>
+                <div className="card-header">Egresos</div>
                 <div className="card-body">
                   {
                     this.state.cargandoEgresos ?

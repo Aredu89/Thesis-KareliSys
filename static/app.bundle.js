@@ -30306,7 +30306,14 @@
 	    value: function cargarEgresos() {
 	      var _this2 = this;
 	
-	      fetch('/api/egresos').then(function (res) {
+	      //Calculo el primer y ultimo día del mes
+	      var ahora = new Date();
+	      var año = ahora.getFullYear();
+	      var mes = ahora.getMonth();
+	      var mesSiguiente = mes === 11 ? 0 : mes + 1;
+	      var desde = new Date(año, mes, 1);
+	      var hasta = new Date(año, mesSiguiente, 1);
+	      fetch('/api/egresos?desde=' + _javascriptFunctions2.default.fechaANumeros(desde) + '&hasta=' + _javascriptFunctions2.default.fechaANumeros(hasta)).then(function (res) {
 	        if (res.ok) {
 	          res.json().then(function (data) {
 	            _this2.setState({
@@ -30337,7 +30344,14 @@
 	    value: function cargarIngresos() {
 	      var _this3 = this;
 	
-	      fetch('/api/ingresos').then(function (res) {
+	      //Calculo el primer y ultimo día del mes
+	      var ahora = new Date();
+	      var año = ahora.getFullYear();
+	      var mes = ahora.getMonth();
+	      var mesSiguiente = mes === 11 ? 0 : mes + 1;
+	      var desde = new Date(año, mes, 1);
+	      var hasta = new Date(año, mesSiguiente, 1);
+	      fetch('/api/ingresos?desde=' + _javascriptFunctions2.default.fechaANumeros(desde) + '&hasta=' + _javascriptFunctions2.default.fechaANumeros(hasta)).then(function (res) {
 	        if (res.ok) {
 	          res.json().then(function (data) {
 	            _this3.setState({
@@ -57148,6 +57162,8 @@
 	    _this.cargarEgresos = _this.cargarEgresos.bind(_this);
 	    _this.cargarIngresos = _this.cargarIngresos.bind(_this);
 	    _this.cargarStockCantidad = _this.cargarStockCantidad.bind(_this);
+	    _this.onClickConsultar = _this.onClickConsultar.bind(_this);
+	    _this.handleOnChange = _this.handleOnChange.bind(_this);
 	    return _this;
 	  }
 	
@@ -57163,7 +57179,7 @@
 	    value: function cargarEgresos() {
 	      var _this2 = this;
 	
-	      fetch('/api/egresos?desde=' + this.state.desde).then(function (res) {
+	      fetch('/api/egresos?desde=' + this.state.desde + '&hasta=' + this.state.hasta).then(function (res) {
 	        if (res.ok) {
 	          res.json().then(function (data) {
 	            _this2.setState({
@@ -57194,7 +57210,7 @@
 	    value: function cargarIngresos() {
 	      var _this3 = this;
 	
-	      fetch('/api/ingresos').then(function (res) {
+	      fetch('/api/ingresos?desde=' + this.state.desde + '&hasta=' + this.state.hasta).then(function (res) {
 	        if (res.ok) {
 	          res.json().then(function (data) {
 	            _this3.setState({
@@ -57269,10 +57285,14 @@
 	      }
 	    }
 	  }, {
+	    key: 'onClickConsultar',
+	    value: function onClickConsultar() {
+	      this.cargarEgresos();
+	      this.cargarIngresos();
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this5 = this;
-	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'home' },
@@ -57311,16 +57331,14 @@
 	              name: 'hasta',
 	              value: this.state.hasta ? this.state.hasta : "",
 	              onChange: this.handleOnChange,
-	              error: this.state.errorDesde
+	              error: this.state.errorHasta
 	            }),
 	            _react2.default.createElement(
 	              'button',
 	              {
 	                type: 'button',
 	                className: 'btn btn-success ml-2',
-	                onClick: function onClick() {
-	                  return _this5.onSave();
-	                }
+	                onClick: this.onClickConsultar
 	              },
 	              'Consultar'
 	            )
@@ -57334,7 +57352,7 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'card-header' },
-	                'Resultado del mes'
+	                'Resultados'
 	              ),
 	              _react2.default.createElement(
 	                'div',
@@ -57424,7 +57442,7 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'card-header' },
-	                'Ingresos del mes'
+	                'Ingresos'
 	              ),
 	              _react2.default.createElement(
 	                'div',
@@ -57469,7 +57487,7 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'card-header' },
-	                'Egresos del mes'
+	                'Egresos'
 	              ),
 	              _react2.default.createElement(
 	                'div',
