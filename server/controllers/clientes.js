@@ -24,7 +24,7 @@ module.exports.listaClientes = (req, res) => {
 module.exports.getIngresosMes = (req, res) => {
   // Para filtrar por algun parametro
   const filter = {}
-  // if (req.query.status) filter.status = req.query.status
+  const { desde, hasta } = req.query
   Clientes
     .find(filter)
     .exec((err, results, status) => {
@@ -38,8 +38,8 @@ module.exports.getIngresosMes = (req, res) => {
         const año = ahora.getFullYear()
         const mes = ahora.getMonth()
         const mesSiguiente = mes === 11 ? 0 : mes + 1
-        const desde = new Date(año, mes, 1)
-        const hasta = new Date(año, mesSiguiente, 1)
+        const desde1 = desde && hasta ? desde : new Date(año, mes, 1)
+        const hasta1 = desde && hasta ? hasta : new Date(año, mesSiguiente, 1)
         let ingresos = 0
         if(results.length > 0){
           results.forEach(cliente=>{
@@ -47,7 +47,7 @@ module.exports.getIngresosMes = (req, res) => {
               cliente.pedidos.forEach(pedido=>{
                 if(pedido.pagos.length > 0){
                   pedido.pagos.forEach(pago=>{
-                    if(pago.fecha > desde && pago.fecha < hasta){
+                    if(pago.fecha > desde1 && pago.fecha < hasta1){
                       ingresos = ingresos + pago.monto
                     }
                   })

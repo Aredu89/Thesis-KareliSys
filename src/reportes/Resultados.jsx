@@ -1,4 +1,5 @@
 import React from'react'
+import DatePicker from '../common/DatePicker.jsx'
 import funciones from '../common/javascriptFunctions.js'
 
 export default class Resultados extends React.Component {
@@ -13,7 +14,11 @@ export default class Resultados extends React.Component {
         errorEgresos: "",
         stock: 0,
         cargandoStock: true,
-        errorStock: ""
+        errorStock: "",
+        desde: "",
+        errorDesde: "",
+        hasta: "",
+        errorHasta: ""
       }
       this.cargarEgresos = this.cargarEgresos.bind(this)
       this.cargarIngresos = this.cargarIngresos.bind(this)
@@ -27,7 +32,7 @@ export default class Resultados extends React.Component {
     }
   
     cargarEgresos(){
-      fetch('/api/egresos')
+      fetch(`/api/egresos?desde=${this.state.desde}`)
         .then(res => {
           if(res.ok) {
             res.json()
@@ -121,14 +126,54 @@ export default class Resultados extends React.Component {
           })
         })
     }
+
+    handleOnChange(event){
+      this.setState({
+        [event.target.name]: event.target.value
+      })
+      //Limpio el error Desde
+      if(event.target.name === "desde"){
+        this.setState({
+          errorDesde: ""
+        })
+      }
+      //Limpio el error Hasta
+      if(event.target.name === "hasta"){
+        this.setState({
+          errorHasta: ""
+        })
+      }
+    }
   
     render() {
       return (
         <div className="home">
           <div className="row">
             {/* Titulo */}
-            <div className="col-12 d-flex justify-content-between">
+            <div className="col-12 d-flex">
               <h3>Reporte de Resultados</h3>
+            </div>
+            {/* Filtro de fechas */}
+            <div className="col-12 d-flex align-items-center">
+              <span className="mr-2">Desde</span>
+              <DatePicker
+                name="desde"
+                value={this.state.desde ? this.state.desde : ""}
+                onChange={this.handleOnChange}
+                error={this.state.errorDesde}
+                />
+              <span className="mr-2 ml-2">Hasta</span>
+              <DatePicker
+                name="hasta"
+                value={this.state.hasta ? this.state.hasta : ""}
+                onChange={this.handleOnChange}
+                error={this.state.errorDesde}
+                />
+              <button 
+                type="button"
+                className="btn btn-success ml-2"
+                onClick={()=>this.onSave()}
+                >Consultar</button>
             </div>
             {/* Card Resultado */}
             <div className="col-md-6 col-12">

@@ -57104,11 +57104,17 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _DatePicker = __webpack_require__(317);
+	
+	var _DatePicker2 = _interopRequireDefault(_DatePicker);
+	
 	var _javascriptFunctions = __webpack_require__(281);
 	
 	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -57133,7 +57139,11 @@
 	      errorEgresos: "",
 	      stock: 0,
 	      cargandoStock: true,
-	      errorStock: ""
+	      errorStock: "",
+	      desde: "",
+	      errorDesde: "",
+	      hasta: "",
+	      errorHasta: ""
 	    };
 	    _this.cargarEgresos = _this.cargarEgresos.bind(_this);
 	    _this.cargarIngresos = _this.cargarIngresos.bind(_this);
@@ -57153,7 +57163,7 @@
 	    value: function cargarEgresos() {
 	      var _this2 = this;
 	
-	      fetch('/api/egresos').then(function (res) {
+	      fetch('/api/egresos?desde=' + this.state.desde).then(function (res) {
 	        if (res.ok) {
 	          res.json().then(function (data) {
 	            _this2.setState({
@@ -57242,8 +57252,27 @@
 	      });
 	    }
 	  }, {
+	    key: 'handleOnChange',
+	    value: function handleOnChange(event) {
+	      this.setState(_defineProperty({}, event.target.name, event.target.value));
+	      //Limpio el error Desde
+	      if (event.target.name === "desde") {
+	        this.setState({
+	          errorDesde: ""
+	        });
+	      }
+	      //Limpio el error Hasta
+	      if (event.target.name === "hasta") {
+	        this.setState({
+	          errorHasta: ""
+	        });
+	      }
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this5 = this;
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'home' },
@@ -57252,11 +57281,48 @@
 	          { className: 'row' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'col-12 d-flex justify-content-between' },
+	            { className: 'col-12 d-flex' },
 	            _react2.default.createElement(
 	              'h3',
 	              null,
 	              'Reporte de Resultados'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'col-12 d-flex align-items-center' },
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'mr-2' },
+	              'Desde'
+	            ),
+	            _react2.default.createElement(_DatePicker2.default, {
+	              name: 'desde',
+	              value: this.state.desde ? this.state.desde : "",
+	              onChange: this.handleOnChange,
+	              error: this.state.errorDesde
+	            }),
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'mr-2 ml-2' },
+	              'Hasta'
+	            ),
+	            _react2.default.createElement(_DatePicker2.default, {
+	              name: 'hasta',
+	              value: this.state.hasta ? this.state.hasta : "",
+	              onChange: this.handleOnChange,
+	              error: this.state.errorDesde
+	            }),
+	            _react2.default.createElement(
+	              'button',
+	              {
+	                type: 'button',
+	                className: 'btn btn-success ml-2',
+	                onClick: function onClick() {
+	                  return _this5.onSave();
+	                }
+	              },
+	              'Consultar'
 	            )
 	          ),
 	          _react2.default.createElement(

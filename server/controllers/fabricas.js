@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Fabricas = mongoose.model('Fabricas')
-const Stock = mongoose.model('Stock')
+// const Stock = mongoose.model('Stock')
 
 //Obtengo el listado de fabricas
 module.exports.listaFabricas = (req, res) => {
@@ -24,6 +24,7 @@ module.exports.listaFabricas = (req, res) => {
 module.exports.getEgresosMes = (req, res) => {
   // Para filtrar por algun parametro
   const filter = {}
+  const { desde, hasta } = req.query
   Fabricas
     .find(filter)
     .exec((err, results, status) => {
@@ -37,8 +38,8 @@ module.exports.getEgresosMes = (req, res) => {
         const año = ahora.getFullYear()
         const mes = ahora.getMonth()
         const mesSiguiente = mes === 11 ? 0 : mes + 1
-        const desde = new Date(año, mes, 1)
-        const hasta = new Date(año, mesSiguiente, 1)
+        const desde1 = desde && hasta ? desde : new Date(año, mes, 1)
+        const hasta1 = desde && hasta ? hasta : new Date(año, mesSiguiente, 1)
         let egresos = 0
         if(results.length > 0){
           results.forEach(fabrica=>{
@@ -46,7 +47,7 @@ module.exports.getEgresosMes = (req, res) => {
               fabrica.pedidos.forEach(pedido=>{
                 if(pedido.pagos.length > 0){
                   pedido.pagos.forEach(pago=>{
-                    if(pago.fecha > desde && pago.fecha < hasta){
+                    if(pago.fecha > desde1 && pago.fecha < hasta1){
                       egresos = egresos + pago.monto
                     }
                   })
