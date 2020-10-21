@@ -79,7 +79,10 @@ export default class Header extends React.Component {
                     </a>
                   <div className="dropdown-menu">
                     <Link className="dropdown-item" to="/reportes/resultados">Resultados</Link>
-                    {/* <div className="dropdown-divider"></div> */}
+                    <div className="dropdown-divider"></div>
+                    <Link className="dropdown-item" to="/reportes/egresos-fecha">Egresos por fecha</Link>
+                    <div className="dropdown-divider"></div>
+                    <Link className="dropdown-item" to="/reportes/ingresos-fecha">Ingresos por fecha</Link>
                   </div>
                 </div>
               }

@@ -44,6 +44,7 @@ module.exports.getIngresosMes = (req, res) => {
         res.status(404).json(err)
       } else {
         let ingresos = 0
+        let detalleIngresos = []
         if(results.length > 0){
           results.forEach(cliente=>{
             if(cliente.pedidos.length > 0){
@@ -53,17 +54,37 @@ module.exports.getIngresosMes = (req, res) => {
                     if(desde && hasta){
                       if(pago.fecha > numerosAFecha(desde) && pago.fecha < numerosAFecha(hasta)){
                         ingresos = ingresos + pago.monto
+                        detalleIngresos.push({
+                          cliente: cliente.nombre,
+                          monto: pago.monto,
+                          fecha: pago.fecha
+                        })
                       }
                     } else if(desde){
                       if(pago.fecha > numerosAFecha(desde)){
                         ingresos = ingresos + pago.monto
+                        detalleIngresos.push({
+                          cliente: cliente.nombre,
+                          monto: pago.monto,
+                          fecha: pago.fecha
+                        })
                       }
                     } else if(hasta) {
                       if(pago.fecha < numerosAFecha(hasta)){
                         ingresos = ingresos + pago.monto
+                        detalleIngresos.push({
+                          cliente: cliente.nombre,
+                          monto: pago.monto,
+                          fecha: pago.fecha
+                        })
                       }
                     } else {
                       ingresos = ingresos + pago.monto
+                      detalleIngresos.push({
+                        cliente: cliente.nombre,
+                        monto: pago.monto,
+                        fecha: pago.fecha
+                      })
                     }
                   })
                 }
@@ -71,7 +92,7 @@ module.exports.getIngresosMes = (req, res) => {
             }
           })
         }
-        res.status(200).json({ ingresosMes: ingresos })
+        res.status(200).json({ ingresosMes: ingresos, detalleIngresosMes: detalleIngresos })
       }
     })
 }

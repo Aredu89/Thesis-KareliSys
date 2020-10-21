@@ -130,6 +130,14 @@
 	
 	var _Resultados2 = _interopRequireDefault(_Resultados);
 	
+	var _EgresosFecha = __webpack_require__(334);
+	
+	var _EgresosFecha2 = _interopRequireDefault(_EgresosFecha);
+	
+	var _IngresosFecha = __webpack_require__(335);
+	
+	var _IngresosFecha2 = _interopRequireDefault(_IngresosFecha);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var contentNode = document.getElementById('contents');
@@ -208,6 +216,8 @@
 	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios/editar', component: permitsAdmin ? _UsuariosEditar2.default : noPermits }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'usuarios/editar/:id', component: permitsAdmin ? _UsuariosEditar2.default : noPermits }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'reportes/resultados', component: permits.reportes ? _Resultados2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'reportes/egresos-fecha', component: permits.reportes ? _EgresosFecha2.default : noPermits }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'reportes/ingresos-fecha', component: permits.reportes ? _IngresosFecha2.default : noPermits }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '*', component: noMatch })
 	    ) : _react2.default.createElement(_reactRouter.Redirect, { from: '/*', to: '/login' })
 	  );
@@ -29715,6 +29725,18 @@
 	                    _reactRouter.Link,
 	                    { className: 'dropdown-item', to: '/reportes/resultados' },
 	                    'Resultados'
+	                  ),
+	                  _react2.default.createElement('div', { className: 'dropdown-divider' }),
+	                  _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { className: 'dropdown-item', to: '/reportes/egresos-fecha' },
+	                    'Egresos por fecha'
+	                  ),
+	                  _react2.default.createElement('div', { className: 'dropdown-divider' }),
+	                  _react2.default.createElement(
+	                    _reactRouter.Link,
+	                    { className: 'dropdown-item', to: '/reportes/ingresos-fecha' },
+	                    'Ingresos por fecha'
 	                  )
 	                )
 	              ),
@@ -34696,7 +34718,7 @@
 	                  col[0]
 	                );
 	              }),
-	              _react2.default.createElement(
+	              this.props.sinAcciones ? null : _react2.default.createElement(
 	                'th',
 	                { scope: 'col', className: 'd-flex justify-content-end' },
 	                'Acciones'
@@ -34767,7 +34789,7 @@
 	                    );
 	                  }
 	                }),
-	                _react2.default.createElement(
+	                _this2.props.sinAcciones ? null : _react2.default.createElement(
 	                  'td',
 	                  { className: 'd-flex justify-content-end' },
 	                  _this2.props.handleEditar && !_this2.blockRead ? _react2.default.createElement(
@@ -57532,6 +57554,472 @@
 	}(_react2.default.Component);
 	
 	exports.default = Resultados;
+
+/***/ },
+/* 334 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _DatePicker = __webpack_require__(317);
+	
+	var _DatePicker2 = _interopRequireDefault(_DatePicker);
+	
+	var _javascriptFunctions = __webpack_require__(281);
+	
+	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
+	
+	var _TablaFlexible = __webpack_require__(286);
+	
+	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var EgresosFecha = function (_React$Component) {
+		_inherits(EgresosFecha, _React$Component);
+	
+		function EgresosFecha() {
+			_classCallCheck(this, EgresosFecha);
+	
+			var _this = _possibleConstructorReturn(this, (EgresosFecha.__proto__ || Object.getPrototypeOf(EgresosFecha)).call(this));
+	
+			_this.state = {
+				desde: "",
+				errorDesde: "",
+				hasta: "",
+				errorHasta: "",
+				egresos: 0,
+				cargandoEgresos: true,
+				errorEgresos: "",
+				detalleEgresos: []
+			};
+			_this.handleOnChange = _this.handleOnChange.bind(_this);
+			_this.onClickConsultar = _this.onClickConsultar.bind(_this);
+			_this.cargarEgresos = _this.cargarEgresos.bind(_this);
+			return _this;
+		}
+	
+		_createClass(EgresosFecha, [{
+			key: 'componentDidMount',
+			value: function componentDidMount() {
+				this.cargarEgresos();
+			}
+		}, {
+			key: 'cargarEgresos',
+			value: function cargarEgresos() {
+				var _this2 = this;
+	
+				fetch('/api/egresos?desde=' + this.state.desde + '&hasta=' + this.state.hasta).then(function (res) {
+					if (res.ok) {
+						res.json().then(function (data) {
+							_this2.setState({
+								cargandoEgresos: false,
+								errorEgresos: "",
+								egresos: data.egresosMes,
+								detalleEgresos: data.detalleEgresosMes
+							});
+						});
+					} else {
+						res.json().then(function (error) {
+							console.log("Error al obtener egresos. ", error.message);
+							_this2.setState({
+								cargandoEgresos: false,
+								errorEgresos: error.message
+							});
+						});
+					}
+				}).catch(function (error) {
+					console.log("Error: ", error.message);
+					_this2.setState({
+						cargandoEgresos: false,
+						errorEgresos: error.message
+					});
+				});
+			}
+		}, {
+			key: 'handleOnChange',
+			value: function handleOnChange(event) {
+				this.setState(_defineProperty({}, event.target.name, event.target.value));
+				//Limpio el error Desde
+				if (event.target.name === "desde") {
+					this.setState({
+						errorDesde: ""
+					});
+				}
+				//Limpio el error Hasta
+				if (event.target.name === "hasta") {
+					this.setState({
+						errorHasta: ""
+					});
+				}
+			}
+		}, {
+			key: 'onClickConsultar',
+			value: function onClickConsultar() {
+				this.cargarEgresos();
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var columns = [["Fabrica", "fabrica", "String"], ["Monto", "monto", "Money"], ["Fecha", "fecha", "Fecha"]];
+				return _react2.default.createElement(
+					'div',
+					{ className: 'fabricas-pagos text-center' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'row' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'col-12 d-flex' },
+							_react2.default.createElement(
+								'h3',
+								null,
+								'Reporte de Egresos por fecha'
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'col-12 d-flex align-items-center' },
+							_react2.default.createElement(
+								'span',
+								{ className: 'mr-2' },
+								'Desde'
+							),
+							_react2.default.createElement(_DatePicker2.default, {
+								name: 'desde',
+								value: this.state.desde ? this.state.desde : "",
+								onChange: this.handleOnChange,
+								error: this.state.errorDesde
+							}),
+							_react2.default.createElement(
+								'span',
+								{ className: 'mr-2 ml-2' },
+								'Hasta'
+							),
+							_react2.default.createElement(_DatePicker2.default, {
+								name: 'hasta',
+								value: this.state.hasta ? this.state.hasta : "",
+								onChange: this.handleOnChange,
+								error: this.state.errorHasta
+							}),
+							_react2.default.createElement(
+								'button',
+								{
+									type: 'button',
+									className: 'btn btn-success ml-2',
+									onClick: this.onClickConsultar
+								},
+								'Consultar'
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'mensaje-deuda' },
+							_react2.default.createElement(
+								'h4',
+								null,
+								'El total de egresos es de: ',
+								_javascriptFunctions2.default.moneyFormatter(this.state.egresos)
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'col-12 contenedor-tabla text-center' },
+							!this.state.cargandoEgresos ?
+							// Tabla
+							_react2.default.createElement(_TablaFlexible2.default, {
+								columns: columns,
+								data: this.state.detalleEgresos,
+								sinAcciones: true
+							}) : this.state.errorEgresos ?
+							//Mensaje de error
+							_react2.default.createElement(
+								'div',
+								{ className: 'alert alert-dismissible alert-danger' },
+								_react2.default.createElement(
+									'button',
+									{ type: 'button', className: 'close', 'data-dismiss': 'alert' },
+									'\xD7'
+								),
+								_react2.default.createElement(
+									'strong',
+									null,
+									'Error!'
+								),
+								' ',
+								this.state.errorEgresos
+							) :
+							// Spinner
+							_react2.default.createElement(
+								'div',
+								{ className: 'spinner-border text-light', role: 'status' },
+								_react2.default.createElement(
+									'span',
+									{ className: 'sr-only' },
+									'Loading...'
+								)
+							)
+						)
+					)
+				);
+			}
+		}]);
+	
+		return EgresosFecha;
+	}(_react2.default.Component);
+	
+	exports.default = EgresosFecha;
+
+/***/ },
+/* 335 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _DatePicker = __webpack_require__(317);
+	
+	var _DatePicker2 = _interopRequireDefault(_DatePicker);
+	
+	var _javascriptFunctions = __webpack_require__(281);
+	
+	var _javascriptFunctions2 = _interopRequireDefault(_javascriptFunctions);
+	
+	var _TablaFlexible = __webpack_require__(286);
+	
+	var _TablaFlexible2 = _interopRequireDefault(_TablaFlexible);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var IngresosFecha = function (_React$Component) {
+		_inherits(IngresosFecha, _React$Component);
+	
+		function IngresosFecha() {
+			_classCallCheck(this, IngresosFecha);
+	
+			var _this = _possibleConstructorReturn(this, (IngresosFecha.__proto__ || Object.getPrototypeOf(IngresosFecha)).call(this));
+	
+			_this.state = {
+				desde: "",
+				errorDesde: "",
+				hasta: "",
+				errorHasta: "",
+				ingresos: 0,
+				cargandoIngresos: true,
+				errorIngresos: "",
+				detalleIngresos: []
+			};
+			_this.handleOnChange = _this.handleOnChange.bind(_this);
+			_this.onClickConsultar = _this.onClickConsultar.bind(_this);
+			_this.cargarIngresos = _this.cargarIngresos.bind(_this);
+			return _this;
+		}
+	
+		_createClass(IngresosFecha, [{
+			key: 'componentDidMount',
+			value: function componentDidMount() {
+				this.cargarIngresos();
+			}
+		}, {
+			key: 'cargarIngresos',
+			value: function cargarIngresos() {
+				var _this2 = this;
+	
+				fetch('/api/ingresos?desde=' + this.state.desde + '&hasta=' + this.state.hasta).then(function (res) {
+					if (res.ok) {
+						res.json().then(function (data) {
+							_this2.setState({
+								cargandoIngresos: false,
+								errorIngresos: "",
+								ingresos: data.ingresosMes,
+								detalleIngresos: data.detalleIngresosMes
+							});
+						});
+					} else {
+						res.json().then(function (error) {
+							console.log("Error al obtener ingresos. ", error.message);
+							_this2.setState({
+								cargandoIngresos: false,
+								errorIngresos: error.message
+							});
+						});
+					}
+				}).catch(function (error) {
+					console.log("Error: ", error.message);
+					_this2.setState({
+						cargandoIngresos: false,
+						errorIngresos: error.message
+					});
+				});
+			}
+		}, {
+			key: 'handleOnChange',
+			value: function handleOnChange(event) {
+				this.setState(_defineProperty({}, event.target.name, event.target.value));
+				//Limpio el error Desde
+				if (event.target.name === "desde") {
+					this.setState({
+						errorDesde: ""
+					});
+				}
+				//Limpio el error Hasta
+				if (event.target.name === "hasta") {
+					this.setState({
+						errorHasta: ""
+					});
+				}
+			}
+		}, {
+			key: 'onClickConsultar',
+			value: function onClickConsultar() {
+				this.cargarIngresos();
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var columns = [["Cliente", "cliente", "String"], ["Monto", "monto", "Money"], ["Fecha", "fecha", "Fecha"]];
+				return _react2.default.createElement(
+					'div',
+					{ className: 'fabricas-pagos' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'row' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'col-12 d-flex' },
+							_react2.default.createElement(
+								'h3',
+								null,
+								'Reporte de Ingresos por fecha'
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'col-12 d-flex align-items-center' },
+							_react2.default.createElement(
+								'span',
+								{ className: 'mr-2' },
+								'Desde'
+							),
+							_react2.default.createElement(_DatePicker2.default, {
+								name: 'desde',
+								value: this.state.desde ? this.state.desde : "",
+								onChange: this.handleOnChange,
+								error: this.state.errorDesde
+							}),
+							_react2.default.createElement(
+								'span',
+								{ className: 'mr-2 ml-2' },
+								'Hasta'
+							),
+							_react2.default.createElement(_DatePicker2.default, {
+								name: 'hasta',
+								value: this.state.hasta ? this.state.hasta : "",
+								onChange: this.handleOnChange,
+								error: this.state.errorHasta
+							}),
+							_react2.default.createElement(
+								'button',
+								{
+									type: 'button',
+									className: 'btn btn-success ml-2',
+									onClick: this.onClickConsultar
+								},
+								'Consultar'
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'mensaje-deuda' },
+							_react2.default.createElement(
+								'h4',
+								null,
+								'El total de ingresos es de: ',
+								_javascriptFunctions2.default.moneyFormatter(this.state.ingresos)
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'col-12 contenedor-tabla text-center' },
+							!this.state.cargandoEgresos ?
+							// Tabla
+							_react2.default.createElement(_TablaFlexible2.default, {
+								columns: columns,
+								data: this.state.detalleIngresos,
+								sinAcciones: true
+							}) : this.state.errorEgresos ?
+							//Mensaje de error
+							_react2.default.createElement(
+								'div',
+								{ className: 'alert alert-dismissible alert-danger' },
+								_react2.default.createElement(
+									'button',
+									{ type: 'button', className: 'close', 'data-dismiss': 'alert' },
+									'\xD7'
+								),
+								_react2.default.createElement(
+									'strong',
+									null,
+									'Error!'
+								),
+								' ',
+								this.state.errorIngresos
+							) :
+							// Spinner
+							_react2.default.createElement(
+								'div',
+								{ className: 'spinner-border text-light', role: 'status' },
+								_react2.default.createElement(
+									'span',
+									{ className: 'sr-only' },
+									'Loading...'
+								)
+							)
+						)
+					)
+				);
+			}
+		}]);
+	
+		return IngresosFecha;
+	}(_react2.default.Component);
+	
+	exports.default = IngresosFecha;
 
 /***/ }
 /******/ ]);

@@ -22,6 +22,8 @@ import StockEditar from './stock/StockEditar.jsx'
 import UsuariosLista from './usuarios/UsuariosLista.jsx'
 import UsuariosEditar from './usuarios/UsuariosEditar.jsx'
 import Resultados from './reportes/Resultados.jsx'
+import EgresosFecha from './reportes/EgresosFecha.jsx'
+import IngresosFecha from './reportes/IngresosFecha.jsx'
 
 const contentNode = document.getElementById('contents')
 const noMatch = () => <p>Page Not Found</p>
@@ -85,6 +87,8 @@ const RoutedApp = () => {
           <Route path="usuarios/editar" component={permitsAdmin ? UsuariosEditar : noPermits} />
           <Route path="usuarios/editar/:id" component={permitsAdmin ? UsuariosEditar : noPermits} />
           <Route path="reportes/resultados" component={permits.reportes ? Resultados : noPermits} />
+          <Route path="reportes/egresos-fecha" component={permits.reportes ? EgresosFecha : noPermits} />
+          <Route path="reportes/ingresos-fecha" component={permits.reportes ? IngresosFecha : noPermits} />
           <Route path="*" component={noMatch} />
         </Route>
       ) : (

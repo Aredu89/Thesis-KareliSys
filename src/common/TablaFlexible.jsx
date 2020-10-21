@@ -57,7 +57,11 @@ export default class TablaFlexible extends React.Component {
                   return <th scope="col" key={i}>{col[0]}</th>
                 })
               }
-              <th scope="col" className="d-flex justify-content-end">Acciones</th>
+              {
+                this.props.sinAcciones ?
+                null :
+                <th scope="col" className="d-flex justify-content-end">Acciones</th>
+              }
             </tr>
           </thead>
           <tbody id={`myTable${this.props.lista}`}>
@@ -88,53 +92,57 @@ export default class TablaFlexible extends React.Component {
                     })
                   }
                   {/* Acciones */}
-                  <td className="d-flex justify-content-end">
-                    {
-                      this.props.handleEditar && !this.blockRead ?
-                        <button type="button" 
-                          className="btn btn-outline-primary"
-                          title="Editar"
-                          onClick={() => this.props.handleEditar(data._id)}
-                          ><i className="material-icons">create</i></button>
-                      : null
-                    }
-                    {
-                      this.props.goToPedidos && !this.blockRead ?
-                        <button type="button" 
-                          className="btn btn-outline-primary"
-                          title="Pedidos"
-                          onClick={() => this.props.goToPedidos(data._id)}
-                          ><i className="material-icons">shopping_cart</i></button>
-                      : null
-                    }
-                    {
-                      this.props.goToPagos && !this.blockRead ?
-                        <button type="button" 
-                          className="btn btn-outline-primary"
-                          title="Pagos"
-                          onClick={() => this.props.goToPagos(data._id)}
-                          ><i className="material-icons">attach_money</i></button>
-                      : null
-                    }
-                    {
-                      this.props.handleEliminar && !this.blockDelete ?
-                        <button type="button" 
-                          className="btn btn-outline-danger"
-                          title="Eliminar"
-                          onClick={() => this.props.handleEliminar(data._id)}
-                          ><i className="material-icons">clear</i></button>
-                      : null
-                    }
-                    {
-                      this.props.onPagarPedido && !this.blockRead ?
-                        <button type="button" 
-                          className="btn btn-outline-primary pagar"
-                          title="Pagos"
-                          onClick={() => this.props.onPagarPedido(data)}
-                          >PAGAR</button>
-                      : null
-                    }
-                  </td>
+                  {
+                    this.props.sinAcciones ?
+                    null :
+                    <td className="d-flex justify-content-end">
+                      {
+                        this.props.handleEditar && !this.blockRead ?
+                          <button type="button" 
+                            className="btn btn-outline-primary"
+                            title="Editar"
+                            onClick={() => this.props.handleEditar(data._id)}
+                            ><i className="material-icons">create</i></button>
+                        : null
+                      }
+                      {
+                        this.props.goToPedidos && !this.blockRead ?
+                          <button type="button" 
+                            className="btn btn-outline-primary"
+                            title="Pedidos"
+                            onClick={() => this.props.goToPedidos(data._id)}
+                            ><i className="material-icons">shopping_cart</i></button>
+                        : null
+                      }
+                      {
+                        this.props.goToPagos && !this.blockRead ?
+                          <button type="button" 
+                            className="btn btn-outline-primary"
+                            title="Pagos"
+                            onClick={() => this.props.goToPagos(data._id)}
+                            ><i className="material-icons">attach_money</i></button>
+                        : null
+                      }
+                      {
+                        this.props.handleEliminar && !this.blockDelete ?
+                          <button type="button" 
+                            className="btn btn-outline-danger"
+                            title="Eliminar"
+                            onClick={() => this.props.handleEliminar(data._id)}
+                            ><i className="material-icons">clear</i></button>
+                        : null
+                      }
+                      {
+                        this.props.onPagarPedido && !this.blockRead ?
+                          <button type="button" 
+                            className="btn btn-outline-primary pagar"
+                            title="Pagos"
+                            onClick={() => this.props.onPagarPedido(data)}
+                            >PAGAR</button>
+                        : null
+                      }
+                    </td>
+                  }
                 </tr>
               })
             }

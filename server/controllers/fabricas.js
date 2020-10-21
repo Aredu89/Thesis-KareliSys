@@ -44,6 +44,7 @@ module.exports.getEgresosMes = (req, res) => {
         res.status(404).json(err)
       } else {
         let egresos = 0
+        let detalleEgresos = []
         if(results.length > 0){
           results.forEach(fabrica=>{
             if(fabrica.pedidos.length > 0){
@@ -53,17 +54,37 @@ module.exports.getEgresosMes = (req, res) => {
                     if(desde && hasta){
                       if(pago.fecha > numerosAFecha(desde) && pago.fecha < numerosAFecha(hasta)){
                         egresos = egresos + pago.monto
+                        detalleEgresos.push({
+                          fabrica: fabrica.nombre,
+                          monto: pago.monto,
+                          fecha: pago.fecha
+                        })
                       }
                     } else if(desde){
                       if(pago.fecha > numerosAFecha(desde)){
                         egresos = egresos + pago.monto
+                        detalleEgresos.push({
+                          fabrica: fabrica.nombre,
+                          monto: pago.monto,
+                          fecha: pago.fecha
+                        })
                       }
                     } else if(hasta) {
                       if(pago.fecha < numerosAFecha(hasta)){
                         egresos = egresos + pago.monto
+                        detalleEgresos.push({
+                          fabrica: fabrica.nombre,
+                          monto: pago.monto,
+                          fecha: pago.fecha
+                        })
                       }
                     } else {
                       egresos = egresos + pago.monto
+                      detalleEgresos.push({
+                        fabrica: fabrica.nombre,
+                        monto: pago.monto,
+                        fecha: pago.fecha
+                      })
                     }
                   })
                 }
@@ -71,7 +92,7 @@ module.exports.getEgresosMes = (req, res) => {
             }
           })
         }
-        res.status(200).json({ egresosMes: egresos })
+        res.status(200).json({ egresosMes: egresos, detalleEgresosMes: detalleEgresos })
       }
     })
 }
