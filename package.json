@@ -42,7 +42,7 @@
     "react-router": "^2.7.0",
     "react-text-mask": "^5.4.3",
     "sweetalert2": "^9.5.3",
-    "validator": "^12.2.0"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
